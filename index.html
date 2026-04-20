@@ -523,6 +523,24 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
 .dim-layout{display:flex;gap:22px;align-items:stretch}
 .dim-frame{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:14px}
 .dim-frame iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08);display:block}
+@media(max-width:900px){.dim-frame iframe{aspect-ratio:4/3;border-radius:14px}}
+@media(max-width:560px){.dim-frame iframe{aspect-ratio:1/1;border-radius:12px}}
+
+/* Touch controls — Pause + Slow-Mo overlay; visible only on coarse-pointer (touch) devices.
+   Lets mobile/tablet users pause + slow without keyboard. */
+.touch-ctrls{display:none}
+@media(hover:none) and (pointer:coarse){
+  .dim-frame{position:relative}
+  .touch-ctrls{display:flex;position:absolute;top:10px;right:10px;gap:6px;z-index:5;pointer-events:auto}
+  .touch-ctrls button{
+    background:rgba(10,22,40,.85);backdrop-filter:blur(10px);
+    border:1px solid rgba(245,243,238,.18);border-radius:999px;
+    padding:8px 12px;font:600 11px/1 var(--font-body,'DM Sans');
+    color:var(--warm,#F5F3EE);letter-spacing:1px;text-transform:uppercase;
+    cursor:pointer;-webkit-tap-highlight-color:transparent;min-height:36px;min-width:50px;
+  }
+  .touch-ctrls button.on{background:rgba(43,139,252,.3);border-color:#2B8BFC;color:#fff}
+}
 
 /* ── Shot chips: rendered BELOW the iframe (never overlaying the 3D canvas) ── */
 .dim-chips{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
@@ -616,6 +634,10 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
   <section style="max-width:1360px;margin:40px auto 32px;padding:0 24px">
     <div class="dim-layout">
       <div class="dim-frame">
+        <div class="touch-ctrls" aria-label="Touch controls">
+            <button id="touch-pause" aria-label="Pause animation">⏸</button>
+            <button id="touch-slowmo" aria-label="Toggle slow motion">SLO</button>
+        </div>
         <iframe
           id="dim-iframe"
           src="4dp/3d_module_template.html?embedded=1&v=1776726173"
@@ -648,7 +670,7 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
         <div class="di-role" id="di-role">Ball striking</div>
         <div class="di-mantra" id="di-mantra">Four friends on a court. Everyone in the backcourt. Playing tennis. We've all seen it.</div>
         <div class="di-traj" id="di-traj">In 1D pickleball, the points don't last very long. This is how many of us started.</div>
-        <div class="di-hint">Click a dimension below · Space to pause · Drag to orbit · Scroll to zoom</div>
+        <div class="di-hint">Tap a dimension · Pinch to zoom · Drag to orbit · Space (or ⏸) to pause</div>
       </aside>
     </div>
   </section>
@@ -751,6 +773,25 @@ document.querySelectorAll('.dim-chip').forEach(chip => {
     }
   });
 });
+
+// Touch control buttons (mobile/tablet) — postMessage to iframe
+(function(){
+  let __slowOn = false;
+  const tp = document.getElementById('touch-pause');
+  const ts = document.getElementById('touch-slowmo');
+  if (tp) tp.addEventListener('click', () => {
+    const f = document.getElementById('dim-iframe');
+    if (f && f.contentWindow) f.contentWindow.postMessage({ type:'4dp:toggle-pause' }, '*');
+    tp.classList.toggle('on');
+    tp.textContent = tp.classList.contains('on') ? '▶' : '⏸';
+  });
+  if (ts) ts.addEventListener('click', () => {
+    __slowOn = !__slowOn;
+    const f = document.getElementById('dim-iframe');
+    if (f && f.contentWindow) f.contentWindow.postMessage({ type:'4dp:set-slowmo', on: __slowOn }, '*');
+    ts.classList.toggle('on', __slowOn);
+  });
+})();
 
 // ── SPACE toggles pause inside the iframe — works even when iframe isn't focused ──
 window.addEventListener('keydown', (e) => {
