@@ -1,0 +1,418 @@
+/* ═══════════════════════════════════════════════════════════
+   4DP — Shared Design Tokens
+   The canonical system for every 4D Pickleball module & page.
+   Rule R17 of feedback_pickleball_module_rules.md requires
+   every module import this file. No hardcoded colors or fonts.
+   Updated: 2026-04-20
+   ═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+
+:root {
+  /* ── BASE SURFACES ──
+     Navy ink, not SaaS gray. Warmer, court-surround feel.
+     Lifted 2026-04-20 per Dave feedback (previous #0A1628 read too dark). */
+  --4dp-ink:        #0E1F38;   /* page background — subtle lift from #0A1628 */
+  --4dp-ink-deep:   #081225;   /* for gradients / vignettes only */
+  --4dp-surface:    #12253E;   /* cards, panels */
+  --4dp-surface-2:  #183353;   /* raised elements */
+  --4dp-hairline:   rgba(245,243,238,.08);
+  --4dp-hairline-s: rgba(245,243,238,.14);
+
+  /* Atmospheric body background — three soft glows over the ink base.
+     Modules apply `.body-atmosphere` on <body> to opt in (non-breaking for existing pages). */
+
+  /* ── TEXT ──
+     Warm off-white, never pure white. Ink-on-paper feel. */
+  --4dp-text:       #F5F3EE;
+  --4dp-text-dim:   rgba(245,243,238,.62);
+  --4dp-text-mute:  rgba(245,243,238,.40);
+  --4dp-text-faint: rgba(245,243,238,.22);
+
+  /* ── DIMENSION COLORS ──
+     Coach-mapped. Never cross-paint.
+     2026-04-20: Drive ↔ Defend swap (Drive now yellow, Defend now pink) per Dave. */
+  --4dp-drive:      #FBBF24;   /* Level 1 · Ball Striking (yellow — tennis ball feel) */
+  --4dp-defend:     #F472B6;   /* Level 2 · Baby Block */
+  --4dp-drop:       #34D399;   /* Level 3 · Reset Drop */
+  --4dp-dink:       #2B8BFC;   /* Level 4 · Kitchen Offense */
+
+  --4dp-drive-soft:  rgba(251,191,36,.12);
+  --4dp-defend-soft: rgba(244,114,182,.12);
+  --4dp-drop-soft:   rgba(52,211,153,.12);
+  --4dp-dink-soft:   rgba(43,139,252,.12);
+
+  /* ── ECOSYSTEM TIE-IN (Give 'n Receive) ──
+     Gold is the "you leveled up" emotion. Reserved. */
+  --gnr-gold:       #F59E0B;
+  --gnr-gold-soft:  rgba(245,158,11,.14);
+
+  /* ── NEPC COURT PALETTE (LOCKED 2026-04-20 from Dave's reference) ──
+     Source: Dave's Positioning & Scoring module court aesthetic.
+     Use these values for every module's court rendering — the look
+     is the 4DP court signature. */
+  --nepc-court-blue:        #234E8C;   /* playing surface (radial gradient center → edge) */
+  --nepc-court-blue-bright: #2D5FA8;   /* radial gradient highlight at center of court */
+  --nepc-court-gray:        #7A8290;   /* deck / surround — slate, not tennis green (lightened 2026-04-20 per Dave) */
+  --nepc-court-gray-dark:   #646D7B;   /* deck gradient base */
+  --nepc-kitchen-burgundy:  #6B0F1A;   /* kitchen (NVZ) — burgundy, NOT blue. Signature. */
+  --nepc-kitchen-deep:      #52090F;   /* kitchen gradient base */
+  --nepc-line-white:        rgba(255,255,255,0.95);   /* court lines — crisp, not warm */
+  --nepc-red:               #C8102E;   /* NEPC brand red — used sparingly */
+
+  /* ── FUNCTIONAL ── */
+  --4dp-success: #34D399;
+  --4dp-error:   #F87171;
+  --4dp-warn:    #FBBF24;
+  --4dp-info:    #60A5FA;
+
+  /* ── TYPOGRAPHY ──
+     Instrument Serif italic for display (R4). DM Sans for body.
+     JetBrains Mono for data/stats. */
+  --4dp-font-display: 'Instrument Serif', Georgia, serif;
+  --4dp-font-body:    'DM Sans', -apple-system, system-ui, sans-serif;
+  --4dp-font-data:    'JetBrains Mono', ui-monospace, monospace;
+
+  /* ── TYPE SCALE ── */
+  --4dp-h1:   clamp(56px, 9vw, 112px);
+  --4dp-h2:   clamp(36px, 5vw, 64px);
+  --4dp-h3:   clamp(26px, 3.5vw, 40px);
+  --4dp-h4:   clamp(20px, 2.4vw, 28px);
+  --4dp-body: 17px;
+  --4dp-small: 14px;
+  --4dp-micro: 11px;
+
+  /* ── RADII ── */
+  --4dp-r-sm:  10px;
+  --4dp-r-md:  16px;
+  --4dp-r-lg:  24px;
+  --4dp-r-pill: 999px;
+
+  /* ── SHADOWS ── */
+  --4dp-shadow:    0 8px 32px rgba(0,0,0,.42);
+  --4dp-shadow-lg: 0 20px 60px rgba(0,0,0,.56);
+
+  /* ── DIMENSION GLOWS ──
+     One source of color energy per screen. */
+  --4dp-glow-drive:  0 0 48px rgba(244,114,182,.22);
+  --4dp-glow-defend: 0 0 48px rgba(251,191,36,.22);
+  --4dp-glow-drop:   0 0 48px rgba(52,211,153,.22);
+  --4dp-glow-dink:   0 0 48px rgba(43,139,252,.22);
+  --4dp-glow-gold:   0 0 64px rgba(245,158,11,.35);
+
+  /* ── SPACING ── */
+  --4dp-s-1:  4px;
+  --4dp-s-2:  8px;
+  --4dp-s-3:  12px;
+  --4dp-s-4:  16px;
+  --4dp-s-5:  24px;
+  --4dp-s-6:  32px;
+  --4dp-s-7:  48px;
+  --4dp-s-8:  64px;
+  --4dp-s-9:  96px;
+
+  /* ── MOTION ──
+     Purposeful only. Not decorative. */
+  --4dp-ease:     cubic-bezier(.16, 1, .3, 1);
+  --4dp-ease-in:  cubic-bezier(.4, 0, .8, .8);
+  --4dp-dur-fast: .2s;
+  --4dp-dur:      .4s;
+  --4dp-dur-slow: .8s;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BASE RESET + BODY
+   Modules can opt-in by applying class "tokens-base" to body.
+   Prevents surprise overrides in existing modules.
+   ═══════════════════════════════════════════════════════════ */
+
+.tokens-base {
+  font-family: var(--4dp-font-body);
+  background: var(--4dp-ink);
+  color: var(--4dp-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.tokens-base * { box-sizing: border-box; }
+
+/* Atmospheric body — subtle radial glows over ink base. Opt-in. */
+.body-atmosphere {
+  background-color: var(--4dp-ink);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 15% -10%, rgba(77,166,255,.10) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 85% 110%, rgba(155,93,229,.08) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(77,166,255,.03) 0%, transparent 70%);
+  background-attachment: fixed;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TYPOGRAPHY UTILITIES
+   ═══════════════════════════════════════════════════════════ */
+
+.t-display {
+  font-family: var(--4dp-font-display);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -1.5px;
+  line-height: 1;
+  color: var(--4dp-text);
+}
+
+.t-h1 { font-size: var(--4dp-h1); letter-spacing: -2px; line-height: .98; }
+.t-h2 { font-size: var(--4dp-h2); letter-spacing: -1px; line-height: 1.05; }
+.t-h3 { font-size: var(--4dp-h3); letter-spacing: -.6px; line-height: 1.1; }
+.t-h4 { font-size: var(--4dp-h4); letter-spacing: -.3px; line-height: 1.15; }
+
+.t-body { font-size: var(--4dp-body); line-height: 1.6; color: var(--4dp-text-dim); }
+.t-small { font-size: var(--4dp-small); line-height: 1.5; color: var(--4dp-text-dim); }
+
+.t-eyebrow {
+  font-family: var(--4dp-font-body);
+  font-size: var(--4dp-micro);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--4dp-text-faint);
+}
+
+.t-data {
+  font-family: var(--4dp-font-data);
+  font-weight: 500;
+  letter-spacing: -.2px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DIMENSION UTILITIES
+   Use these to attach dimension color to any element.
+   Example: <div class="dim-drop">...</div>
+   ═══════════════════════════════════════════════════════════ */
+
+.dim-drive  { --dim: var(--4dp-drive);  --dim-soft: var(--4dp-drive-soft);  --dim-glow: var(--4dp-glow-drive);  }
+.dim-defend { --dim: var(--4dp-defend); --dim-soft: var(--4dp-defend-soft); --dim-glow: var(--4dp-glow-defend); }
+.dim-drop   { --dim: var(--4dp-drop);   --dim-soft: var(--4dp-drop-soft);   --dim-glow: var(--4dp-glow-drop);   }
+.dim-dink   { --dim: var(--4dp-dink);   --dim-soft: var(--4dp-dink-soft);   --dim-glow: var(--4dp-glow-dink);   }
+
+.dim-accent { color: var(--dim); }
+.dim-bg     { background: var(--dim-soft); border: 1px solid color-mix(in srgb, var(--dim) 30%, transparent); }
+.dim-glow   { box-shadow: var(--dim-glow); }
+
+/* ═══════════════════════════════════════════════════════════
+   SHARED COMPONENTS — minimal, composable
+   Modules can use these directly or wrap them.
+   ═══════════════════════════════════════════════════════════ */
+
+/* Hero skeleton */
+.fdp-hero { text-align: center; padding: var(--4dp-s-7) 0 var(--4dp-s-6); position: relative; }
+.fdp-hero .eyebrow {
+  display: inline-flex; align-items: center; gap: var(--4dp-s-2);
+  padding: 6px 18px; border-radius: var(--4dp-r-pill);
+  background: var(--dim-soft, rgba(245,243,238,.06));
+  border: 1px solid var(--dim, var(--4dp-hairline-s));
+  font-size: var(--4dp-micro); font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--dim, var(--4dp-text-dim));
+  margin-bottom: var(--4dp-s-6);
+}
+.fdp-hero h1 {
+  font-family: var(--4dp-font-display); font-style: italic;
+  font-size: var(--4dp-h1); font-weight: 400;
+  letter-spacing: -2px; line-height: .98;
+  color: var(--4dp-text);
+  margin: 0 auto 12px;
+  max-width: 900px;
+}
+.fdp-hero .sub {
+  font-family: var(--4dp-font-body);
+  font-size: var(--4dp-body); color: var(--4dp-text-dim);
+  max-width: 540px; margin: 28px auto 0; line-height: 1.55;
+}
+
+/* Kbd chip (for game key explainers) */
+.fdp-kbd {
+  display: inline-block;
+  font-family: var(--4dp-font-body); font-weight: 700;
+  font-size: 13px; letter-spacing: 1.2px;
+  padding: 4px 12px; border-radius: 8px;
+  background: color-mix(in srgb, var(--dim, var(--4dp-text)) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--dim, var(--4dp-text)) 50%, transparent);
+  color: var(--dim, var(--4dp-text));
+}
+
+/* Staggered dimension-word reveal (the landing-page signature motion) */
+@keyframes fdpPop {
+  from { opacity: 0; transform: translateY(14px) scale(.92); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.fdp-word-row { display: inline-flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.fdp-word {
+  font-size: clamp(28px, 4.5vw, 52px); font-weight: 900; letter-spacing: -1.2px;
+  color: var(--fd-c);
+  text-shadow: 0 0 28px color-mix(in srgb, var(--fd-c) 35%, transparent);
+  animation: fdpPop .5s var(--4dp-ease) both;
+}
+.fdp-word:nth-child(1) { animation-delay: .10s; }
+.fdp-word:nth-child(2) { animation-delay: .25s; }
+.fdp-word:nth-child(3) { animation-delay: .40s; }
+.fdp-word:nth-child(4) { animation-delay: .55s; }
+
+/* Pull-quote — italic serif for single-sentence emphasis */
+.fdp-pull {
+  font-family: var(--4dp-font-display); font-style: italic;
+  font-size: var(--4dp-h2); font-weight: 400;
+  letter-spacing: -.8px; line-height: 1.15;
+  color: var(--4dp-text);
+  max-width: 760px; margin: 0 auto;
+  text-align: center;
+}
+.fdp-pull .dim { color: var(--4dp-text-dim); }
+
+/* Progress ladder — four rungs (Drive → Defend → Drop → Dink) */
+.fdp-ladder { display: flex; gap: var(--4dp-s-2); }
+.fdp-ladder .rung {
+  flex: 1; height: 6px; border-radius: 3px;
+  background: var(--4dp-hairline);
+  position: relative; overflow: hidden;
+}
+.fdp-ladder .rung.complete { background: var(--4dp-success); }
+.fdp-ladder .rung.active   { background: linear-gradient(90deg, var(--dim, var(--4dp-text)) 50%, var(--4dp-hairline) 50%); }
+
+/* Pro intro card */
+.fdp-pro {
+  display: flex; align-items: center; gap: var(--4dp-s-4);
+  padding: var(--4dp-s-4) var(--4dp-s-5);
+  background: var(--dim-soft, var(--4dp-surface));
+  border: 1px solid var(--dim, var(--4dp-hairline-s));
+  border-radius: var(--4dp-r-md);
+}
+.fdp-pro .avatar { font-size: 28px; line-height: 1; }
+.fdp-pro .name { font-weight: 700; color: var(--4dp-text); font-size: 15px; }
+.fdp-pro .role { font-size: 12px; color: var(--dim, var(--4dp-text-dim)); font-weight: 600; margin-top: 2px; }
+.fdp-pro .quote { font-size: 12px; color: var(--4dp-text-mute); font-style: italic; margin-top: 4px; }
+
+/* Drill card */
+.fdp-drill {
+  background: var(--4dp-surface);
+  border: 1px solid var(--4dp-hairline);
+  border-radius: var(--4dp-r-md);
+  padding: var(--4dp-s-5);
+  transition: all var(--4dp-dur) var(--4dp-ease);
+  cursor: pointer;
+}
+.fdp-drill:hover {
+  border-color: var(--dim, var(--4dp-hairline-s));
+  transform: translateY(-2px);
+  box-shadow: var(--4dp-shadow);
+}
+.fdp-drill .tag {
+  display: inline-block; padding: 3px 10px; border-radius: 6px;
+  font-size: var(--4dp-micro); font-weight: 800; letter-spacing: 1px;
+  text-transform: uppercase;
+  background: var(--dim-soft); color: var(--dim);
+  border: 1px solid color-mix(in srgb, var(--dim, var(--4dp-text)) 30%, transparent);
+  margin-bottom: var(--4dp-s-3);
+}
+.fdp-drill h4 { font-family: var(--4dp-font-body); font-weight: 700; font-size: 17px; color: var(--4dp-text); margin-bottom: 6px; }
+.fdp-drill p  { font-size: 14px; color: var(--4dp-text-dim); line-height: 1.5; }
+
+/* Stat row — data-first, JetBrains Mono for numbers */
+.fdp-stat {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: var(--4dp-s-3) 0;
+  border-bottom: 1px solid var(--4dp-hairline);
+}
+.fdp-stat .label { font-size: 13px; color: var(--4dp-text-dim); font-weight: 600; }
+.fdp-stat .value { font-family: var(--4dp-font-data); font-weight: 700; font-size: 15px; color: var(--4dp-text); }
+.fdp-stat .pct { font-size: 11px; color: var(--4dp-text-mute); margin-left: var(--4dp-s-2); }
+
+/* Earning moment — ambient "you earned" (no rubric shown) */
+@keyframes fdpEarn {
+  0%   { opacity: 0; transform: translateY(8px) scale(.96); }
+  15%  { opacity: 1; transform: translateY(0) scale(1); }
+  85%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-8px) scale(1); }
+}
+.fdp-earn {
+  display: inline-flex; align-items: center; gap: var(--4dp-s-2);
+  padding: 10px 18px; border-radius: var(--4dp-r-pill);
+  background: var(--gnr-gold-soft);
+  border: 1px solid color-mix(in srgb, var(--gnr-gold) 45%, transparent);
+  font-family: var(--4dp-font-body); font-weight: 700; font-size: 13px;
+  color: var(--gnr-gold);
+  box-shadow: var(--4dp-glow-gold);
+  animation: fdpEarn 3s ease forwards;
+}
+
+/* Beta badge — visible earning contract */
+.fdp-beta {
+  display: inline-flex; align-items: center; gap: var(--4dp-s-2);
+  padding: 6px 14px; border-radius: var(--4dp-r-pill);
+  background: var(--4dp-drop-soft);
+  border: 1px solid color-mix(in srgb, var(--4dp-drop) 40%, transparent);
+  font-family: var(--4dp-font-body); font-weight: 700; font-size: 11px;
+  color: var(--4dp-drop); letter-spacing: 1.5px; text-transform: uppercase;
+}
+
+/* Up next — always at module end (R16: no dead ends) */
+.fdp-up-next {
+  margin-top: var(--4dp-s-7);
+  padding: var(--4dp-s-6) var(--4dp-s-5);
+  background: var(--dim-soft, var(--4dp-surface));
+  border: 1px solid var(--dim, var(--4dp-hairline-s));
+  border-radius: var(--4dp-r-lg);
+  text-align: center;
+}
+.fdp-up-next .label { font-size: var(--4dp-micro); color: var(--dim, var(--4dp-text-faint)); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: var(--4dp-s-3); }
+.fdp-up-next h3 { font-family: var(--4dp-font-display); font-style: italic; font-weight: 400; font-size: var(--4dp-h3); color: var(--4dp-text); margin-bottom: var(--4dp-s-4); }
+.fdp-up-next .cta {
+  display: inline-block; padding: 14px 32px;
+  background: var(--dim, var(--4dp-text));
+  color: var(--4dp-ink);
+  border-radius: var(--4dp-r-pill);
+  font-family: var(--4dp-font-body); font-weight: 700; font-size: 14px;
+  letter-spacing: 1px; text-transform: uppercase;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: transform var(--4dp-dur-fast) var(--4dp-ease);
+}
+.fdp-up-next .cta:hover { transform: translateY(-2px); }
+
+/* Footer lockup — always present (ecosystem parentage) */
+.fdp-footer {
+  margin-top: var(--4dp-s-8);
+  padding: var(--4dp-s-6) 0;
+  border-top: 1px solid var(--4dp-hairline);
+  text-align: center;
+  font-size: var(--4dp-small);
+  color: var(--4dp-text-faint);
+}
+.fdp-footer .parent { color: var(--gnr-gold); font-weight: 600; font-style: italic; font-family: var(--4dp-font-display); font-size: 16px; }
+
+/* Pregame splash (game modules — R14) — skeleton only, modules style details */
+.fdp-pregame {
+  display: none; position: fixed; inset: 0; z-index: 9000;
+  background: rgba(10,22,40,.94); backdrop-filter: blur(14px);
+  align-items: center; justify-content: center; padding: var(--4dp-s-5);
+}
+.fdp-pregame.open { display: flex; animation: fadeIn .3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Persistent two-key banner during gameplay */
+.fdp-keys-banner {
+  position: absolute; top: 62px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 14px; align-items: center; z-index: 110;
+  background: rgba(10,22,40,.82); backdrop-filter: blur(10px);
+  border: 1px solid var(--4dp-hairline-s); border-radius: var(--4dp-r-pill);
+  padding: 8px 18px;
+  font-family: var(--4dp-font-body); font-weight: 700; font-size: 12px;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  box-shadow: var(--4dp-shadow); white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  .fdp-hero { padding: var(--4dp-s-6) 0 var(--4dp-s-5); }
+  .fdp-word-row { gap: 10px; }
+}

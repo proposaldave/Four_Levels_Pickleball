@@ -1,23 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEPC Academy — 4 Levels</title>
+<title>4D Pickleball — Drive. Defend. Drop. Dink.</title>
+<meta name="description" content="Pickleball has four dimensions. Drive. Defend. Drop. Dink. Master them in order. The simplest four-part progression to developing your pickleball skills.">
+<meta property="og:title" content="4D Pickleball — Drive. Defend. Drop. Dink.">
+<meta property="og:description" content="Pickleball has four dimensions. The simplest four-part progression to developing your pickleball skills.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://4dpickleball.com">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232B8BFC'/%3E%3Ctext x='50' y='68' font-family='Inter,Arial,sans-serif' font-size='56' font-weight='900' fill='white' text-anchor='middle'%3E4D%3C/text%3E%3C/svg%3E">
+<!-- Shared design tokens — changes here propagate to every module that links this file -->
+<link rel="stylesheet" href="4dp/tokens.css">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;600;700&display=swap');
 :root{
   --blue:#2B8BFC;--blue-d:#1E6FD9;--blue-dd:#1759B0;--blue-l:#5BA8FF;
   --sky:#EBF4FF;--sky-d:#D6E8FF;
-  --white:#fff;--off:#F4F7FB;
+  --warm:#F5F3EE;--warm-dim:rgba(245,243,238,.6);--warm-mute:rgba(245,243,238,.4);
+  --white:#F5F3EE;--off:#F4F7FB;
   --txt:#0f172a;--txt-d:#334155;--txt-m:#64748b;--txt-l:#94a3b8;
   --green:#34D399;--gold:#FBBF24;--red:#FB7185;--pink:#F472B6;
+  /* --ink aliased to the shared token — change --4dp-ink in tokens.css to update every module at once */
+  --ink:var(--4dp-ink);
+  --font-display:'Instrument Serif',Georgia,serif;
+  --font-body:'DM Sans',-apple-system,system-ui,sans-serif;
   --r:20px;--rs:14px;
   --shadow:0 4px 16px rgba(0,0,0,.06);
   --shadow-lg:0 12px 40px rgba(0,0,0,.08);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',-apple-system,system-ui,sans-serif;background:#0a0f1a;color:var(--white);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 
 /* ── NAV ── */
 .topnav{
@@ -51,6 +66,24 @@ body{font-family:'Inter',-apple-system,system-ui,sans-serif;background:#0a0f1a;c
 
 /* ── HERO ── */
 .hero{text-align:center;padding:48px 0 40px;position:relative}
+.fourd-graphic{margin:12px 0 8px;filter:drop-shadow(0 6px 40px rgba(43,139,252,.15))}
+.fd-word{
+  font-size:clamp(28px,4.5vw,48px);font-weight:900;letter-spacing:-1.2px;
+  color:var(--fd-c);text-shadow:0 0 28px color-mix(in srgb,var(--fd-c) 35%,transparent);
+  animation:fdPop .5s cubic-bezier(.16,1,.3,1) both;
+}
+.fd-word:nth-child(1){animation-delay:.1s}
+.fd-word:nth-child(2){animation-delay:.25s}
+.fd-word:nth-child(3){animation-delay:.4s}
+.fd-word:nth-child(4){animation-delay:.55s}
+@keyframes fdPop{from{opacity:0;transform:translateY(14px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}
+.dim-tag{
+  display:inline-block;font-size:10px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;
+  padding:3px 8px;border-radius:6px;margin-right:8px;
+  background:color-mix(in srgb,var(--tier-c1,#2B8BFC) 18%,transparent);
+  color:var(--tier-c1,#2B8BFC);
+  border:1px solid color-mix(in srgb,var(--tier-c1,#2B8BFC) 35%,transparent);
+}
 .hero-badge{
   display:inline-flex;align-items:center;gap:8px;
   background:rgba(43,139,252,.12);border:1px solid rgba(43,139,252,.2);
@@ -58,16 +91,16 @@ body{font-family:'Inter',-apple-system,system-ui,sans-serif;background:#0a0f1a;c
   padding:6px 18px;border-radius:24px;margin-bottom:32px;color:var(--blue-l);
 }
 .hero h1{
-  font-size:clamp(30px,5vw,52px);font-weight:900;letter-spacing:-1.5px;
-  line-height:1.12;margin-bottom:16px;max-width:720px;margin-left:auto;margin-right:auto;
-  background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,.75) 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
+  font-family:var(--font-display);font-style:italic;
+  font-size:clamp(56px,9vw,112px);font-weight:400;letter-spacing:-2px;
+  line-height:.98;margin-bottom:12px;max-width:900px;margin-left:auto;margin-right:auto;
+  color:var(--warm);
 }
 .hero-sub{
-  font-size:17px;color:rgba(255,255,255,.5);max-width:520px;margin:0 auto;line-height:1.6;font-weight:400;margin-top:32px;
+  font-size:18px;color:var(--warm-dim);max-width:540px;margin:28px auto 0;line-height:1.55;font-weight:400;
+  font-family:var(--font-body);
 }
-.hero-sub strong{color:rgba(255,255,255,.8);font-weight:600}
+.hero-sub strong{color:var(--warm);font-weight:600}
 
 /* ── PAIN POINTS ── */
 .pain-row{
@@ -231,8 +264,8 @@ body{font-family:'Inter',-apple-system,system-ui,sans-serif;background:#0a0f1a;c
 .level-tier[data-level="4"] .tier-bar{width:55%}
 
 /* Level colors */
-.level-tier[data-level="1"]{--tier-c1:#F472B6;--tier-c2:#DB2777;--tier-glow:rgba(244,114,182,.3);--tier-bg1:#F472B6;--tier-bg2:#BE185D}
-.level-tier[data-level="2"]{--tier-c1:#FBBF24;--tier-c2:#D97706;--tier-glow:rgba(251,191,36,.3);--tier-bg1:#FBBF24;--tier-bg2:#B45309}
+.level-tier[data-level="1"]{--tier-c1:#FBBF24;--tier-c2:#D97706;--tier-glow:rgba(251,191,36,.3);--tier-bg1:#FBBF24;--tier-bg2:#B45309}
+.level-tier[data-level="2"]{--tier-c1:#F472B6;--tier-c2:#DB2777;--tier-glow:rgba(244,114,182,.3);--tier-bg1:#F472B6;--tier-bg2:#BE185D}
 .level-tier[data-level="3"]{--tier-c1:#34D399;--tier-c2:#059669;--tier-glow:rgba(52,211,153,.3);--tier-bg1:#34D399;--tier-bg2:#047857}
 .level-tier[data-level="4"]{--tier-c1:#2B8BFC;--tier-c2:#1759B0;--tier-glow:rgba(43,139,252,.3);--tier-bg1:#2B8BFC;--tier-bg2:#1759B0}
 
@@ -263,7 +296,7 @@ body{font-family:'Inter',-apple-system,system-ui,sans-serif;background:#0a0f1a;c
   display:flex;align-items:center;justify-content:center;
   font-size:24px;flex-shrink:0;
 }
-.ld-meta h2{font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px}
+.ld-meta h2{font-family:var(--font-display);font-style:italic;font-size:34px;font-weight:400;letter-spacing:-.8px;line-height:1.05;margin-bottom:8px;color:var(--warm)}
 .ld-meta p{font-size:14px;color:rgba(255,255,255,.5);line-height:1.6}
 
 /* Unlock criteria */
@@ -360,1074 +393,270 @@ body{font-family:'Inter',-apple-system,system-ui,sans-serif;background:#0a0f1a;c
 .crit-card h4{font-size:13px;font-weight:700;color:var(--txt);margin-bottom:4px}
 .crit-card p{font-size:12px;color:var(--txt-m)}
 
-/* ── AMBIENT PARTICLES ── */
-.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-.particle{
-  position:absolute;width:2px;height:2px;border-radius:50%;
-  background:rgba(43,139,252,.3);
-  animation:float linear infinite;
-}
-@keyframes float{
-  0%{transform:translateY(100vh) scale(0);opacity:0}
-  10%{opacity:1}
-  90%{opacity:1}
-  100%{transform:translateY(-20px) scale(1);opacity:0}
-}
+/* Particles removed — reads generic SaaS. */
 
 @media(max-width:860px){
   .topnav{padding:0 16px}.main{padding:84px 16px 48px}
   .tier-bar{padding:12px 16px}
   .pain-row,.answer-row{flex-direction:column;align-items:center}
 }
+
+/* ── INTERACTIVE PROGRESSION CLICK-THROUGH ── */
+.prog-section{
+  max-width:880px;margin:24px auto 0;padding:56px 24px 40px;text-align:center;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.prog-badge{display:inline-flex;margin-bottom:20px;transition:all .5s cubic-bezier(.16,1,.3,1)}
+.prog-copy{
+  font-size:17px;color:var(--warm-dim);max-width:580px;margin:0 auto 20px;line-height:1.6;
+  min-height:3.2em;transition:opacity .3s;
+}
+.prog-dims{
+  display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;
+  margin:0 auto 28px;padding:6px;border-radius:100px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+}
+.prog-dim{
+  display:inline-flex;align-items:center;gap:6px;cursor:pointer;
+  padding:8px 14px;border-radius:100px;font-size:12px;font-weight:700;letter-spacing:.2px;
+  color:rgba(255,255,255,.3);border:1px solid transparent;background:transparent;
+  transition:all .4s cubic-bezier(.16,1,.3,1);white-space:nowrap;
+}
+.prog-dim:hover{color:rgba(255,255,255,.6);background:rgba(255,255,255,.04)}
+.prog-dim.on{
+  color:var(--dc);background:color-mix(in srgb,var(--dc) 12%,transparent);
+  border-color:color-mix(in srgb,var(--dc) 35%,transparent);
+  box-shadow:0 0 20px color-mix(in srgb,var(--dc) 25%,transparent);
+}
+.prog-dim.current{
+  color:var(--dc);background:color-mix(in srgb,var(--dc) 20%,transparent);
+  border-color:var(--dc);
+  box-shadow:0 0 28px color-mix(in srgb,var(--dc) 40%,transparent);
+  transform:scale(1.06);
+}
+.prog-dim.on .pd-label{font-weight:800}
+.prog-court-wrap{
+  max-width:380px;margin:0 auto 24px;
+  padding:20px 24px;
+  background:linear-gradient(180deg,#5E6878 0%,#4A5462 100%);
+  border-radius:22px;
+  box-shadow:inset 0 0 40px rgba(0,0,0,.35),0 16px 50px rgba(0,0,0,.45);
+}
+.prog-court{
+  width:100%;display:block;border-radius:4px;overflow:hidden;
+  box-shadow:inset 0 0 60px rgba(0,0,0,.25);
+  transition:box-shadow .4s;
+  border:2px solid rgba(255,255,255,.92);
+}
+.prog-stage-meta{max-width:520px;margin:0 auto 28px}
+.prog-stage-title{
+  font-family:var(--font-display);font-style:italic;
+  font-size:clamp(28px,4.2vw,44px);font-weight:400;letter-spacing:-.8px;line-height:1.1;
+  color:var(--warm);margin-bottom:8px;
+  transition:opacity .3s;
+}
+.prog-stage-sub{
+  font-size:15px;color:var(--warm-mute);line-height:1.55;
+  transition:opacity .3s;
+}
+.prog-controls{
+  display:inline-flex;align-items:center;gap:14px;margin-top:8px;
+  padding:8px;border-radius:100px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+}
+.prog-btn{
+  padding:10px 18px;border-radius:100px;border:none;cursor:pointer;
+  font-family:var(--font-body);font-size:13px;font-weight:700;letter-spacing:.2px;
+  background:transparent;color:rgba(255,255,255,.7);transition:all .2s;
+}
+.prog-btn:hover:not(:disabled){background:rgba(255,255,255,.06);color:var(--warm)}
+.prog-btn:disabled{opacity:.3;cursor:not-allowed}
+.prog-btn-primary{background:rgba(43,139,252,.9);color:#fff;box-shadow:0 2px 12px rgba(43,139,252,.3)}
+.prog-btn-primary:hover:not(:disabled){background:var(--blue);color:#fff}
+.prog-step-dots{display:inline-flex;align-items:center;gap:8px;padding:0 4px}
+.prog-step{
+  width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15);
+  cursor:pointer;transition:all .3s;
+}
+.prog-step:hover{background:rgba(255,255,255,.35)}
+.prog-step.active{width:24px;border-radius:100px;background:var(--blue)}
+.prog-step.visited{background:rgba(255,255,255,.45)}
+.prog-fade-out .prog-copy,.prog-fade-out .prog-stage-title,.prog-fade-out .prog-stage-sub{opacity:0}
+
+@media(max-width:560px){
+  .prog-dim{padding:6px 10px;font-size:11px}
+  .prog-controls{gap:6px;padding:6px}
+  .prog-btn{padding:8px 12px;font-size:12px}
+  .prog-dims{padding:4px;gap:3px}
+  .pd-icon{width:10px;height:10px}
+}
+
+/* ── Dimension pill icons ── */
+.pd-icon{width:12px;height:12px;display:inline-block;opacity:.9;flex-shrink:0}
+.prog-dim svg{display:block}
+
+/* ── MOBILE POLISH ── fully optimized for phone viewports (up to 560px) */
+@media(max-width:560px){
+  /* Top nav: shrink padding, hide tagline so 4D Pickleball brand fits */
+  .topnav{padding:0 12px;gap:8px;height:56px}
+  .main{padding:72px 14px 56px}
+  .logo-mark{width:32px;height:32px;font-size:11px;border-radius:9px}
+  .logo-text{font-size:12px}
+  .logo-text span{display:none}
+  .nav-pills{gap:2px}
+  .nav-pill{padding:6px 10px;font-size:11px}
+  /* Hero: smaller padding, tighter H1 */
+  .hero{padding:28px 0 24px}
+  .hero h1{font-size:clamp(42px,13vw,72px);letter-spacing:-1.2px}
+  .hero-sub{font-size:15px;padding:0 8px}
+  .fd-word{font-size:clamp(22px,7.5vw,36px);letter-spacing:-.8px}
+  /* Progression section: less padding, smaller court */
+  .prog-section{padding:36px 14px 28px;margin-top:12px}
+  .prog-copy{font-size:15px;margin-bottom:16px}
+  .prog-court-wrap{max-width:320px;margin-bottom:18px}
+  .prog-stage-title{font-size:clamp(24px,6vw,32px)}
+  .prog-stage-sub{font-size:14px}
+  .prog-stage-meta{margin-bottom:18px}
+  .prog-badge{margin-bottom:14px;font-size:10px;letter-spacing:1.5px}
+}
+
+/* ── Dimension info panel (side of iframe) ── */
+.dim-layout{display:flex;gap:22px;align-items:stretch}
+.dim-frame{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:14px}
+.dim-frame iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08);display:block}
+
+/* ── Shot chips: rendered BELOW the iframe (never overlaying the 3D canvas) ── */
+.dim-chips{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.dim-chip{
+  background:rgba(10,22,40,.78);backdrop-filter:blur(10px);
+  border:1px solid rgba(245,243,238,.12);border-radius:16px;
+  padding:12px 16px;cursor:pointer;text-align:left;
+  display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+  transition:transform .2s cubic-bezier(.16,1,.3,1), border-color .25s, background .25s, box-shadow .25s;
+  font-family:var(--font-body);
+}
+.dim-chip:hover{transform:translateY(-2px);border-color:var(--dc,#FBBF24)}
+.dim-chip.active{
+  background:color-mix(in srgb,var(--dc,#FBBF24) 14%, rgba(10,22,40,.88));
+  border-color:var(--dc,#FBBF24);
+  box-shadow:0 0 28px color-mix(in srgb,var(--dc,#FBBF24) 28%, transparent);
+}
+.dim-chip[data-shot="drive"] {--dc:#FBBF24}
+.dim-chip[data-shot="defend"]{--dc:#F472B6}
+.dim-chip[data-shot="drop"]  {--dc:#34D399}
+.dim-chip[data-shot="dink"]  {--dc:#2B8BFC}
+.dim-chip .dc-num{
+  font-weight:700;font-size:10px;letter-spacing:2px;
+  color:var(--dc);text-transform:uppercase;
+}
+.dim-chip .dc-name{
+  font-family:var(--font-display);font-style:italic;font-weight:400;
+  font-size:20px;letter-spacing:-.3px;line-height:1.1;color:var(--warm);
+}
+@media(max-width:900px){
+  .dim-chips{grid-template-columns:repeat(2,1fr);gap:8px}
+  .dim-chip{padding:10px 14px}
+  .dim-chip .dc-name{font-size:17px}
+}
+@media(max-width:560px){
+  .dim-chips{gap:6px}
+  .dim-chip{padding:8px 12px;border-radius:12px}
+  .dim-chip .dc-num{font-size:9px;letter-spacing:1.5px}
+  .dim-chip .dc-name{font-size:15px}
+}
+.dim-info{
+  flex:0 0 290px;padding:26px 24px;border-radius:20px;
+  background:rgba(10,22,40,.72);border:1px solid rgba(245,243,238,.08);border-left:3px solid var(--di-c,#FBBF24);
+  display:flex;flex-direction:column;justify-content:center;gap:12px;
+  transition:border-left-color .4s ease;
+}
+.di-label{font-family:var(--font-body);font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;transition:color .4s ease}
+.di-role{font-family:var(--font-display);font-style:italic;font-weight:400;font-size:30px;line-height:1.05;letter-spacing:-.5px;color:var(--warm)}
+.di-mantra{font-size:15px;font-style:italic;color:var(--warm);line-height:1.5;padding-top:14px;border-top:1px solid rgba(245,243,238,.08)}
+.di-traj{font-size:14px;color:var(--warm-dim);line-height:1.55}
+.di-hint{margin-top:auto;font-size:11px;color:var(--warm-mute);letter-spacing:.5px;line-height:1.5;padding-top:16px;border-top:1px solid rgba(245,243,238,.06)}
+@media(max-width:900px){
+  .dim-layout{flex-direction:column;gap:14px}
+  .dim-info{flex:1 1 auto;padding:20px}
+  .di-role{font-size:24px}
+}
+
+/* Tablet breakpoint (561-900px) */
+@media(min-width:561px) and (max-width:900px){
+  .main{padding:88px 20px 64px}
+  .prog-section{padding:44px 20px 32px}
+  .prog-court-wrap{max-width:360px}
+  .nav-pill{padding:7px 14px;font-size:12px}
+}
 </style>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
 
-<div class="particles" id="particles"></div>
 
-<nav class="topnav">
-  <div class="logo">
-    <div class="logo-mark">NEPC</div>
-    <div class="logo-text">New England Pickleball Club<span>Academy</span></div>
-  </div>
-  <div class="nav-pills">
-    <button class="nav-pill active" data-page="pyramid">The 4 Levels</button>
-    <button class="nav-pill" data-page="class-l4">Class: Level 4</button>
-    <button class="nav-pill" data-page="my-journey">My Journey</button>
-  </div>
-</nav>
-
-<main class="main">
+<main class="main" style="padding-top:32px">
 
 <!-- ═══ PYRAMID HOME ═══ -->
 <div class="page active" id="page-pyramid">
 
   <div class="hero">
-    <div class="hero-badge">◆ FOUR LEVELS PICKLEBALL</div>
-    <h1>100,000 pickleball lessons on YouTube.</h1>
-    <div style="display:inline-flex;align-items:center;justify-content:center;margin:20px 0 16px;position:relative">
-      <span style="font-size:clamp(40px,6vw,64px);font-weight:900;color:rgba(251,113,133,.7);letter-spacing:4px">=</span>
-      <span style="position:absolute;width:120%;height:4px;background:rgba(251,113,133,.85);transform:rotate(-20deg);border-radius:3px"></span>
-    </div>
-    <p style="font-size:clamp(30px,5vw,52px);font-weight:900;letter-spacing:-1.5px;line-height:1.12;max-width:720px;margin-left:auto;margin-right:auto;background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,.75) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Mastering pickleball is YOUR progression through four levels.</p>
-    <p class="hero-sub">Contradictory tips. Generic advice. Information overload that doesn't know <strong>you</strong> or what you need to thrive in your community. Four Levels Pickleball simplifies through all of it — <strong>4 levels, one clear progression, coached by true expert humans who know your game.</strong></p>
+    <div class="hero-badge">◆ 4D Pickleball</div>
 
-    <div class="pain-row">
-      <div class="pain-chip"><span class="pc-x">✕</span> Contradictory YouTube advice</div>
-      <div class="pain-chip"><span class="pc-x">✕</span> One-size-fits-all</div>
-      <div class="pain-chip"><span class="pc-x">✕</span> No clear path forward</div>
+    <h1>Anyone can learn<br>to play 4D Pickleball.</h1>
+
+    <div style="display:inline-flex;align-items:center;justify-content:center;gap:16px;margin:36px 0 8px;flex-wrap:wrap">
+      <span class="fd-word" style="--fd-c:#FBBF24">Drive.</span>
+      <span class="fd-word" style="--fd-c:#F472B6">Defend.</span>
+      <span class="fd-word" style="--fd-c:#34D399">Drop.</span>
+      <span class="fd-word" style="--fd-c:#2B8BFC">Dink.</span>
     </div>
-    <div class="answer-row">
-      <div class="answer-chip">✓ 4 levels. Clear progression.</div>
-      <div class="answer-chip">✓ Your coach knows you.</div>
-      <div class="answer-chip">✓ Thrive in your community.</div>
-    </div>
+
   </div>
 
-  <!-- Journey bar -->
-  <div class="journey-bar">
-    <div class="jb-top">
-      <h3>Your Progress</h3>
-      <div class="jb-level">Level 1 — Ball Striking</div>
+  <!-- Embedded cinematic 3D module (canonical at 06_ACADEMY/4dp/3d_module_template.html per R21)
+       + side info panel (parent-rendered, synced via postMessage from the iframe) -->
+  <section style="max-width:1360px;margin:40px auto 32px;padding:0 24px">
+    <div class="dim-layout">
+      <div class="dim-frame">
+        <iframe
+          id="dim-iframe"
+          src="4dp/3d_module_template.html?embedded=1&v=1776726173"
+          title="4D Pickleball cinematic 3D module"
+          loading="eager"
+        ></iframe>
+        <!-- Shot chips live BELOW the iframe so they never overlay the 3D canvas.
+             Clicks post {type:'4dp:select-shot', key} into the iframe. -->
+        <div class="dim-chips" role="tablist" aria-label="Pick a dimension">
+          <button class="dim-chip active" data-shot="drive"  role="tab" aria-selected="true">
+            <span class="dc-num">1D · Drive</span>
+            <span class="dc-name">Ball Striking</span>
+          </button>
+          <button class="dim-chip" data-shot="defend" role="tab" aria-selected="false">
+            <span class="dc-num">2D · Defend</span>
+            <span class="dc-name">Baby Block</span>
+          </button>
+          <button class="dim-chip" data-shot="drop"   role="tab" aria-selected="false">
+            <span class="dc-num">3D · Drop</span>
+            <span class="dc-name">Under the Ball</span>
+          </button>
+          <button class="dim-chip" data-shot="dink"   role="tab" aria-selected="false">
+            <span class="dc-num">4D · Dink</span>
+            <span class="dc-name">Generating Kitchen Offense</span>
+          </button>
+        </div>
+      </div>
+      <aside class="dim-info" id="dim-info" aria-live="polite">
+        <div class="di-label" id="di-label" style="color:#FBBF24">1D · Drive</div>
+        <div class="di-role" id="di-role">Ball striking</div>
+        <div class="di-mantra" id="di-mantra">Four friends on a court. Everyone in the backcourt. Playing tennis. We've all seen it.</div>
+        <div class="di-traj" id="di-traj">In 1D pickleball, the points don't last very long. This is how many of us started.</div>
+        <div class="di-hint">Click a dimension below · Space to pause · Drag to orbit · Scroll to zoom</div>
+      </aside>
     </div>
-    <div class="jb-track">
-      <div class="jb-seg complete" style="flex:1"></div>
-      <div class="jb-seg" style="flex:1;background:linear-gradient(90deg,var(--blue) 50%,rgba(255,255,255,.06) 50%)"></div>
-      <div class="jb-seg locked" style="flex:1"></div>
-      <div class="jb-seg locked" style="flex:1"></div>
-      <div class="jb-seg locked" style="flex:1"></div>
-    </div>
-    <div class="jb-labels">
-      <div class="jb-lab done">Foundation</div>
-      <div class="jb-lab active">Ball Striking</div>
-      <div class="jb-lab">Baby Block</div>
-      <div class="jb-lab">Reset Drop</div>
-      <div class="jb-lab">Kitchen Offense</div>
-    </div>
-  </div>
-
-  <!-- THE PYRAMID -->
-  <div class="pyramid-section">
-    <div class="pyramid-layout">
-
-      <!-- Foundation Pillar — LEFT -->
-      <div class="foundation-pillar" onclick="toggleFoundation()">
-        <div class="fp-num">0</div>
-        <div class="fp-title">Foundation</div>
-        <div class="fp-sub">Rules, positioning, anticipation, ready position. Everything else builds on this.</div>
-        <div class="fp-status">✓ Unlocked</div>
-        <div class="fp-label">Underpins all levels →</div>
-      </div>
-
-      <!-- Skill Pyramid — RIGHT -->
-      <div class="pyramid-container">
-      <div class="pyramid-arrow-label">Longer, more dynamic points ↑</div>
-
-      <!-- Level 4 — TOP (clicks through to Pressure Dinking class) -->
-      <div class="level-tier" data-level="4" onclick="navigateToPage('class-l4')">
-        <div class="tier-bar">
-          <div class="tier-num">4</div>
-          <div class="tier-info">
-            <h3>Kitchen Offense</h3>
-            <p>Pressure dinks, speed-ups, put-aways</p>
-          </div>
-          <div class="tier-status">Locked</div>
-          <div class="tier-arrow">▸</div>
-        </div>
-      </div>
-      <div class="level-detail" data-detail="4">
-        <div class="ld-header">
-          <div class="ld-icon" style="background:linear-gradient(135deg,rgba(43,139,252,.15),rgba(23,89,176,.15))">🎯</div>
-          <div class="ld-meta">
-            <h2>Level 4 — Kitchen Offense</h2>
-            <p>You've learned to defend, reset, and survive. Now learn to create. Pressure dinks that force errors. Speed-ups your opponents can't handle. The complete kitchen game.</p>
-          </div>
-        </div>
-        <div class="unlock-box">
-          <h4>🔓 Unlock Criteria</h4>
-          <div class="unlock-item"><div class="unlock-check">○</div>Complete Level 3 (Reset Drop)</div>
-          <div class="unlock-item"><div class="unlock-check">○</div>Coach sign-off on reset consistency</div>
-          <div class="unlock-item"><div class="unlock-check">○</div>Attend 2 Kitchen Offense clinics</div>
-          <div class="unlock-item"><div class="unlock-check">○</div>Demo: 10 consecutive cross-court pressure dinks clearing net by ≤3"</div>
-        </div>
-        <div class="level-skills">
-          <div class="ls-card" onclick="goToLevel(4)"><h4><span class="ls-tag ls-tag-concept">Concept</span> Pressure Dinking</h4><p>Why net clearance changes everything. Arc comparison, target zones.</p></div>
-          <div class="ls-card" onclick="goToLevel(4)"><h4><span class="ls-tag ls-tag-drill">Drill</span> Cone #1 — Cross-Court</h4><p>Pressure dink to the cross-court target with animated side-view.</p></div>
-          <div class="ls-card" onclick="goToLevel(4)"><h4><span class="ls-tag ls-tag-drill">Drill</span> Cone #2 — Middle T</h4><p>Target the middle T to freeze your opponent.</p></div>
-          <div class="ls-card" onclick="goToLevel(4)"><h4><span class="ls-tag ls-tag-assessment">Assessment</span> Live Kitchen Rally</h4><p>Controlled rally: sustain pressure for 15 shots without popping up.</p></div>
-        </div>
-      </div>
-
-      <div class="tier-connector">You can reset. Now get to the kitchen and pressure dink.</div>
-
-      <!-- Level 3 -->
-      <div class="level-tier" data-level="3" onclick="toggleLevel(this)">
-        <div class="tier-bar">
-          <div class="tier-num">3</div>
-          <div class="tier-info">
-            <h3>Reset Drop</h3>
-            <p>Under-the-ball touch. Defense → neutral.</p>
-          </div>
-          <div class="tier-status">Locked</div>
-          <div class="tier-arrow">▸</div>
-        </div>
-      </div>
-      <div class="level-detail" data-detail="3">
-        <div class="ld-header">
-          <div class="ld-icon" style="background:linear-gradient(135deg,rgba(52,211,153,.15),rgba(4,120,87,.15))">🔄</div>
-          <div class="ld-meta">
-            <h2>Level 3 — Reset Drop</h2>
-            <p>When you're in trouble — pushed back, off-balance, under pressure — the reset drop buys time. Not a winner. Not a dink. A nothing ball that lands soft in the kitchen and lets you get back to the line.</p>
-          </div>
-        </div>
-        <div class="unlock-box">
-          <h4>🔓 Unlock Criteria</h4>
-          <div class="unlock-item"><div class="unlock-check">○</div>Complete Level 2 (Baby Block)</div>
-          <div class="unlock-item"><div class="unlock-check">○</div>Attend 2 Reset Drop clinics</div>
-          <div class="unlock-item"><div class="unlock-check">○</div>Demo: 5 consecutive resets from mid-court that land in kitchen</div>
-          <div class="unlock-item"><div class="unlock-check">○</div>Coach confirms soft hands under pressure</div>
-        </div>
-        <div class="level-skills">
-          <div class="ls-card"><h4><span class="ls-tag ls-tag-concept">Concept</span> The Nothing Ball</h4><p>Why doing less is more. The reset isn't a shot — it's a pause button.</p></div>
-          <div class="ls-card"><h4><span class="ls-tag ls-tag-drill">Drill</span> Mid-Court Resets</h4><p>Partner feeds drives; you drop into the kitchen from transition zone.</p></div>
-          <div class="ls-card"><h4><span class="ls-tag ls-tag-drill">Drill</span> Pressure → Reset → Recover</h4><p>Full sequence: absorb attack, reset, regain position at the line.</p></div>
-          <div class="ls-card"><h4><span class="ls-tag ls-tag-assessment">Assessment</span> Reset Under Fire</h4><p>Partner escalates speed. Maintain soft resets for 8 consecutive balls.</p></div>
-        </div>
-      </div>
-
-      <div class="tier-connector">You can handle the pace. Now get under the ball and into the kitchen.</div>
-
-      <!-- Level 2 -->
-      <div class="level-tier" data-level="2" onclick="toggleLevel(this)">
-        <div class="tier-bar">
-          <div class="tier-num">2</div>
-          <div class="tier-info">
-            <h3>Baby Block</h3>
-            <p>Anticipate, cover, baby block to safest place</p>
-          </div>
-          <div class="tier-status">Locked</div>
-          <div class="tier-arrow">▸</div>
-        </div>
-      </div>
-      <div class="level-detail" data-detail="2">
-        <div class="ld-header">
-          <div class="ld-icon" style="background:linear-gradient(135deg,rgba(251,191,36,.15),rgba(180,83,9,.15))">🛡️</div>
-          <div class="ld-meta">
-            <h2>Level 2 — Baby Block</h2>
-            <p>Attacks are coming. The instinct is to swing big. The skill is to do almost nothing — absorb the pace, stay compact, redirect to a safe zone. Minimal movement, maximum survival.</p>
-          </div>
-        </div>
-        <div class="unlock-box">
-          <h4>🔓 Unlock Criteria</h4>
-          <div class="unlock-item"><div class="unlock-check">○</div>Complete Level 1 (Ball Striking)</div>
-          <div class="unlock-item"><div class="unlock-check">○</div>Attend 2 Baby Block clinics</div>
-          <div class="unlock-item"><div class="unlock-check">○</div>Demo: 3 consecutive blocks from a fed attack (ball stays in kitchen)</div>
-          <div class="unlock-item"><div class="unlock-check">○</div>Demonstrate "let it go" decision on wide balls</div>
-        </div>
-        <div class="level-skills">
-          <div class="ls-card"><h4><span class="ls-tag ls-tag-concept">Concept</span> The Attack Lane</h4><p>Where attacks go and why. Understanding the lane narrows your job.</p></div>
-          <div class="ls-card"><h4><span class="ls-tag ls-tag-drill">Drill</span> Feed & Block</h4><p>Partner feeds attacks; you block to the safe zone. No backswing.</p></div>
-          <div class="ls-card"><h4><span class="ls-tag ls-tag-drill">Drill</span> Speed Read</h4><p>Decide: block it or let it go? Train the read, not just the hands.</p></div>
-          <div class="ls-card"><h4><span class="ls-tag ls-tag-assessment">Assessment</span> Banger vs Blocker</h4><p>Live rally: partner bangs, you block. Survive 10 exchanges.</p></div>
-        </div>
-      </div>
-
-      <div class="tier-connector">You can hit it. But what if someone hits it at you?</div>
-
-      <!-- Level 1 -->
-      <div class="level-tier" data-level="1" onclick="toggleLevel(this)">
-        <div class="tier-bar">
-          <div class="tier-num">1</div>
-          <div class="tier-info">
-            <h3>Ball Striking</h3>
-            <p>Setup, grip, clean contact</p>
-          </div>
-          <div class="tier-status current">Current</div>
-          <div class="tier-arrow">▸</div>
-        </div>
-      </div>
-      <div class="level-detail" data-detail="1">
-        <div class="ld-header">
-          <div class="ld-icon" style="background:linear-gradient(135deg,rgba(244,114,182,.15),rgba(190,24,93,.15))">🏓</div>
-          <div class="ld-meta">
-            <h2>Level 1 — Ball Striking</h2>
-            <p>Pickleball rewards short, simple strokes. Someone without a racket background can be genuinely good. Simpler motion, fewer errors, faster hands. This levels the playing field.</p>
-          </div>
-        </div>
-        <div class="unlock-box">
-          <h4>🔓 Unlock Criteria</h4>
-          <div class="unlock-item"><div class="unlock-check done">✓</div>Complete Level 0 (Foundation)</div>
-          <div class="unlock-item"><div class="unlock-check">○</div>Attend 2 Ball Striking clinics</div>
-          <div class="unlock-item"><div class="unlock-check">○</div>Demo: 10 consecutive clean contacts with proper grip</div>
-          <div class="unlock-item"><div class="unlock-check">○</div>Pass the 90-Second A/B Test (choke-up grip vs standard)</div>
-        </div>
-        <div class="level-skills">
-          <div class="ls-card"><h4><span class="ls-tag ls-tag-concept">Concept</span> The Big Insight</h4><p>Why simpler strokes win. The physics of a short motion.</p></div>
-          <div class="ls-card"><h4><span class="ls-tag ls-tag-drill">Drill</span> Grip & Contact</h4><p>Choke-up finger grip. Setup position. Clean contact zone.</p></div>
-          <div class="ls-card"><h4><span class="ls-tag ls-tag-drill">Drill</span> 90-Second A/B Test</h4><p>Try both grips. See the difference yourself. Then decide.</p></div>
-          <div class="ls-card"><h4><span class="ls-tag ls-tag-assessment">Assessment</span> Clean 10</h4><p>10 consecutive clean contacts — no frame, no off-center. Simple pass/fail.</p></div>
-        </div>
-      </div>
-
-    </div><!-- /pyramid-container -->
-
-    </div><!-- /pyramid-layout -->
-
-    <!-- Foundation detail panel (shows below the full layout when clicked) -->
-    <div class="level-detail" data-detail="0" style="max-width:900px">
-      <div class="ld-header">
-        <div class="ld-icon" style="background:linear-gradient(135deg,rgba(100,116,139,.15),rgba(51,65,85,.15))">📐</div>
-        <div class="ld-meta">
-          <h2>Foundation</h2>
-          <p>Before any shot matters, you need to be in the right place, reading the right cues, ready to move. This is the invisible skill that separates players who "just hit" from players who play.</p>
-        </div>
-      </div>
-      <div class="unlock-box" style="border-color:rgba(52,211,153,.2);background:rgba(52,211,153,.06)">
-        <h4 style="color:var(--green)">✓ Unlock Criteria — Complete</h4>
-        <div class="unlock-item"><div class="unlock-check done">✓</div>Attend 1 Intro Clinic (Orientation)</div>
-        <div class="unlock-item"><div class="unlock-check done">✓</div>Demonstrate ready position (paddle up, knees bent, eyes forward)</div>
-        <div class="unlock-item"><div class="unlock-check done">✓</div>Complete court positioning walkthrough with coach</div>
-      </div>
-      <div class="level-skills">
-        <div class="ls-card"><h4><span class="ls-tag ls-tag-concept">Concept</span> Court Positioning</h4><p>Where to stand and why. The geometry of good positioning.</p></div>
-        <div class="ls-card"><h4><span class="ls-tag ls-tag-concept">Concept</span> Anticipation</h4><p>Read the opponent's setup. Know where the ball is going before it leaves the paddle.</p></div>
-        <div class="ls-card"><h4><span class="ls-tag ls-tag-drill">Drill</span> Ready & Cover</h4><p>Split-step timing. Recovery to center. Building the habit loop.</p></div>
-        <div class="ls-card"><h4><span class="ls-tag ls-tag-assessment">Assessment</span> Position Check</h4><p>Coach-guided walkthrough of 4 court positions. Know where and why.</p></div>
-      </div>
-    </div>
-
-  </div><!-- /pyramid-section -->
-
-  <!-- Why These Four Levels -->
-  <div style="max-width:700px;margin:0 auto;padding:40px 0 20px;border-top:1px solid rgba(255,255,255,.06)">
-    <div style="display:flex;gap:20px;align-items:stretch">
-      <div style="flex:1;background:rgba(43,139,252,.04);border:1px solid rgba(43,139,252,.1);border-radius:16px;padding:24px">
-        <p style="font-size:13px;font-weight:700;color:var(--blue-l);margin-bottom:8px">Unlike tennis.</p>
-        <p style="font-size:14px;color:rgba(255,255,255,.55);line-height:1.7">As you and your friends work your way through the four levels and improve, the points get longer, more dynamic, and a lot more fun. The opposite happens in tennis — as you improve, points get shorter. In pickleball, every rally moves through phases — striking, defending, resetting, attacking — and better skills mean better points.</p>
-      </div>
-      <div style="flex:1;background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:16px;padding:24px">
-        <p style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px">Four skills. In order.</p>
-        <p style="font-size:14px;color:rgba(255,255,255,.55);line-height:1.7">Each level builds on the last. No skipping. No contradictions. Your NEPC coach walks you through every gate — because they know your game, your partners, and what's actually holding you back.</p>
-      </div>
-    </div>
-    <!-- Third card — matchmaking connection -->
-    <div style="margin-top:20px;background:rgba(251,191,36,.04);border:1px solid rgba(251,191,36,.1);border-radius:16px;padding:24px">
-      <p style="font-size:13px;font-weight:700;color:var(--gold);margin-bottom:8px">Your level shapes who you play with.</p>
-      <p style="font-size:14px;color:rgba(255,255,255,.55);line-height:1.7">Every gate you pass, every coach note, every clinic — it all feeds into how you get matched. Not just in the Academy. In open play. In leagues. The system knows your level, your partners, and who will push you just right. Your next session isn't random. It's built for you.</p>
-    </div>
-  </div>
-
-
-  <!-- Your Coaches — who teaches what -->
-  <div style="max-width:700px;margin:0 auto;padding:32px 0">
-    <p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:16px;text-align:center">Your Human Experts</p>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
-      <div style="background:rgba(244,114,182,.04);border:1px solid rgba(244,114,182,.12);border-radius:14px;padding:16px;text-align:center">
-        <div style="font-size:24px;margin-bottom:6px">⚡</div>
-        <div style="font-size:14px;font-weight:700;color:rgba(255,255,255,.8)">Coach Ryann</div>
-        <div style="font-size:11px;color:rgba(244,114,182,.7);font-weight:600;margin-top:4px">Level 1 · Ball Striking</div>
-        <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:4px">"Simpler motion, fewer errors"</div>
-      </div>
-      <div style="background:rgba(251,191,36,.04);border:1px solid rgba(251,191,36,.12);border-radius:14px;padding:16px;text-align:center">
-        <div style="font-size:24px;margin-bottom:6px">🛡</div>
-        <div style="font-size:14px;font-weight:700;color:rgba(255,255,255,.8)">Coach Caleb</div>
-        <div style="font-size:11px;color:rgba(251,191,36,.7);font-weight:600;margin-top:4px">Level 2 · Baby Block</div>
-        <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:4px">"Boring is beautiful"</div>
-      </div>
-      <div style="background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.12);border-radius:14px;padding:16px;text-align:center">
-        <div style="font-size:24px;margin-bottom:6px">🤲</div>
-        <div style="font-size:14px;font-weight:700;color:rgba(255,255,255,.8)">Coach Dave</div>
-        <div style="font-size:11px;color:rgba(52,211,153,.7);font-weight:600;margin-top:4px">Level 3 · Reset Drop</div>
-        <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:4px">"Let the ball come to you"</div>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px;max-width:470px;margin-left:auto;margin-right:auto">
-      <div style="background:rgba(43,139,252,.04);border:1px solid rgba(43,139,252,.12);border-radius:14px;padding:16px;text-align:center">
-        <div style="font-size:24px;margin-bottom:6px">🔥</div>
-        <div style="font-size:14px;font-weight:700;color:rgba(255,255,255,.8)">Ben & Casey</div>
-        <div style="font-size:11px;color:rgba(43,139,252,.7);font-weight:600;margin-top:4px">Level 4 · Kitchen Offense</div>
-        <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:4px">"Pressure creates errors"</div>
-      </div>
-      <div style="background:rgba(100,116,139,.04);border:1px solid rgba(100,116,139,.12);border-radius:14px;padding:16px;text-align:center">
-        <div style="font-size:24px;margin-bottom:6px">🧭</div>
-        <div style="font-size:14px;font-weight:700;color:rgba(255,255,255,.8)">All Coaches</div>
-        <div style="font-size:11px;color:rgba(100,116,139,.7);font-weight:600;margin-top:4px">Level 0 · Foundation</div>
-        <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:4px">"Position before paddle"</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Trust positioning -->
-  <div style="max-width:600px;margin:0 auto;text-align:center;padding:24px 0 20px;border-top:1px solid rgba(255,255,255,.06)">
-    <p style="font-size:24px;font-weight:800;letter-spacing:-.5px;color:rgba(255,255,255,.7);line-height:1.3;margin-bottom:12px">100,000 YouTube videos.<br><span style="color:rgba(255,255,255,.3)">Zero that know your game.</span></p>
-    <p style="font-size:13px;color:rgba(255,255,255,.35);line-height:1.6;max-width:440px;margin:0 auto">Your pro watches you play. The Academy remembers everything they see. Every gate you pass shapes your next clinic, your next match, and who you play with — grounded in real sessions, not the internet.</p>
-  </div>
+  </section>
 
 </div><!-- /page-pyramid -->
 
-<!-- ═══ MY JOURNEY ═══ -->
-<div class="page" id="page-my-journey">
-  <div class="hero" style="padding-bottom:32px">
-    <div class="hero-badge">◆ My Journey</div>
-    <h1>Sarah's path through the 4 levels</h1>
-    <p class="hero-sub">Level 2.8 · Member since October 2025 · Track what you've unlocked, what's next, and what your coach recommends.</p>
-  </div>
-
-  <!-- Journey tracker -->
-  <div style="max-width:640px;margin:0 auto">
-
-    <!-- Recent Pro Note -->
-    <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px 22px;margin-bottom:16px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:12px">Latest from Your Pro</div>
-      <div style="display:flex;gap:12px;align-items:flex-start">
-        <div style="width:36px;height:36px;border-radius:10px;background:rgba(244,114,182,.12);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--pink);flex-shrink:0">RF</div>
-        <div>
-          <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.8)">Coach Ryann <span style="font-weight:400;color:rgba(255,255,255,.3);font-size:11px">· Feb 20 · Private Lesson</span></div>
-          <div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.6;margin-top:6px">Topspin drive → locked in. Third shot drop → too much arm, needs "marshmallow hands." Baby block trending up.</div>
-          <div style="display:flex;gap:6px;margin-top:8px">
-            <span style="padding:2px 8px;border-radius:6px;font-size:9px;font-weight:700;background:rgba(244,114,182,.1);color:var(--pink)">BoB</span>
-            <span style="padding:2px 8px;border-radius:6px;font-size:9px;font-weight:700;background:rgba(52,211,153,.1);color:var(--green)">UtB</span>
-            <span style="padding:2px 8px;border-radius:6px;font-size:9px;font-weight:700;background:rgba(43,139,252,.1);color:var(--blue-l)">Def</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Recommended Class with social proof -->
-    <div style="background:rgba(52,211,153,.03);border:1px solid rgba(52,211,153,.12);border-radius:16px;padding:16px 22px;margin-bottom:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green)">AI Recommended</div>
-        <span style="font-size:10px;color:rgba(255,255,255,.3)">Targets your #1 gap</span>
-      </div>
-      <div style="font-size:14px;font-weight:700;color:rgba(255,255,255,.85);margin-bottom:4px">Under the Ball Clinic — Coach Dave</div>
-      <div style="font-size:12px;color:rgba(255,255,255,.4)">Wed Mar 5 · 2:00 PM · 3 spots left</div>
-      <div style="font-size:11px;color:rgba(52,211,153,.6);margin-top:8px">Mike R. and Lisa K. from your Wednesday group are signed up</div>
-    </div>
-
-    <!-- Level 0 — Complete -->
-    <div style="background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.12);border-radius:16px;padding:20px 24px;margin-bottom:12px">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
-        <div style="width:40px;height:40px;border-radius:12px;background:rgba(52,211,153,.15);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:var(--green)">0</div>
-        <div style="flex:1">
-          <div style="font-size:15px;font-weight:700;color:var(--green)">Foundation</div>
-          <div style="font-size:12px;color:rgba(255,255,255,.4)">Completed Feb 12, 2026</div>
-        </div>
-        <div style="font-size:11px;font-weight:700;color:var(--green);background:rgba(52,211,153,.1);padding:4px 10px;border-radius:6px;letter-spacing:.5px">✓ COMPLETE</div>
-      </div>
-      <div style="display:flex;gap:4px">
-        <div style="flex:1;height:4px;border-radius:4px;background:var(--green)"></div>
-        <div style="flex:1;height:4px;border-radius:4px;background:linear-gradient(90deg,var(--green) 66%,rgba(255,255,255,.06) 66%)"></div>
-        <div style="flex:1;height:4px;border-radius:4px;background:linear-gradient(90deg,var(--green) 33%,rgba(255,255,255,.06) 33%)"></div>
-      </div>
-      <div style="display:flex;gap:4px;margin-top:4px">
-        <div style="flex:1;font-size:9px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-align:center;color:rgba(52,211,153,.5)">Rules</div>
-        <div style="flex:1;font-size:9px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-align:center;color:rgba(52,211,153,.5)">Positioning</div>
-        <div style="flex:1;font-size:9px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-align:center;color:rgba(52,211,153,.5)">Anticipation</div>
-      </div>
-    </div>
-
-    <!-- Level 1 — In Progress -->
-    <div style="background:rgba(43,139,252,.04);border:1px solid rgba(43,139,252,.15);border-radius:16px;padding:20px 24px;margin-bottom:12px">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
-        <div style="width:40px;height:40px;border-radius:12px;background:rgba(244,114,182,.15);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:var(--pink)">1</div>
-        <div style="flex:1">
-          <div style="font-size:15px;font-weight:700;color:var(--blue-l)">Ball Striking</div>
-          <div style="font-size:12px;color:rgba(255,255,255,.4)">Started Feb 19, 2026 — 2 of 4 criteria met</div>
-        </div>
-        <div style="font-size:11px;font-weight:700;color:var(--blue-l);background:rgba(43,139,252,.1);padding:4px 10px;border-radius:6px;letter-spacing:.5px">IN PROGRESS</div>
-      </div>
-      <div style="display:flex;gap:4px">
-        <div style="flex:1;height:4px;border-radius:4px;background:var(--green)"></div>
-        <div style="flex:1;height:4px;border-radius:4px;background:var(--blue);animation:segPulse 2s ease-in-out infinite"></div>
-        <div style="flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,.06)"></div>
-        <div style="flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,.06)"></div>
-      </div>
-      <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.06)">
-        <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:8px">Next Up</div>
-        <div style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.8">
-          <div style="display:flex;align-items:center;gap:8px"><span style="color:var(--green)">✓</span> Complete Level 0</div>
-          <div style="display:flex;align-items:center;gap:8px"><span style="color:var(--green)">✓</span> Attended first Ball Striking clinic</div>
-          <div style="display:flex;align-items:center;gap:8px"><span style="color:var(--blue-l)">→</span> <strong style="color:rgba(255,255,255,.8)">Attend 1 more clinic</strong> (next: Thursday 6pm)</div>
-          <div style="display:flex;align-items:center;gap:8px"><span style="color:rgba(255,255,255,.2)">○</span> Pass the 90-Second A/B Test</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Levels 2-4 — Locked -->
-    <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:16px 24px;margin-bottom:8px;opacity:.5">
-      <div style="display:flex;align-items:center;gap:14px">
-        <div style="width:36px;height:36px;border-radius:10px;background:rgba(251,191,36,.08);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:rgba(251,191,36,.5)">2</div>
-        <div style="flex:1;font-size:14px;font-weight:600;color:rgba(255,255,255,.35)">Baby Block</div>
-        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.2);letter-spacing:.5px">🔒 LOCKED</div>
-      </div>
-    </div>
-    <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:16px 24px;margin-bottom:8px;opacity:.4">
-      <div style="display:flex;align-items:center;gap:14px">
-        <div style="width:36px;height:36px;border-radius:10px;background:rgba(52,211,153,.08);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:rgba(52,211,153,.4)">3</div>
-        <div style="flex:1;font-size:14px;font-weight:600;color:rgba(255,255,255,.3)">Reset Drop</div>
-        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.15);letter-spacing:.5px">🔒 LOCKED</div>
-      </div>
-    </div>
-    <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:16px 24px;margin-bottom:8px;opacity:.3">
-      <div style="display:flex;align-items:center;gap:14px">
-        <div style="width:36px;height:36px;border-radius:10px;background:rgba(43,139,252,.08);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:rgba(43,139,252,.4)">4</div>
-        <div style="flex:1;font-size:14px;font-weight:600;color:rgba(255,255,255,.25)">Kitchen Offense</div>
-        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.1);letter-spacing:.5px">🔒 LOCKED</div>
-      </div>
-    </div>
-
-    <div style="text-align:center;padding:32px 0;color:rgba(255,255,255,.3);font-size:13px">
-      <p>Talk to your NEPC coach about advancing to the next level.</p>
-    </div>
-
-  </div>
-</div><!-- /page-my-journey -->
-
-<!-- ═══ CLASS: LEVEL 4 — PRESSURE DINKING ═══ -->
-<div class="page" id="page-class-l4">
-  <div id="pressure-dinking-root"></div>
-</div>
-
 </main>
 
-<script type="text/babel">
-const {useState,useEffect,useRef} = React;
-
-// ── PRESSURE DINKING DATA ──
-const PD_SEGMENTS = [
-  {
-    id:1, title:"Intro & Pro Demo", time:"0:00–0:15", duration:900,
-    cues:["Pressure dinking is often the biggest improvement area for advanced players","This is POINT CONSTRUCTION","Watch: I only speed up when there is an obvious window","What did you notice about where I was placing the ball?"],
-    intro:["The title of this class is Pressure Dinking: the foundation of creating offense in the kitchen.","When I assess an advanced player and I don't see anything obvious they need to fix — they appear to have an all-around very strong game — pressure dinking is often the area where they have the biggest room for improvement.","A common question I get: I don't really know what I'm supposed to do — where am I supposed to dink, how do I improve my dinking?","This class could have been titled: go from winning 55% of your kitchen points to winning 85% of them."],
-    demos:["Pro Demo #1: Hit target spots — cone #1 (cross-court) and cone #2 (middle). Show precision and consistency.","Pro Demo #2: 2v1 skinny court. Pro takes one side, two students on the other. Long-point-style rallies — only speed up on obvious windows."],
-    courtType:"demo", mistakes:[]
-  },
-  {
-    id:2, title:"How DEEP Should Your Dinks Be?", time:"0:15–0:20", duration:300,
-    cues:["Test deep dinking early in the match — see how they respond","The out-of-the-air speedup is one of the most advanced shots in pickleball","Depth is relative to your opponent's ability"],
-    questions:["Do dinks have to land in the kitchen?","If your opponent hits your dink out of the air, does that mean it was a bad dink?","If your opponent takes your dink out of the air and speeds it up, does that mean it was a bad dink?"],
-    scenarios:[
-      {label:"Scenario A",setup:"Your opponent has really bad speedups and you have super fast hands — you have no trouble handling whenever they speed it up.",answer:"Dink very deep aggressively. That puts more pressure on them to speed up their least favorite shot, giving you the upper hand in dinking."},
-      {label:"Scenario B",setup:"Your opponent is all-around solid, same skill level — coinflip odds.",answer:"If you dink it and they speed it up with a 60% probability advantage, your dink was too deep. If you dink it and they can speed it up but you'll win 51% of those exchanges at that ball height, that's right up against the line — that's a good dink."},
-      {label:"Scenario C",setup:"Your opponent is not a good dinker compared to you, but has super good speedups whenever you hit even slightly high.",answer:"Dink dink dink dink. Keep dinking until you get a high easy popup. Any questionable ball, do NOT speed it up — hit another dink."}
-    ],
-    keyInsight:"Just like testing if someone can handle a third shot drive at the start of a match, it is good to dink deep at the start of the match to test to see if someone has a good speedup. Do they even speed it up when you dink deep? Do they volley dink at all? Or do they just back up?",
-    courtType:"none", mistakes:[]
-  },
-  {
-    id:3, title:"Cone #1 — Cross-Court", time:"0:20–0:40", duration:1200,
-    cues:["DEPTH is the key","Simplify your technique for better consistency","Tip down, no wrist cock, no spin — more like reset technique","From the shoulder, not the wrist","Option: try choking up on the grip for better control","Can you hit the cone consistently? If not, we need to simplify your technique"],
-    drillFlow:["Backhand focus — hit cone #1 from backhand side, 100+ balls","Forehand focus — switch sides, hit cone #1 from forehand","Feeder variation 1: feed so ball bounces in front of dinker (off the bounce)","Feeder variation 2: feed balls dinker has to take out of the air (volley)"],
-    courtType:"cone1",
-    mistakes:["Complex wrist motion (should be simple shoulder movement)","Adding spin when trying to be precise","Not getting under the ball","Inconsistent contact point"]
-  },
-  {
-    id:4, title:"Cone #2 — Middle", time:"0:40–0:55", duration:900,
-    cues:["Cone #2 = center, 1 foot beyond kitchen line","Shorter dinks require even simpler technique","Under the ball is CRITICAL for short dinks","This is where simplified technique really pays off"],
-    funQuestion:"Did simplifying your technique make it easier to hit the dots?",
-    drillFlow:["Two dinkers on opposite sides, both targeting center cone","Same rotation: 4 stations, go around","Focus on tighter, more controlled motion for shorter targets"],
-    courtType:"cone2",
-    mistakes:["Overcomplicating motion for short targets","Too much wrist on short dinks","Not adjusting arc for shorter distance"]
-  },
-  {
-    id:5, title:"Combined Cones #1 + #2", time:"0:55–1:10", duration:900,
-    cues:["Make your opponents MOVE — top rule of dinking","Target VERY SPECIFIC SPOTS to exploit weaknesses","Not just targeting a specific player — target forehand, backhand, inside left foot, whatever","The ability to dink the ball wherever you want — that is the skill","Alternating targets trains deception — can they read where you are going?"],
-    drillFlow:["First variation: off the bounce","Second variation: out of the air","Add third cone: straight down the line dink","Feeding is difficult — drill could be set up so only pros are feeding"],
-    courtType:"combined",
-    mistakes:["Telegraphing target location","Losing technique when alternating between targets","Not moving the feeder enough"]
-  },
-  {
-    id:6, title:"Volley Dinking + Strategy", time:"1:10–1:25", duration:900,
-    cues:["Take the ball out of the air to take time away and create angles","As you develop, your dinks go closer to the top of the net","Pressure dinking technique is a halfway partial pressure shot","Unlike resets, a variety of different techniques can work in pressure dinking","Previous skills: 2nd base (blocking), 3rd base (resets). Then pressure dinking completes the trifecta"],
-    volleyDrill:["Hit unattackable under-the-ball volley dinks to each other's paddles (cooperative)","Then: volley dink to the target spots (cones)","Key: when leaning in for volley dinking, get under the ball MORE because you are closer to the net"],
-    strategyPoints:["Reaching to take ball out of the air (take time away, create angles)","Hitting specific spots","Depth control — NOT just hitting every ball in the kitchen","Altering arc based on position on the court","Deception — opponent cannot read where the ball is going","Net clearance getting lower as rallies develop"],
-    approaches:{
-      rollDice:{name:"Roll the Dice",desc:"Speed up early",risk:"High risk",good:"opponent cannot defend speedups, OR you cannot out-dink them"},
-      pressure:{name:"Pressure Dinking",desc:"Build advantage gradually",risk:"Low risk",good:"you want to win without taking risk"}
-    },
-    courtType:"volley", mistakes:[]
-  },
-  {
-    id:7, title:"Live Play & Debrief", time:"1:25–1:30", duration:300,
-    cues:["Test what you learned today in your next open play","Start every match by testing deep dinks to various spots","The goal: become someone opponents DREAD dinking against"],
-    debrief:["Did simplifying your technique make it easier to hit the dots?","Do you need to spin your dinks for good pressure dinking?","If you do grip switching (choke up vs not), which grip should you use for dinking and why?","What happens if you just keep dinking forever until your opponent just gives you the point?"],
-    funEnding:"When/why might you roll the dice with an early speedup vs lower-risk pressure dinking point construction?",
-    courtType:"none", mistakes:[]
-  }
-];
-
-const PD_KEY_CONCEPTS = [
-  "POINT CONSTRUCTION — pressure dinking builds advantages gradually to create attack windows OR force errors",
-  "Two approaches: \"Roll the dice\" (speed up early, high risk) vs. pressure dinking (build advantage, low risk)",
-  "Make opponents MOVE — top rule of dinking",
-  "DEPTH is the key variable — how deep depends on the opponent",
-  "Volley dinking — taking ball out of the air to take time away and create angles",
-  "Deception — opponent cannot read where you are hitting until last second",
-  "As skill develops, dinks go closer to the top of the net",
-  "Simplify technique: tip down, no wrist cock, from the shoulder",
-  "Unlike resets, a variety of techniques can work in pressure dinking",
-  "Prerequisites: blocking (2nd base), resets (3rd base) — then pressure dinking completes the trifecta"
-];
-
-// ── COURT SVG ──
-function PDCourt({type="demo",animating=false,speed=1}){
-  const [frame,setFrame] = useState(0);
-  const reqRef = useRef();
-  const lastTime = useRef(0);
-
-  useEffect(()=>{
-    if(!animating) return;
-    const step=(ts)=>{
-      if(ts-lastTime.current>50/speed){
-        setFrame(f=>f+1);
-        lastTime.current=ts;
-      }
-      reqRef.current=requestAnimationFrame(step);
-    };
-    reqRef.current=requestAnimationFrame(step);
-    return ()=>cancelAnimationFrame(reqRef.current);
-  },[animating,speed]);
-
-  const netY=220, kitchenFar=150, kitchenNear=290;
-  const centerX=100;
-  const ballPhase = animating ? (frame%120) : 0;
-  let players=[], ball=null, cones=[], trajectory=[];
-
-  if(type==="demo"){
-    players=[{x:50,y:kitchenNear-10,label:"PRO",color:"#FBBF24"},{x:140,y:kitchenNear-10,label:"S1",color:"#2B8BFC"},{x:160,y:kitchenNear-20,label:"S2",color:"#2B8BFC"}];
-    const t=ballPhase/120;
-    const goingRight=Math.floor(frame/120)%2===0;
-    ball=goingRight?{x:50+90*t,y:kitchenNear-10-40*Math.sin(Math.PI*t)}:{x:140-90*t,y:kitchenNear-10-40*Math.sin(Math.PI*t)};
-    cones=[{x:90,y:kitchenFar+15,label:"#1"},{x:100,y:kitchenFar+25,label:"#2"}];
-  } else if(type==="cone1"){
-    players=[{x:60,y:kitchenNear-10,label:"DK",color:"#2B8BFC"},{x:160,y:kitchenFar+30,label:"FD",color:"#2B8BFC",small:true}];
-    cones=[{x:155,y:kitchenFar+10,label:"#1"}];
-    const t=ballPhase/120;
-    ball={x:60+95*t,y:kitchenNear-10-(kitchenNear-kitchenFar-20)*t-30*Math.sin(Math.PI*t)};
-    trajectory=[{x1:60,y1:kitchenNear-10,x2:155,y2:kitchenFar+10}];
-  } else if(type==="cone2"){
-    players=[{x:60,y:kitchenNear-10,label:"DK",color:"#2B8BFC"},{x:140,y:kitchenNear-10,label:"DK",color:"#2B8BFC"}];
-    cones=[{x:100,y:kitchenFar+25,label:"#2"}];
-    const t=ballPhase/120;
-    const side=Math.floor(frame/120)%2;
-    ball=side===0?{x:60+40*t,y:kitchenNear-10-(kitchenNear-kitchenFar)*t-20*Math.sin(Math.PI*t)}:{x:140-40*t,y:kitchenNear-10-(kitchenNear-kitchenFar)*t-20*Math.sin(Math.PI*t)};
-  } else if(type==="combined"){
-    players=[{x:60,y:kitchenNear-10,label:"DK",color:"#2B8BFC"},{x:150,y:kitchenFar+30,label:"FD",color:"#2B8BFC",small:true}];
-    cones=[{x:155,y:kitchenFar+10,label:"#1"},{x:100,y:kitchenFar+25,label:"#2"},{x:40,y:kitchenFar+10,label:"#3"}];
-    const cycle=Math.floor(frame/120)%3;
-    const t=ballPhase/120;
-    const targets=[{x:155,y:kitchenFar+10},{x:100,y:kitchenFar+25},{x:40,y:kitchenFar+10}];
-    const tgt=targets[cycle];
-    ball={x:60+(tgt.x-60)*t,y:kitchenNear-10+(tgt.y-kitchenNear+10)*t-30*Math.sin(Math.PI*t)};
-  } else if(type==="volley"){
-    players=[{x:70,y:kitchenNear-20,label:"P1",color:"#2B8BFC"},{x:130,y:kitchenFar+20,label:"P2",color:"#2B8BFC"}];
-    cones=[{x:155,y:kitchenFar+10,label:"#1"},{x:100,y:kitchenFar+25,label:"#2"}];
-    const t=ballPhase/120;
-    const goingUp=Math.floor(frame/120)%2===0;
-    ball=goingUp?{x:70+60*t,y:kitchenNear-20-(kitchenNear-kitchenFar-40)*t-15*Math.sin(Math.PI*t)}:{x:130-60*t,y:kitchenFar+20+(kitchenNear-kitchenFar-40)*t-15*Math.sin(Math.PI*t)};
-  }
-
-  return (
-    <svg viewBox="0 0 200 440" style={{width:"100%",maxWidth:360,margin:"0 auto",display:"block",borderRadius:12,overflow:"hidden"}}>
-      <rect x="0" y="0" width="200" height="440" fill="#1759B0" rx="4"/>
-      <rect x="0" y={kitchenFar} width="200" height={kitchenNear-kitchenFar} fill="#1E6FD9" opacity=".4"/>
-      <line x1="0" y1={netY} x2="200" y2={netY} stroke="#fff" strokeWidth="2.5"/>
-      <line x1="0" y1={kitchenFar} x2="200" y2={kitchenFar} stroke="#fff" strokeWidth="1.2" strokeDasharray="6 3"/>
-      <line x1="0" y1={kitchenNear} x2="200" y2={kitchenNear} stroke="#fff" strokeWidth="1.2" strokeDasharray="6 3"/>
-      <line x1={centerX} y1="0" x2={centerX} y2={kitchenFar} stroke="#fff" strokeWidth=".8" opacity=".5"/>
-      <line x1={centerX} y1={kitchenNear} x2={centerX} y2="440" stroke="#fff" strokeWidth=".8" opacity=".5"/>
-      <rect x="0" y="0" width="200" height="440" fill="none" stroke="#fff" strokeWidth="1.5" rx="4"/>
-      <text x={centerX} y={netY-6} textAnchor="middle" fill="#fff" fontSize="8" fontWeight="700" opacity=".4">NET</text>
-      <text x={10} y={kitchenFar+12} fill="#fff" fontSize="7" fontWeight="600" opacity=".3">NVZ</text>
-      <text x={10} y={kitchenNear-5} fill="#fff" fontSize="7" fontWeight="600" opacity=".3">NVZ</text>
-      {trajectory.map((t,i)=>(
-        <line key={i} x1={t.x1} y1={t.y1} x2={t.x2} y2={t.y2} stroke="#c8e632" strokeWidth="1" strokeDasharray="4 4" opacity=".4"/>
-      ))}
-      {cones.map((c,i)=>(
-        <g key={i}>
-          <polygon points={`${c.x},${c.y-8} ${c.x-6},${c.y+4} ${c.x+6},${c.y+4}`} fill="#FF6B35" opacity=".9"/>
-          <text x={c.x} y={c.y+14} textAnchor="middle" fill="#FF6B35" fontSize="8" fontWeight="800">{c.label}</text>
-        </g>
-      ))}
-      {players.map((p,i)=>(
-        <g key={i}>
-          <circle cx={p.x} cy={p.y} r={p.small?7:10} fill={p.color} stroke="#fff" strokeWidth="1.5" opacity=".9"/>
-          <text x={p.x} y={p.y+3.5} textAnchor="middle" fill="#fff" fontSize={p.small?6:7} fontWeight="800">{p.label}</text>
-        </g>
-      ))}
-      {ball && animating && (
-        <g>
-          <circle cx={ball.x} cy={ball.y} r="5" fill="#c8e632" stroke="#a0b828" strokeWidth="1"/>
-          <circle cx={ball.x} cy={ball.y} r="8" fill="#c8e632" opacity=".2"/>
-        </g>
-      )}
-    </svg>
-  );
-}
-
-function pdFormatTime(s){const m=Math.floor(s/60);const sec=s%60;return `${m}:${sec.toString().padStart(2,'0')}`;}
-
-// ── PRO VIEW ──
-function PDProView(){
-  const [activeSegment,setActiveSegment]=useState(0);
-  const [totalElapsed,setTotalElapsed]=useState(0);
-  const [segmentElapsed,setSegmentElapsed]=useState(0);
-  const [running,setRunning]=useState(false);
-  const [animating,setAnimating]=useState(false);
-  const [speed,setSpeed]=useState(1);
-  const [expandedScenario,setExpandedScenario]=useState(null);
-  const intervalRef=useRef(null);
-  const seg=PD_SEGMENTS[activeSegment];
-  const totalDuration=5400;
-
-  useEffect(()=>{
-    if(running){intervalRef.current=setInterval(()=>{setTotalElapsed(t=>t+1);setSegmentElapsed(s=>s+1)},1000)}
-    else{clearInterval(intervalRef.current)}
-    return ()=>clearInterval(intervalRef.current);
-  },[running]);
-
-  const jumpToSegment=(i)=>{setActiveSegment(i);setSegmentElapsed(0);setExpandedScenario(null)};
-  const segPct=Math.min(100,segmentElapsed/seg.duration*100);
-  const totalPct=Math.min(100,totalElapsed/totalDuration*100);
-  const isOvertime=segmentElapsed>seg.duration;
-
-  // Shared style constants (matching parent page design system)
-  const card={background:"rgba(255,255,255,.04)",borderRadius:16,padding:"24px",border:"1px solid rgba(255,255,255,.08)",marginBottom:16};
-  const label={fontSize:11,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",marginBottom:10};
-  const blue="#2B8BFC",green="#34D399",gold="#FBBF24",red="#FB7185";
-
-  return (
-    <div style={{maxWidth:900,margin:"0 auto",padding:"20px 0 80px"}}>
-      {/* Master Timer */}
-      <div style={{...card,padding:"20px 24px"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
-          <div>
-            <div style={{...label,color:"rgba(255,255,255,.3)",marginBottom:4}}>Class Timer</div>
-            <div style={{fontSize:36,fontWeight:900,letterSpacing:-1.5,color:totalElapsed>totalDuration?red:"#fff"}}>{pdFormatTime(totalElapsed)} <span style={{fontSize:16,color:"rgba(255,255,255,.3)",fontWeight:500}}>/ 90:00</span></div>
-          </div>
-          <button onClick={()=>setRunning(!running)} style={{padding:"12px 24px",borderRadius:12,border:"none",fontSize:15,fontWeight:700,background:running?"rgba(255,255,255,.08)":blue,color:"#fff",minWidth:80,cursor:"pointer"}}>{running?"Pause":"Start"}</button>
-        </div>
-        <div style={{height:6,background:"rgba(255,255,255,.06)",borderRadius:3,overflow:"hidden"}}>
-          <div style={{height:"100%",background:blue,borderRadius:3,width:`${totalPct}%`,transition:"width 1s linear"}}/>
-        </div>
-      </div>
-
-      {/* Segment Nav */}
-      <div style={{display:"flex",gap:6,marginBottom:16,overflowX:"auto",paddingBottom:4}}>
-        {PD_SEGMENTS.map((s,i)=>(
-          <button key={i} onClick={()=>jumpToSegment(i)} style={{
-            padding:"10px 14px",borderRadius:10,border:i===activeSegment?`2px solid ${blue}`:"1px solid rgba(255,255,255,.08)",
-            background:i===activeSegment?"rgba(43,139,252,.12)":"rgba(255,255,255,.03)",
-            color:i===activeSegment?blue:"rgba(255,255,255,.4)",
-            fontSize:12,fontWeight:700,whiteSpace:"nowrap",flexShrink:0,minWidth:44,cursor:"pointer"
-          }}>{i+1}</button>
-        ))}
-      </div>
-
-      {/* Active Segment */}
-      <div style={card}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:16}}>
-          <div>
-            <div style={{fontSize:12,fontWeight:700,color:blue,letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>Segment {seg.id} of 7</div>
-            <h2 style={{fontSize:24,fontWeight:900,letterSpacing:-.5}}>{seg.title}</h2>
-            <div style={{fontSize:13,color:"rgba(255,255,255,.3)",marginTop:4}}>{seg.time}</div>
-          </div>
-          <div style={{textAlign:"right"}}>
-            <div style={{fontSize:28,fontWeight:800,color:isOvertime?red:"#fff",fontVariantNumeric:"tabular-nums"}}>{pdFormatTime(segmentElapsed)}</div>
-            <div style={{fontSize:11,color:"rgba(255,255,255,.3)"}}>/ {pdFormatTime(seg.duration)}</div>
-          </div>
-        </div>
-        <div style={{height:4,background:"rgba(255,255,255,.06)",borderRadius:2,overflow:"hidden",marginBottom:20}}>
-          <div style={{height:"100%",background:isOvertime?red:blue,borderRadius:2,width:`${Math.min(segPct,100)}%`,transition:"width 1s linear"}}/>
-        </div>
-
-        {/* Intro statements */}
-        {seg.intro && (
-          <div style={{marginBottom:20}}>
-            <div style={{...label,color:"rgba(255,255,255,.3)"}}>Say This</div>
-            {seg.intro.map((s,i)=>(
-              <div key={i} style={{background:"rgba(255,255,255,.02)",borderRadius:12,padding:"14px 16px",marginBottom:8,fontSize:14,color:"rgba(255,255,255,.6)",lineHeight:1.7,borderLeft:`3px solid ${blue}`}}>"{s}"</div>
-            ))}
-          </div>
-        )}
-
-        {/* Demos */}
-        {seg.demos && (
-          <div style={{marginBottom:20}}>
-            <div style={{...label,color:gold}}>Demonstrations</div>
-            {seg.demos.map((d,i)=>(
-              <div key={i} style={{background:"rgba(251,191,36,.04)",border:"1px solid rgba(251,191,36,.12)",borderRadius:12,padding:"14px 16px",marginBottom:8,fontSize:14,color:"rgba(255,255,255,.6)",lineHeight:1.6}}>{d}</div>
-            ))}
-          </div>
-        )}
-
-        {/* Discussion Questions */}
-        {seg.questions && (
-          <div style={{marginBottom:20}}>
-            <div style={{...label,color:blue}}>Ask the Group</div>
-            {seg.questions.map((q,i)=>(
-              <div key={i} style={{background:"rgba(255,255,255,.02)",borderRadius:12,padding:"14px 16px",marginBottom:8,fontSize:15,fontWeight:600,color:"#fff"}}>"{q}"</div>
-            ))}
-          </div>
-        )}
-
-        {/* Scenarios */}
-        {seg.scenarios && (
-          <div style={{marginBottom:20}}>
-            <div style={{...label,color:green}}>Scenarios — Tap to Reveal</div>
-            {seg.scenarios.map((sc,i)=>(
-              <div key={i} onClick={()=>setExpandedScenario(expandedScenario===i?null:i)} style={{
-                background:expandedScenario===i?"rgba(52,211,153,.04)":"rgba(255,255,255,.02)",
-                border:expandedScenario===i?"1px solid rgba(52,211,153,.15)":"1px solid rgba(255,255,255,.06)",
-                borderRadius:14,padding:"16px 18px",marginBottom:10,cursor:"pointer",transition:"all .2s"
-              }}>
-                <div style={{fontSize:13,fontWeight:700,color:green,marginBottom:6}}>{sc.label}</div>
-                <div style={{fontSize:14,color:"rgba(255,255,255,.6)",lineHeight:1.6}}>{sc.setup}</div>
-                {expandedScenario===i && (
-                  <div style={{marginTop:12,paddingTop:12,borderTop:"1px solid rgba(52,211,153,.12)",fontSize:14,color:green,lineHeight:1.7,fontWeight:500}}>→ {sc.answer}</div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {seg.keyInsight && (
-          <div style={{background:"rgba(251,191,36,.04)",border:"1px solid rgba(251,191,36,.12)",borderRadius:14,padding:"16px 18px",marginBottom:20}}>
-            <div style={{fontSize:11,fontWeight:700,letterSpacing:1,textTransform:"uppercase",color:gold,marginBottom:6}}>Key Insight</div>
-            <div style={{fontSize:14,color:"rgba(255,255,255,.6)",lineHeight:1.7}}>{seg.keyInsight}</div>
-          </div>
-        )}
-
-        {/* Drill Flow */}
-        {seg.drillFlow && (
-          <div style={{marginBottom:20}}>
-            <div style={{...label,color:blue}}>Drill Flow</div>
-            {seg.drillFlow.map((d,i)=>(
-              <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8}}>
-                <div style={{width:24,height:24,borderRadius:7,background:"rgba(43,139,252,.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,color:blue,flexShrink:0}}>{i+1}</div>
-                <div style={{fontSize:14,color:"rgba(255,255,255,.6)",lineHeight:1.6,paddingTop:2}}>{d}</div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Volley Drill */}
-        {seg.volleyDrill && (
-          <div style={{marginBottom:20}}>
-            <div style={{...label,color:blue}}>Volley Dinking Drill</div>
-            {seg.volleyDrill.map((d,i)=>(
-              <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8}}>
-                <div style={{width:24,height:24,borderRadius:7,background:"rgba(43,139,252,.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,color:blue,flexShrink:0}}>{i+1}</div>
-                <div style={{fontSize:14,color:"rgba(255,255,255,.6)",lineHeight:1.6,paddingTop:2}}>{d}</div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Strategy Points */}
-        {seg.strategyPoints && (
-          <div style={{marginBottom:20}}>
-            <div style={{...label,color:gold}}>What Pro Demonstrates (spectators guess)</div>
-            {seg.strategyPoints.map((s,i)=>(
-              <div key={i} style={{fontSize:14,color:"rgba(255,255,255,.6)",lineHeight:1.8,paddingLeft:16,position:"relative"}}>
-                <span style={{position:"absolute",left:0,color:gold}}>•</span>{s}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Two Approaches comparison */}
-        {seg.approaches && (
-          <div style={{marginBottom:20}}>
-            <div style={{...label,color:"rgba(255,255,255,.3)"}}>Two Approaches to Kitchen Offense</div>
-            <div style={{display:"flex",gap:10}}>
-              <div style={{flex:1,background:"rgba(251,113,133,.04)",border:"1px solid rgba(251,113,133,.12)",borderRadius:14,padding:16}}>
-                <div style={{fontSize:14,fontWeight:800,color:red,marginBottom:6}}>{seg.approaches.rollDice.name}</div>
-                <div style={{fontSize:13,color:"rgba(255,255,255,.6)",lineHeight:1.6}}>{seg.approaches.rollDice.desc}</div>
-                <div style={{fontSize:11,color:red,marginTop:8,fontWeight:600}}>{seg.approaches.rollDice.risk}</div>
-                <div style={{fontSize:12,color:"rgba(255,255,255,.35)",marginTop:4}}>Good when: {seg.approaches.rollDice.good}</div>
-              </div>
-              <div style={{flex:1,background:"rgba(52,211,153,.04)",border:"1px solid rgba(52,211,153,.12)",borderRadius:14,padding:16}}>
-                <div style={{fontSize:14,fontWeight:800,color:green,marginBottom:6}}>{seg.approaches.pressure.name}</div>
-                <div style={{fontSize:13,color:"rgba(255,255,255,.6)",lineHeight:1.6}}>{seg.approaches.pressure.desc}</div>
-                <div style={{fontSize:11,color:green,marginTop:8,fontWeight:600}}>{seg.approaches.pressure.risk}</div>
-                <div style={{fontSize:12,color:"rgba(255,255,255,.35)",marginTop:4}}>Good when: {seg.approaches.pressure.good}</div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Debrief */}
-        {seg.debrief && (
-          <div style={{marginBottom:20}}>
-            <div style={{...label,color:blue}}>Debrief Questions</div>
-            {seg.debrief.map((q,i)=>(
-              <div key={i} style={{background:"rgba(255,255,255,.02)",borderRadius:12,padding:"14px 16px",marginBottom:8,fontSize:14,color:"rgba(255,255,255,.6)",lineHeight:1.6}}>"{q}"</div>
-            ))}
-          </div>
-        )}
-
-        {seg.funQuestion && (
-          <div style={{background:"rgba(251,191,36,.04)",border:"1px solid rgba(251,191,36,.12)",borderRadius:14,padding:"14px 18px",marginBottom:20}}>
-            <div style={{fontSize:11,fontWeight:700,color:gold,marginBottom:4}}>Fun Question</div>
-            <div style={{fontSize:15,fontWeight:600,color:"#fff"}}>"{seg.funQuestion}"</div>
-          </div>
-        )}
-
-        {seg.funEnding && (
-          <div style={{background:"rgba(251,191,36,.04)",border:"1px solid rgba(251,191,36,.12)",borderRadius:14,padding:"14px 18px",marginBottom:20}}>
-            <div style={{fontSize:11,fontWeight:700,color:gold,marginBottom:4}}>Ending Question</div>
-            <div style={{fontSize:15,fontWeight:600,color:"#fff"}}>"{seg.funEnding}"</div>
-          </div>
-        )}
-
-        {/* Court Diagram */}
-        {seg.courtType!=="none" && (
-          <div style={{marginBottom:20}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-              <div style={{...label,color:"rgba(255,255,255,.3)",marginBottom:0}}>Court Diagram</div>
-              <div style={{display:"flex",gap:6}}>
-                <button onClick={()=>setAnimating(!animating)} style={{padding:"6px 14px",borderRadius:8,border:"1px solid rgba(255,255,255,.08)",background:animating?blue:"rgba(255,255,255,.06)",color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer"}}>
-                  {animating?"⏸ Pause":"▶ Play"}
-                </button>
-                {[0.5,1,2].map(s=>(
-                  <button key={s} onClick={()=>setSpeed(s)} style={{padding:"6px 10px",borderRadius:8,border:speed===s?`1px solid ${blue}`:"1px solid rgba(255,255,255,.08)",background:speed===s?"rgba(43,139,252,.12)":"transparent",color:speed===s?blue:"rgba(255,255,255,.3)",fontSize:11,fontWeight:700,cursor:"pointer"}}>{s}x</button>
-                ))}
-              </div>
-            </div>
-            <PDCourt type={seg.courtType} animating={animating} speed={speed}/>
-          </div>
-        )}
-
-        {/* Teaching Cues */}
-        <div style={{marginBottom:20}}>
-          <div style={{...label,color:blue}}>Teaching Cues</div>
-          {seg.cues.map((c,i)=>(
-            <div key={i} style={{fontSize:14,color:"rgba(255,255,255,.6)",lineHeight:1.8,paddingLeft:16,position:"relative"}}>
-              <span style={{position:"absolute",left:0,color:blue}}>→</span>{c}
-            </div>
-          ))}
-        </div>
-
-        {/* Common Mistakes */}
-        {seg.mistakes.length>0 && (
-          <div>
-            <div style={{...label,color:red}}>Watch For</div>
-            {seg.mistakes.map((m,i)=>(
-              <div key={i} style={{fontSize:14,color:red,lineHeight:1.8,paddingLeft:16,position:"relative",opacity:.8}}>
-                <span style={{position:"absolute",left:0}}>⚠</span>{m}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Feeder Rule */}
-      <div style={{background:"rgba(251,191,36,.06)",border:"2px solid rgba(251,191,36,.25)",borderRadius:14,padding:"16px 20px",textAlign:"center"}}>
-        <div style={{fontSize:11,fontWeight:700,letterSpacing:1.5,textTransform:"uppercase",color:gold,marginBottom:6}}>Feeder Rule</div>
-        <div style={{fontSize:16,fontWeight:700,color:gold}}>"Feeders: always practice and reset. No wrist cock dink."</div>
-      </div>
-
-      {/* Segment nav arrows */}
-      <div style={{display:"flex",gap:12,justifyContent:"center",marginTop:20}}>
-        <button disabled={activeSegment===0} onClick={()=>jumpToSegment(activeSegment-1)} style={{
-          padding:"14px 28px",borderRadius:12,border:"1px solid rgba(255,255,255,.08)",background:"rgba(255,255,255,.04)",color:activeSegment===0?"rgba(255,255,255,.1)":"#fff",fontSize:15,fontWeight:700,opacity:activeSegment===0?.4:1,cursor:"pointer"
-        }}>← Previous</button>
-        <button disabled={activeSegment===6} onClick={()=>jumpToSegment(activeSegment+1)} style={{
-          padding:"14px 28px",borderRadius:12,border:"none",background:activeSegment===6?"rgba(255,255,255,.06)":blue,color:"#fff",fontSize:15,fontWeight:700,opacity:activeSegment===6?.4:1,cursor:"pointer"
-        }}>Next →</button>
-      </div>
-    </div>
-  );
-}
-
-// ── STUDENT VIEW ──
-function PDStudentView(){
-  const [expandedDrill,setExpandedDrill]=useState(null);
-  const [animatingDrill,setAnimatingDrill]=useState(null);
-  const blue="#2B8BFC",green="#34D399",gold="#FBBF24";
-
-  const drills=[
-    {name:"Cone #1 — Cross-Court",purpose:"Build cross-court precision. Target the T at the kitchen endline.",how:"Place a cone at the cross-court T. Hit 100+ dinks from backhand, then forehand. Have a feeder return balls — practice both off the bounce and out of the air.",courtType:"cone1"},
-    {name:"Cone #2 — Middle",purpose:"Develop short, controlled middle dinks to the center of the court.",how:"Place a cone at center, 1 foot beyond kitchen line. Two players on opposite sides target the cone. Focus on simplified technique — shoulder, not wrist.",courtType:"cone2"},
-    {name:"Combined Cones",purpose:"Train target-switching and movement creation.",how:"Both cones in play. Alternate: cone #1 (cross-court), then cone #2 (middle), then add cone #3 (down the line). This trains deception and forces opponent movement.",courtType:"combined"},
-    {name:"Volley Dinking",purpose:"Take time away from opponents by dinking out of the air.",how:"Start cooperative — volley dink to each other's paddles. Then target the cones while volley dinking. Key: get under the ball MORE when leaning in.",courtType:"volley"},
-  ];
-
-  return (
-    <div style={{maxWidth:700,margin:"0 auto",padding:"20px 0 80px"}}>
-      {/* Overview */}
-      <div style={{background:"rgba(255,255,255,.04)",borderRadius:16,padding:"28px 24px",marginBottom:20,border:"1px solid rgba(255,255,255,.08)"}}>
-        <div style={{fontSize:11,fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:blue,marginBottom:12}}>◆ Class Overview</div>
-        <h1 style={{fontSize:28,fontWeight:900,letterSpacing:-.5,marginBottom:12,lineHeight:1.2}}>Pressure Dinking</h1>
-        <p style={{fontSize:15,color:"rgba(255,255,255,.4)",lineHeight:1.7,marginBottom:16}}>The foundation of creating offense in the kitchen. Go from winning 55% of your kitchen points to winning 85% of them.</p>
-        <p style={{fontSize:14,color:"rgba(255,255,255,.3)",lineHeight:1.7}}>Pressure dinking builds advantages gradually to create attack windows OR force errors — missed dinks wide, into the net, or easy popups. The drills are extremely simple. You have to master executing them.</p>
-      </div>
-
-      {/* Key Concepts */}
-      <div style={{marginBottom:20}}>
-        <div style={{fontSize:11,fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:"rgba(255,255,255,.3)",marginBottom:12}}>Key Concepts</div>
-        {PD_KEY_CONCEPTS.map((c,i)=>(
-          <div key={i} style={{background:"rgba(255,255,255,.04)",borderRadius:12,padding:"14px 16px",marginBottom:8,fontSize:14,color:"rgba(255,255,255,.6)",lineHeight:1.6,border:"1px solid rgba(255,255,255,.06)"}}>
-            <span style={{color:blue,fontWeight:700,marginRight:8}}>{i+1}.</span>{c}
-          </div>
-        ))}
-      </div>
-
-      {/* Drill Library */}
-      <div style={{marginBottom:20}}>
-        <div style={{fontSize:11,fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:"rgba(255,255,255,.3)",marginBottom:12}}>Drill Library</div>
-        {drills.map((d,i)=>(
-          <div key={i} style={{background:"rgba(255,255,255,.04)",borderRadius:16,padding:"20px",marginBottom:12,border:expandedDrill===i?`1px solid ${blue}`:"1px solid rgba(255,255,255,.06)",cursor:"pointer",transition:"all .2s"}} onClick={()=>{setExpandedDrill(expandedDrill===i?null:i);setAnimatingDrill(null)}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-              <h3 style={{fontSize:17,fontWeight:800}}>{d.name}</h3>
-              <span style={{color:"rgba(255,255,255,.3)",fontSize:18}}>{expandedDrill===i?"−":"+"}</span>
-            </div>
-            <p style={{fontSize:13,color:"rgba(255,255,255,.4)",marginTop:4}}>{d.purpose}</p>
-            {expandedDrill===i && (
-              <div style={{marginTop:16}}>
-                <div style={{marginBottom:16}}>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-                    <div style={{fontSize:11,fontWeight:700,letterSpacing:1,textTransform:"uppercase",color:"rgba(255,255,255,.3)"}}>Court View</div>
-                    <button onClick={(e)=>{e.stopPropagation();setAnimatingDrill(animatingDrill===i?null:i)}} style={{padding:"6px 14px",borderRadius:8,border:"1px solid rgba(255,255,255,.08)",background:animatingDrill===i?blue:"rgba(255,255,255,.06)",color:"#fff",fontSize:12,fontWeight:600,cursor:"pointer"}}>
-                      {animatingDrill===i?"⏸ Pause":"▶ Play"}
-                    </button>
-                  </div>
-                  <PDCourt type={d.courtType} animating={animatingDrill===i} speed={1}/>
-                </div>
-                <div style={{fontSize:11,fontWeight:700,letterSpacing:1,textTransform:"uppercase",color:green,marginBottom:6}}>How to Practice</div>
-                <p style={{fontSize:14,color:"rgba(255,255,255,.6)",lineHeight:1.7}}>{d.how}</p>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Strategy Scenarios */}
-      <div style={{marginBottom:20}}>
-        <div style={{fontSize:11,fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:"rgba(255,255,255,.3)",marginBottom:12}}>Strategy Scenarios</div>
-        {PD_SEGMENTS[1].scenarios.map((sc,i)=>(
-          <div key={i} style={{background:"rgba(255,255,255,.04)",borderRadius:14,padding:"18px 20px",marginBottom:10,border:"1px solid rgba(255,255,255,.06)"}}>
-            <div style={{fontSize:13,fontWeight:700,color:green,marginBottom:6}}>{sc.label}</div>
-            <div style={{fontSize:14,color:"rgba(255,255,255,.6)",lineHeight:1.6,marginBottom:10}}>{sc.setup}</div>
-            <div style={{fontSize:14,color:green,lineHeight:1.6,fontWeight:500,paddingTop:10,borderTop:"1px solid rgba(255,255,255,.06)"}}>→ {sc.answer}</div>
-          </div>
-        ))}
-        <div style={{background:"rgba(251,191,36,.04)",border:"1px solid rgba(251,191,36,.12)",borderRadius:14,padding:"16px 18px",marginTop:10}}>
-          <div style={{fontSize:11,fontWeight:700,color:gold,marginBottom:6}}>Key Insight</div>
-          <div style={{fontSize:14,color:"rgba(255,255,255,.6)",lineHeight:1.7}}>{PD_SEGMENTS[1].keyInsight}</div>
-        </div>
-      </div>
-
-      {/* Next Steps */}
-      <div>
-        <div style={{fontSize:11,fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:"rgba(255,255,255,.3)",marginBottom:12}}>Next Steps</div>
-        {[
-          {title:"Book a Pro Drilling Session",desc:"1-on-1 with your coach to lock in pressure dinking technique",color:blue},
-          {title:"Find a Drill Partner",desc:"Connect with someone at your level to practice cone drills",color:green},
-          {title:"Book Next Class",desc:"Level 4 Kitchen Offense — Wednesdays at 6pm",color:gold},
-        ].map((n,i)=>(
-          <div key={i} style={{background:"rgba(255,255,255,.04)",borderRadius:14,padding:"18px 20px",marginBottom:10,border:"1px solid rgba(255,255,255,.06)",display:"flex",alignItems:"center",gap:16,cursor:"pointer"}}>
-            <div style={{flex:1}}>
-              <div style={{fontSize:15,fontWeight:700,color:"#fff"}}>{n.title}</div>
-              <div style={{fontSize:13,color:"rgba(255,255,255,.4)",marginTop:2}}>{n.desc}</div>
-            </div>
-            <div style={{color:n.color,fontSize:18}}>→</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ── MAIN PRESSURE DINKING APP ──
-function PressureDinkingApp(){
-  const [view,setView]=useState("pro");
-  const blue="#2B8BFC";
-
-  return (
-    <div>
-      {/* Sub-nav: Back + View Toggle */}
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:24}}>
-        <button onClick={()=>{
-          document.querySelectorAll('.nav-pill').forEach(x=>x.classList.remove('active'));
-          document.querySelector('[data-page="pyramid"]').classList.add('active');
-          document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
-          document.getElementById('page-pyramid').classList.add('active');
-        }} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 16px",borderRadius:10,fontSize:13,fontWeight:600,color:"rgba(255,255,255,.5)",background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.06)",cursor:"pointer"}}>
-          ← Back to 4 Levels
-        </button>
-        <div style={{display:"flex",gap:4}}>
-          {[{key:"pro",label:"Pro View"},{key:"student",label:"Student View"}].map(v=>(
-            <button key={v.key} onClick={()=>setView(v.key)} style={{
-              padding:"8px 18px",borderRadius:10,fontSize:13,fontWeight:600,border:"none",cursor:"pointer",
-              background:view===v.key?"rgba(43,139,252,.9)":"transparent",
-              color:view===v.key?"#fff":"rgba(255,255,255,.5)",
-              transition:"all .2s"
-            }}>{v.label}</button>
-          ))}
-        </div>
-      </div>
-
-      {/* Class header */}
-      <div style={{textAlign:"center",marginBottom:24}}>
-        <div style={{fontSize:11,fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:blue,marginBottom:8}}>Academy · Level 4 · Kitchen Offense</div>
-        <h1 style={{fontSize:"clamp(24px,4vw,40px)",fontWeight:900,letterSpacing:-1,background:"linear-gradient(135deg,#fff 0%,rgba(255,255,255,.75) 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>Pressure Dinking</h1>
-        <p style={{fontSize:14,color:"rgba(255,255,255,.4)",marginTop:8}}>The foundation of creating offense in the kitchen</p>
-      </div>
-
-      {view==="pro" ? <PDProView/> : <PDStudentView/>}
-    </div>
-  );
-}
-
-// Mount React app
-const pdRoot = document.getElementById('pressure-dinking-root');
-if(pdRoot){ReactDOM.createRoot(pdRoot).render(<PressureDinkingApp/>)}
-</script>
 
 <script>
 // ── Page navigation ──
@@ -1476,11 +705,6 @@ function toggleFoundation(){
 
 // ── Navigate to full level page ──
 function goToLevel(n){
-  if(n===4){
-    // Navigate to Pressure Dinking class page
-    navigateToPage('class-l4');
-    return;
-  }
   const names=['Foundation','Ball Striking','Baby Block','Reset Drop','Kitchen Offense'];
   alert('Opening '+names[n]+' content...\n\nIn the full app, this links to the drill-by-drill Teaching Standards page for this level.');
 }
@@ -1499,25 +723,270 @@ function revealPyramid(){
   document.querySelector('.foundation-pillar')?.classList.add('revealed');
 }
 
-// ── Ambient particles ──
-function createParticles(){
-  const c=document.getElementById('particles');
-  for(let i=0;i<25;i++){
-    const p=document.createElement('div');
-    p.className='particle';
-    p.style.left=Math.random()*100+'%';
-    p.style.animationDuration=(8+Math.random()*12)+'s';
-    p.style.animationDelay=Math.random()*10+'s';
-    p.style.width=p.style.height=(1+Math.random()*2)+'px';
-    const colors=['rgba(43,139,252,.3)','rgba(52,211,153,.2)','rgba(251,191,36,.2)','rgba(244,114,182,.2)'];
-    p.style.background=colors[Math.floor(Math.random()*colors.length)];
-    c.appendChild(p);
-  }
-}
-
 // Init
-createParticles();
 setTimeout(revealPyramid,300);
+
+// ── Shot chips: clicks postMessage into the iframe to switch shots ──
+// Force fresh iframe template fetch on EVERY page load — replace ?v= with Date.now().
+// (HTML attribute has a build-time version that changes per deploy; this JS adds per-visit bust.)
+(function(){
+  const f = document.getElementById('dim-iframe');
+  if (!f) { console.warn('[4DP] dim-iframe missing'); return; }
+  const cur = f.getAttribute('src') || '';
+  const fresh = cur.replace(/[?&]v=\d+/, '') + (cur.includes('?') ? '&' : '?') + 'v=' + Date.now();
+  f.src = fresh;
+})();
+const dimIframe = document.getElementById('dim-iframe');
+document.querySelectorAll('.dim-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const key = chip.dataset.shot;
+    // Optimistic UI: mark active immediately; iframe also echoes back via shot-changed
+    document.querySelectorAll('.dim-chip').forEach(c => {
+      const isActive = c === chip;
+      c.classList.toggle('active', isActive);
+      c.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+    if (dimIframe && dimIframe.contentWindow) {
+      dimIframe.contentWindow.postMessage({ type:'4dp:select-shot', key }, '*');
+    }
+  });
+});
+
+// ── SPACE toggles pause inside the iframe — works even when iframe isn't focused ──
+window.addEventListener('keydown', (e) => {
+  // Only hijack SPACE when the user is NOT typing in an input/textarea
+  if (e.code !== 'Space') return;
+  const t = e.target;
+  if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+  e.preventDefault();
+  if (dimIframe && dimIframe.contentWindow) {
+    dimIframe.contentWindow.postMessage({ type:'4dp:toggle-pause' }, '*');
+  }
+});
+
+// ── Listen for shot changes from the embedded 3D cinematic iframe ──
+window.addEventListener('message', (e) => {
+  if (!e.data || e.data.type !== '4dp:shot-changed') return;
+  const { key, label, role, mantra, traj, color } = e.data;
+  // Sync chip active state (covers autoplay, Replay button, keyboard switches inside iframe)
+  if (key) {
+    document.querySelectorAll('.dim-chip').forEach(c => {
+      const isActive = c.dataset.shot === key;
+      c.classList.toggle('active', isActive);
+      c.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+  }
+  const panel = document.getElementById('dim-info');
+  if (!panel) return;
+  panel.style.setProperty('--di-c', color);
+  const l = document.getElementById('di-label');   if (l) { l.textContent = label; l.style.color = color; }
+  const r = document.getElementById('di-role');    if (r) r.textContent = role;
+  const m = document.getElementById('di-mantra');  if (m) m.textContent = mantra;
+  const t = document.getElementById('di-traj');    if (t) t.textContent = traj;
+});
+
+// ── INTERACTIVE PROGRESSION STORY ──
+(function(){
+  const STAGES = [
+    {
+      badge: "◆ 1D — YOU'VE SEEN IT",
+      badgeColor: "251,113,133",
+      copy: "Four friends play pickleball for the first time. You watch them: all stuck at the baseline playing tennis. We've all seen it before!",
+      title: "Tennis at the baseline",
+      sub: "Cross-net lobs only. Long rallies, but nothing happens — nobody can construct a point yet.",
+      dimsOn: [0],
+      view: "top",
+      players: [[120,30,"P1"],[280,30,"P2"],[120,410,"P3"],[280,410,"P4"]],
+      trails: ["M 120 410 Q 200 -60 280 30","M 280 410 Q 200 -60 120 30"],
+      ballDur: 5.6,
+      ballPath: "M 120 410 Q 200 -60 280 30 Q 200 470 280 410 Q 200 -60 120 30 Q 200 470 120 410",
+      ballColor: "#c8e632"
+    },
+    {
+      badge: "◆ +D1 DRIVE",
+      badgeColor: "251,191,36",
+      copy: "They learn to actually strike the ball. Faster, flatter drives across the net. The point sustains longer, but still from the baseline.",
+      title: "Ball striking",
+      sub: "Short, simple swing. Clean contact. No more lazy lobs — now the ball moves.",
+      dimsOn: [0,1],
+      view: "top",
+      players: [[120,30,"P1"],[280,30,"P2"],[120,410,"P3"],[280,410,"P4"]],
+      trails: ["M 120 410 L 280 30"],
+      ballDur: 1.8,
+      ballPath: "M 120 410 L 280 30 L 120 410",
+      ballColor: "#FBBF24"
+    },
+    {
+      badge: "◆ +D2 DEFEND",
+      badgeColor: "244,114,182",
+      copy: "Classic setup: the serving team is stuck at the baseline. The return team advances to the kitchen line. Now the serving team drives hard — the return team has to absorb it with a baby block.",
+      title: "Baby block",
+      sub: "The return team's baby block neutralizes the drive. Ball drops soft in the kitchen at the banger's feet.",
+      dimsOn: [0,1,2],
+      view: "top",
+      players: [[120,30,"P1"],[280,30,"P2"],[120,265,"P3"],[280,265,"P4"]],
+      trails: ["M 280 30 L 120 265","M 120 265 Q 140 180 220 200"],
+      ballDur: 3.6,
+      ballPath: "M 280 30 L 120 265 Q 140 180 220 200 Q 280 120 280 30",
+      ballColor: "#F472B6"
+    },
+    {
+      badge: "◆ +D3 DROP",
+      badgeColor: "52,211,153",
+      copy: "The serving team can't just drive forever. They learn the under the ball: a high arc from the transition zone that bounces in front of the return team — earning the right to advance to the kitchen.",
+      title: "Under the ball",
+      sub: "Side view. Ball arcs high, clears the net, drops in front of the receivers. Now the serving team can move forward.",
+      dimsOn: [0,1,2,3],
+      view: "side",
+      players: [],
+      trails: [],
+      ballDur: 3.6,
+      ballPath: "M 100 290 Q 180 40 260 330 Q 180 40 100 290",
+      ballColor: "#34D399"
+    },
+    {
+      badge: "◆ +D4 DINK — FULL 4D",
+      badgeColor: "43,139,252",
+      copy: "All four at the kitchen. Pressure dinks move the opponents around. A weak reply pops up — speed it up into the weak position — the reflex pop-up floats high — reload and finish.",
+      title: "Generating offense in the kitchen",
+      sub: "Pressure dink. Move the opponent. Find the window. Speed up. Reload. Finish.",
+      dimsOn: [0,1,2,3,4],
+      view: "top",
+      players: [[120,175,"P1"],[280,175,"P2"],[120,265,"P3"],[280,265,"P4"]],
+      trails: ["M 120 265 Q 160 200 280 185","M 280 185 Q 240 230 120 265","M 120 265 L 280 185","M 280 185 Q 240 80 180 240","M 180 240 L 260 60"],
+      ballDur: 7.2,
+      ballPath: "M 120 265 Q 160 200 280 185 Q 240 230 120 265 Q 160 200 280 185 L 280 265 L 120 185 Q 240 80 180 240 L 260 60 Q 200 200 120 265",
+      ballColor: "#2B8BFC"
+    }
+  ];
+
+  const $ = id => document.getElementById(id);
+  const badge = $('prog-badge'), copy = $('prog-copy'), title = $('prog-title'), sub = $('prog-sub');
+  const dyn = $('prog-dynamic'), stepDots = $('prog-step-dots');
+  const prev = $('prog-prev'), next = $('prog-next'), dims = $('prog-dims');
+  if(!badge) return;
+
+  let stage = 0;
+  const visited = new Set([0]);
+
+  function buildSVG(s){
+    if(s.view === "side"){
+      // Side-view overlay for the Drop dimension: shows the high arc over the net
+      // Covers top-down court with a side-profile rendering
+      return `
+        <!-- Cover top-down court with fresh side-view background -->
+        <rect x="0" y="0" width="400" height="440" fill="#1e40af"/>
+        <!-- Ground strip (court surface seen from side) -->
+        <rect x="0" y="340" width="400" height="100" fill="#0d2d78"/>
+        <!-- Near-side kitchen band -->
+        <rect x="140" y="336" width="60" height="8" fill="#7f1d1d"/>
+        <!-- Far-side kitchen band -->
+        <rect x="200" y="336" width="60" height="8" fill="#7f1d1d"/>
+        <!-- Net (vertical bar at center) -->
+        <line x1="200" y1="340" x2="200" y2="180" stroke="#fff" stroke-width="3"/>
+        <line x1="192" y1="180" x2="208" y2="180" stroke="#fff" stroke-width="2.5"/>
+        <!-- Ground line -->
+        <line x1="0" y1="340" x2="400" y2="340" stroke="#fff" stroke-width="2"/>
+        <!-- Court outer border -->
+        <rect x="0" y="0" width="400" height="440" fill="none" stroke="#fff" stroke-width="2.5" rx="4"/>
+        <!-- Baseline labels (subtle) -->
+        <text x="50" y="365" fill="rgba(255,255,255,.35)" font-size="9" font-weight="700" letter-spacing="1">NEAR</text>
+        <text x="330" y="365" fill="rgba(255,255,255,.35)" font-size="9" font-weight="700" letter-spacing="1">FAR</text>
+        <!-- Trail: dashed arc showing the drop's path for a full cycle -->
+        <path d="M 100 290 Q 180 40 260 330" stroke="rgba(52,211,153,.35)" stroke-width="1.5" fill="none" stroke-dasharray="4 6"/>
+        <!-- Near-side player (serving team, in transition zone) -->
+        <g transform="translate(100,0)">
+          <circle cx="0" cy="282" r="10" fill="#F5F3EE" stroke="#0A1628" stroke-width="2"/>
+          <rect x="-6" y="292" width="12" height="48" fill="#F5F3EE" stroke="#0A1628" stroke-width="2" rx="3"/>
+          <text x="0" y="285" text-anchor="middle" fill="#0A1628" font-size="9" font-weight="900">S</text>
+        </g>
+        <!-- Far-side receivers (return team, two at kitchen line) -->
+        <g transform="translate(255,0)">
+          <circle cx="0" cy="282" r="10" fill="#F5F3EE" stroke="#0A1628" stroke-width="2"/>
+          <rect x="-6" y="292" width="12" height="48" fill="#F5F3EE" stroke="#0A1628" stroke-width="2" rx="3"/>
+          <text x="0" y="285" text-anchor="middle" fill="#0A1628" font-size="9" font-weight="900">R1</text>
+        </g>
+        <g transform="translate(285,0)">
+          <circle cx="0" cy="282" r="10" fill="#F5F3EE" stroke="#0A1628" stroke-width="2"/>
+          <rect x="-6" y="292" width="12" height="48" fill="#F5F3EE" stroke="#0A1628" stroke-width="2" rx="3"/>
+          <text x="0" y="285" text-anchor="middle" fill="#0A1628" font-size="9" font-weight="900">R2</text>
+        </g>
+        <!-- Animated ball: the high-arc drop + return loop -->
+        <circle r="9" fill="${s.ballColor}" stroke="#0A1628" stroke-width="1.5">
+          <animateMotion dur="${s.ballDur}s" repeatCount="indefinite" path="${s.ballPath}"/>
+        </circle>
+        <circle r="14" fill="${s.ballColor}" opacity=".22">
+          <animateMotion dur="${s.ballDur}s" repeatCount="indefinite" path="${s.ballPath}"/>
+        </circle>
+      `;
+    }
+    // Default: top-down view (stages 0, 1, 2, 4)
+    const trailPaths = s.trails.map(p => `<path d="${p}"/>`).join('');
+    const playerDots = s.players.map(([x,y,l]) => `<g><circle cx="${x}" cy="${y}" r="16" fill="#F5F3EE" stroke="#0A1628" stroke-width="2.5"/><text x="${x}" y="${y+5}" text-anchor="middle" fill="#0A1628" font-size="12" font-weight="900">${l}</text></g>`).join('');
+    return `
+      <g stroke="rgba(200,230,50,.13)" stroke-width="1.25" fill="none" stroke-dasharray="3 5">${trailPaths}</g>
+      ${playerDots}
+      <circle r="9" fill="${s.ballColor}" stroke="#0A1628" stroke-width="1.5">
+        <animateMotion dur="${s.ballDur}s" repeatCount="indefinite" path="${s.ballPath}"/>
+      </circle>
+      <circle r="14" fill="${s.ballColor}" opacity=".22">
+        <animateMotion dur="${s.ballDur}s" repeatCount="indefinite" path="${s.ballPath}"/>
+      </circle>
+    `;
+  }
+
+  function render(){
+    const s = STAGES[stage];
+    visited.add(stage);
+
+    // Fade text out, swap, fade in
+    document.querySelector('.prog-section').classList.add('prog-fade-out');
+    setTimeout(()=>{
+      badge.textContent = s.badge;
+      badge.style.background = `rgba(${s.badgeColor},.1)`;
+      badge.style.borderColor = `rgba(${s.badgeColor},.25)`;
+      badge.style.color = `rgba(${s.badgeColor},.95)`;
+      copy.textContent = s.copy;
+      title.textContent = s.title;
+      sub.textContent = s.sub;
+      dyn.innerHTML = buildSVG(s);
+
+      // Dim indicators — "on" = dimension is active at this stage, "current" = the most recently added dimension
+      dims.querySelectorAll('.prog-dim').forEach((el,i)=>{
+        el.classList.toggle('on', s.dimsOn.includes(i));
+        el.classList.toggle('current', i===stage);
+      });
+
+      // Step dots
+      stepDots.querySelectorAll('.prog-step').forEach((el,i)=>{
+        el.classList.toggle('active', i===stage);
+        el.classList.toggle('visited', i<stage && visited.has(i));
+      });
+
+      // Buttons
+      prev.disabled = stage===0;
+      next.disabled = stage===STAGES.length-1;
+      next.textContent = stage===STAGES.length-1 ? 'Full 4D ✓' : 'Next →';
+
+      document.querySelector('.prog-section').classList.remove('prog-fade-out');
+    }, 180);
+  }
+
+  prev.addEventListener('click',()=>{ if(stage>0){stage--; render();} });
+  next.addEventListener('click',()=>{ if(stage<STAGES.length-1){stage++; render();} });
+  stepDots.querySelectorAll('.prog-step').forEach((el,i)=>{
+    el.addEventListener('click',()=>{ stage=i; render(); });
+  });
+  // Dimension pills are clickable — jump directly to that stage
+  dims.querySelectorAll('.prog-dim').forEach((el,i)=>{
+    el.setAttribute('role','button');
+    el.setAttribute('tabindex','0');
+    el.addEventListener('click',()=>{ stage=i; render(); });
+    el.addEventListener('keydown',(e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); stage=i; render(); }});
+  });
+
+  render();
+})();
 </script>
 </body>
 </html>
