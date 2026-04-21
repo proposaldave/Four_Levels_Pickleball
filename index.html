@@ -543,7 +543,15 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
 }
 
 /* ── Shot chips: rendered BELOW the iframe (never overlaying the 3D canvas) ── */
-.dim-chips{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.dim-chips{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;position:relative}
+.dim-chip{position:relative}
+/* Progression arrows between chips — visible at desktop, hidden when stacked */
+.dim-chip:not(:last-child)::after{
+  content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);
+  font-size:18px;color:rgba(245,243,238,.35);font-weight:400;
+  pointer-events:none;z-index:2;
+}
+@media(max-width:900px){.dim-chip:not(:last-child)::after{display:none}}
 .dim-chip{
   background:rgba(10,22,40,.78);backdrop-filter:blur(10px);
   border:1px solid rgba(245,243,238,.12);border-radius:16px;
