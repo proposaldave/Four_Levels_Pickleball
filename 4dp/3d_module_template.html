@@ -684,7 +684,7 @@ const SHOTS = {
     shot: {
       segments: [
         // 1ST HIT - SERVE: farRight cross-court underhand, bounces in near deuce court
-        { from: [ 5, 2.0, -22], to: [-3, 0.15, 14], apex: 7.5, dur: 0.85 },
+        { from: [ 5, 2.0, -22], to: [-3, 0.15, 14], apex: 7.5, dur: 0.72 },
         // BOUNCE -> nearLeft paddle (left back)
         { from: [-3, 0.15, 14], to: [-5, 3, 21], apex: 3.2, dur: 0.40 },
         // 2ND HIT - RETURN: nearLeft DOWN THE LINE, bounces in far-left court
@@ -764,7 +764,7 @@ const SHOTS = {
     shot: {
       segments: [
         // 1ST HIT - SERVE: farRight underhand, bounces in near deuce court
-        { from: [ 5, 2.0, -22], to: [-3, 0.15, 15], apex: 8.0, dur: 0.95 },
+        { from: [ 5, 2.0, -22], to: [-3, 0.15, 15], apex: 8.0, dur: 0.80 },
         // BOUNCE -> nearLeft paddle
         { from: [-3, 0.15, 15], to: [-5, 2.2, 20], apex: 2.3, dur: 0.40 },
         // 2ND HIT - RETURN: nearLeft groundstroke, bounces in far deuce court
@@ -820,7 +820,7 @@ const SHOTS = {
     story: 'Stop hitting through the ball. Start lifting under it.',
     shot: {
       segments: [
-        { from: [ 5, 2.0, -22], to: [-3, 0.15, 15], apex: 8.0, dur: 0.85 },
+        { from: [ 5, 2.0, -22], to: [-3, 0.15, 15], apex: 8.0, dur: 0.72 },
         { from: [-3, 0.15, 15], to: [-5, 3, 20], apex: 3.2, dur: 0.40 },
         { from: [-5, 3, 20], to: [ 3, 0.15, -15], apex: 7.5, dur: 0.80 },
         { from: [ 3, 0.15, -15], to: [ 5, 3, -20], apex: 3.2, dur: 0.40 },
@@ -1578,7 +1578,7 @@ function makeBallTexture() {
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
 const ballMat = new THREE.MeshStandardMaterial({
-  color: 0xFFF4D6, emissive: 0xFFEEAA, emissiveIntensity: 1.6,
+  color: 0xE8FF80, emissive: 0xCCFF00, emissiveIntensity: 1.6,
   roughness: 0.5, metalness: 0.1, map: makeBallTexture()
 });
 const ball = new THREE.Mesh(new THREE.SphereGeometry(0.24, 20, 14), ballMat);
@@ -1586,7 +1586,7 @@ ball.castShadow = true;
 ball.position.set(0, 3, 14);
 scene.add(ball);
 
-const ballLight = new THREE.PointLight(0xFFEEAA, 0.9, 8, 2);
+const ballLight = new THREE.PointLight(0xCCFF00, 0.9, 8, 2);
 scene.add(ballLight);
 
 const ballShadowMat = new THREE.MeshBasicMaterial({
@@ -1602,23 +1602,31 @@ const TRAIL_MAX = 64;
 let trailPoints = [];
 let trailMesh = null;
 const trailMat = new THREE.MeshStandardMaterial({
-  color: 0x34D399, emissive: 0x34D399, emissiveIntensity: 2.2,
+  color: 0xCCFF00, emissive: 0xCCFF00, emissiveIntensity: 2.2,
   transparent: true, opacity: 0.85, roughness: 0.2, metalness: 0.0
 });
+let _trailFrameSkip = 0;
 function rebuildTrail() {
+  // Throttle: rebuild every other frame. The ball still moves smoothly because
+  // ball.position is updated every frame; only the trail mesh skips a beat.
+  // Cuts TubeGeometry allocation cost in half, which removes the jitter Dave
+  // was seeing while the ball was soaring (2026-04-22).
+  _trailFrameSkip = (_trailFrameSkip + 1) % 2;
+  if (_trailFrameSkip !== 0 && trailMesh) return;
   if (trailMesh) { scene.remove(trailMesh); trailMesh.geometry.dispose(); }
   if (trailPoints.length < 4) return;
   const curve = new THREE.CatmullRomCurve3(trailPoints);
-  const geo = new THREE.TubeGeometry(curve, Math.min(trailPoints.length * 3, 120), 0.09, 8, false);
+  // Density tuned down: ~1.6× points (was 3×) and 6 radial slices (was 8).
+  // Curve still reads smooth because Catmull-Rom interpolates between samples.
+  const tubularSegments = Math.min(Math.round(trailPoints.length * 1.6), 80);
+  const geo = new THREE.TubeGeometry(curve, tubularSegments, 0.09, 6, false);
   trailMesh = new THREE.Mesh(geo, trailMat);
   scene.add(trailMesh);
 }
 function setDimensionColor(hex) {
-  ballMat.emissive.setHex(hex);
-  ballMat.color.setHex(hex).offsetHSL(0, 0, 0.15);
-  trailMat.color.setHex(hex);
-  trailMat.emissive.setHex(hex);
-  ballLight.color.setHex(hex);
+  // Ball + trail intentionally NOT recolored per dimension — they stay
+  // neon-pickleball green (Dave 2026-04-22). Dimension color lives in chips,
+  // info panel, and burst FX only.
 }
 
 // ═════ IMPACT BURST — particle pop at rally end ═════
