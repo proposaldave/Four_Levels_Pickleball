@@ -79,9 +79,11 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
 .fd-word:nth-of-type(4){animation:fdPop .7s cubic-bezier(.16,1,.3,1) .75s both, dinkWobble 1.0s cubic-bezier(.34,1.56,.64,1) 1.15s both}
 .fd-arrow{
   display:inline-block;color:var(--fa-c, #F5F3EE);
-  font-weight:900;font-size:.85em;line-height:1;
-  margin:0 .05em;opacity:0;transform:translateX(-12px);
-  filter:drop-shadow(0 0 14px var(--fa-c)) drop-shadow(0 0 4px var(--fa-c));
+  /* MATCH the hero word size — arrows are sibling spans, not children, so they don't inherit font-size from .fd-word */
+  font-size:clamp(28px,4.5vw,48px);font-weight:900;line-height:1;letter-spacing:-1.2px;
+  text-shadow:0 0 28px color-mix(in srgb,var(--fa-c) 55%,transparent);
+  margin:0 .1em;opacity:0;transform:translateX(-12px);
+  filter:drop-shadow(0 0 10px var(--fa-c));
   animation:fdArrowFade .55s cubic-bezier(.16,1,.3,1) forwards,
             fdArrowPulse 1.8s cubic-bezier(.4,0,.6,1) infinite;
   animation-delay:.50s, 1.10s;
