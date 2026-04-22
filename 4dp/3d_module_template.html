@@ -2255,7 +2255,8 @@ function animateCameraTo(pos, look, duration = 1.0) {
 function updateCameraTween(now) {
   if (!camTween) return;
   const t = Math.min(1, (now - camTween.t0) / camTween.duration);
-  const e = 1 - Math.pow(1 - t, 3);
+  // ease-in-out cubic — symmetric, smoother when chaining multi-angle legs
+  const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   camera.position.lerpVectors(camTween.startPos, camTween.endPos, e);
   controls.target.lerpVectors(camTween.startLook, camTween.endLook, e);
   if (t >= 1) camTween = null;
@@ -2278,17 +2279,21 @@ function updateCameraBreathing(dt) {
 function playCinematicReplay(onDone) {
   if (!cinematicReplay || reducedMotion || userCameraOwned) { onDone(); return; }
   const s = SHOTS[activeShotKey];
+  // Gentler replay: one soft hero-angle pulled from the signature preset, then glide back.
+  // Smaller swings + longer durations + ease-in-out = no jerky junctions.
+  const px = s.cam.pos[0], py = s.cam.pos[1], pz = s.cam.pos[2];
+  const lx = s.cam.look[0], ly = s.cam.look[1], lz = s.cam.look[2];
   const angles = [
-    { pos: [0, 6.5, 26], look: [0, 2, 0], dur: 0.75 },
-    { pos: [-22, 14, -12], look: [0, 2, 0], dur: 0.75 },
-    { pos: s.cam.pos, look: s.cam.look, dur: 0.9 }
+    { pos: [px * 0.55, py * 0.85 + 2, pz * 0.55 + 12], look: [lx, ly, lz], dur: 1.3 },
+    { pos: s.cam.pos, look: s.cam.look, dur: 1.5 }
   ];
   let i = 0;
   function step() {
     if (i >= angles.length) { onDone(); return; }
     const a = angles[i++];
     animateCameraTo(a.pos, a.look, a.dur);
-    setTimeout(step, a.dur * 1000 + 40);
+    // No gap between legs — next animateCameraTo picks up from current camera position for continuous glide
+    setTimeout(step, a.dur * 1000);
   }
   step();
 }
