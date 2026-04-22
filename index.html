@@ -636,6 +636,80 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
   .prog-court-wrap{max-width:360px}
   .nav-pill{padding:7px 14px;font-size:12px}
 }
+
+/* ─── 0D Bedrock: the platform UNDER 1D-4D dimension chips ─── */
+.zero-d-bedrock{
+  margin:18px 0 8px;
+  position:relative;
+}
+/* Four short "rebar" lines hanging from the chip row above into the bedrock */
+.zero-d-bedrock .zd-rail{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:38px;
+  height:14px;margin-bottom:0;pointer-events:none;
+  padding:0 2px;
+}
+.zero-d-bedrock .zd-rail span{
+  display:block;width:1px;height:100%;justify-self:center;
+  background:linear-gradient(to bottom, rgba(245,243,238,.32), rgba(245,243,238,.04));
+}
+.zero-d-bedrock .zd-platform{
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(43,139,252,.08) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(10,22,40,.92) 0%, rgba(10,22,40,.78) 100%);
+  border:1px solid rgba(245,243,238,.10);
+  border-top:1px solid rgba(245,243,238,.20);
+  border-radius:0 0 22px 22px;
+  padding:24px 28px 28px;
+  text-align:center;
+  position:relative;
+}
+/* Subtle bright top edge — reads as the "weld line" between chips above and the foundation */
+.zero-d-bedrock .zd-platform::before{
+  content:"";position:absolute;left:8%;right:8%;top:-1px;height:1px;
+  background:linear-gradient(90deg, transparent, rgba(245,243,238,.45), transparent);
+  pointer-events:none;
+}
+.zero-d-bedrock .zd-eyebrow{
+  font-family:var(--font-body);font-size:11px;font-weight:700;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--warm-mute);margin-bottom:12px;
+}
+.zero-d-bedrock .zd-headline{
+  font-family:var(--font-display);font-style:normal;font-weight:400;
+  font-size:clamp(16px,1.7vw,20px);line-height:1.4;
+  color:var(--warm-dim);margin:0 auto 18px;max-width:680px;
+}
+.zero-d-bedrock .zd-headline em{
+  font-style:italic;color:var(--warm);font-size:1.15em;margin-right:6px;
+}
+.zero-d-bedrock .zd-pillars{
+  display:inline-flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:18px;
+}
+.zero-d-bedrock .zd-chip{
+  background:rgba(245,243,238,.06);
+  border:1px solid rgba(245,243,238,.14);
+  border-radius:100px;padding:7px 16px;
+  font-family:var(--font-display);font-style:italic;font-size:15px;
+  color:var(--warm);
+}
+.zero-d-bedrock .zd-chip-link{
+  background:rgba(52,211,153,.14);
+  border-color:rgba(52,211,153,.45);
+  color:#34D399;
+}
+.zero-d-bedrock .zd-cta{
+  display:inline-block;background:#2B8BFC;color:#fff;
+  padding:11px 26px;border-radius:999px;
+  font-family:var(--font-body);font-weight:700;font-size:13px;
+  letter-spacing:1.2px;text-transform:uppercase;
+  text-decoration:none;box-shadow:0 6px 18px rgba(43,139,252,.32);
+  transition:transform .2s;
+}
+.zero-d-bedrock .zd-cta:hover{transform:translateY(-1px)}
+@media(max-width:900px){
+  .zero-d-bedrock .zd-rail{display:none}
+  .zero-d-bedrock .zd-platform{border-radius:18px;border-top-width:1px;padding:20px 18px 22px}
+  .zero-d-bedrock .zd-headline{font-size:14px}
+}
 </style>
 </head>
 <body>
@@ -704,21 +778,22 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
         <div class="di-hint">Tap a dimension · Pinch to zoom · Drag to orbit · Space (or ⏸) to pause</div>
       </aside>
     </div>
-  </section>
 
-  <!-- 0D Foundation — the base under every dimension (includes Out Balls CTA) -->
-  <section style="max-width:760px;margin:180px auto 80px;padding:0 24px;text-align:center">
-    <div style="border-top:1px solid rgba(245,243,238,.10);padding-top:48px">
-      <div style="font-family:var(--font-body);font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--warm-mute);margin-bottom:18px">◆ The Foundation</div>
-      <h2 style="font-family:var(--font-display);font-style:italic;font-weight:400;font-size:clamp(36px,6vw,64px);letter-spacing:-1.5px;line-height:1;color:var(--warm);margin-bottom:18px">And then there&apos;s 0D.</h2>
-      <p style="font-size:17px;color:var(--warm-dim);line-height:1.6;max-width:520px;margin:0 auto 24px">The base under every pickleball shot:</p>
-      <div style="display:inline-flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:36px">
-        <span style="background:rgba(245,243,238,.06);border:1px solid rgba(245,243,238,.12);border-radius:100px;padding:10px 20px;font-family:var(--font-display);font-style:italic;font-size:18px;color:var(--warm)">Positioning</span>
-        <span style="background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.38);border-radius:100px;padding:10px 20px;font-family:var(--font-display);font-style:italic;font-size:18px;color:#34D399">Anticipation ↓</span>
-        <span style="background:rgba(245,243,238,.06);border:1px solid rgba(245,243,238,.12);border-radius:100px;padding:10px 20px;font-family:var(--font-display);font-style:italic;font-size:18px;color:var(--warm)">Ready Position</span>
+    <!-- 0D Bedrock — the foundation UNDER 1D-4D. No divider, no separate section.
+         Visually welded to the dimension chips above so it reads as the base layer. -->
+    <div class="zero-d-bedrock">
+      <div class="zd-rail" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
       </div>
-      <div style="background:linear-gradient(135deg,rgba(43,139,252,.10),rgba(52,211,153,.06));border:1px solid rgba(245,243,238,.10);border-radius:24px;padding:28px 24px;max-width:480px;margin:0 auto">
-        <a href="/outballs/" style="display:inline-block;background:#2B8BFC;color:#fff;padding:14px 30px;border-radius:999px;font-family:var(--font-body);font-weight:700;font-size:14px;letter-spacing:1.2px;text-transform:uppercase;text-decoration:none;box-shadow:0 8px 24px rgba(43,139,252,.32);transition:transform .2s">Train Out Balls →</a>
+      <div class="zd-platform">
+        <div class="zd-eyebrow">◆ 0D · Underneath every dimension</div>
+        <div class="zd-headline"><em>And then there&apos;s 0D.</em> The base under every pickleball shot.</div>
+        <div class="zd-pillars">
+          <span class="zd-chip">Positioning</span>
+          <span class="zd-chip zd-chip-link">Anticipation&nbsp;↓</span>
+          <span class="zd-chip">Ready Position</span>
+        </div>
+        <a href="/outballs/" class="zd-cta">Train Out Balls →</a>
       </div>
     </div>
   </section>
