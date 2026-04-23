@@ -1,0 +1,2880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="dns-prefetch" href="https://unpkg.com">
+<!-- NOTE: NO modulepreload here. modulepreload initiates the module graph
+     BEFORE the importmap registers, breaking bare-specifier resolution
+     ('three' → fails). Preconnect is enough for CDN warmup. -->
+
+<title>Pressure Dinking · 4D Pickleball — Generating Kitchen Offense</title>
+<meta name="description" content="Pressure dinking — the foundation of creating offense in the kitchen. Four cinematic 3D rallies teach depth, precision, deception, and volley dinking. Go from winning 55% of kitchen points to 85%.">
+<meta property="og:title" content="Pressure Dinking · 4D Pickleball">
+<meta property="og:description" content="Four rallies. One skill. Depth is the key. Under the ball. Move them first. Speed up last.">
+<link rel="stylesheet" href="/4dp/tokens.css">
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: var(--4dp-ink); }
+  body { font-family: var(--4dp-font-body); color: var(--4dp-text); -webkit-font-smoothing: antialiased; }
+  #viewport { position: fixed; inset: 0; z-index: 0; }
+  #viewport canvas { display: block; width: 100% !important; height: 100% !important; }
+
+  /* Vignette for cinematic feel */
+  #vignette {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(10,22,40,.6) 100%);
+  }
+
+  /* ── Top HUD ── */
+  .hud-top {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 28px; pointer-events: none; gap: 12px;
+  }
+  .hud-top > * { pointer-events: auto; }
+  .brand-pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(10,22,40,.72); backdrop-filter: blur(14px);
+    border: 1px solid var(--4dp-hairline-s); border-radius: var(--4dp-r-pill);
+    padding: 8px 16px; font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--4dp-text-dim);
+  }
+  .brand-pill .d { width: 8px; height: 8px; border-radius: 50%; display: inline-block; background: var(--4dp-drive); }
+  .hud-controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  .ctrl-btn {
+    background: rgba(10,22,40,.72); backdrop-filter: blur(14px);
+    border: 1px solid var(--4dp-hairline-s); border-radius: 10px;
+    padding: 8px 12px; font-family: var(--4dp-font-body); font-weight: 700;
+    font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--4dp-text); cursor: pointer; white-space: nowrap;
+    transition: background .2s var(--4dp-ease), border-color .2s var(--4dp-ease), transform .12s var(--4dp-ease);
+  }
+  .ctrl-btn:hover { background: rgba(245,243,238,.08); border-color: var(--4dp-hairline-s); }
+  .ctrl-btn:active { transform: scale(.97); }
+  .ctrl-btn.active { background: var(--dim, var(--4dp-drop)); color: var(--4dp-ink); border-color: var(--dim, var(--4dp-drop)); }
+  .ctrl-btn .kbd-hint {
+    display: inline-block; margin-left: 6px; padding: 1px 5px;
+    border-radius: 4px; background: rgba(245,243,238,.12);
+    font-family: var(--4dp-font-data); font-size: 9px; letter-spacing: 0;
+    vertical-align: middle;
+  }
+  /* At narrow widths, drop the kbd hint to keep buttons on one row */
+  @media (max-width: 900px) {
+    .ctrl-btn .kbd-hint { display: none; }
+    .ctrl-btn { padding: 8px 10px; font-size: 10px; letter-spacing: 1px; }
+  }
+  @media (max-width: 620px) {
+    .ctrl-btn { padding: 7px 8px; font-size: 10px; }
+    .hud-controls { gap: 5px; }
+    /* On mobile the 7 buttons wrap; hide stats HUD to avoid overlap */
+    .hud-stats { display: none !important; }
+    /* Tuck the top HUD tighter */
+    .hud-top { padding: 14px 16px; }
+  }
+
+  /* ── Stats HUD (top-right, below controls) ── */
+  .hud-stats {
+    position: fixed; top: 76px; right: 28px; z-index: 10;
+    display: flex; flex-direction: column; gap: 6px; align-items: flex-end;
+    pointer-events: none;
+    opacity: 0; transform: translateY(-4px);
+    transition: opacity .5s ease, transform .5s ease;
+  }
+  .hud-stats.visible { opacity: 1; transform: translateY(0); }
+  .hud-stats .stat-row {
+    background: rgba(10,22,40,.72); backdrop-filter: blur(14px);
+    border: 1px solid var(--4dp-hairline-s); border-radius: var(--4dp-r-pill);
+    padding: 6px 14px;
+    font-family: var(--4dp-font-data); font-weight: 500;
+    font-size: 11px; letter-spacing: 0.5px; color: var(--4dp-text-dim);
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .hud-stats .stat-row .lbl { color: var(--4dp-text-faint); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; }
+  .hud-stats .stat-row .val { color: var(--4dp-text); font-weight: 700; }
+  .hud-stats .stat-row .dim-val { color: var(--dim, var(--4dp-text)); font-weight: 700; }
+
+  /* ── Center hero (empty placeholder — landing page owns the copy) ── */
+  .center-hero {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 5;
+    text-align: center; pointer-events: none; max-width: 820px; padding: 0 24px;
+    opacity: 1; transition: opacity 1.2s ease;
+  }
+  .center-hero.dimmed { opacity: 0; }
+
+  /* ── Bottom shot-switcher ── */
+  .shot-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
+    display: flex; justify-content: center; gap: 12px; padding: 24px 20px 28px;
+    pointer-events: none;
+  }
+  .shot-bar > * { pointer-events: auto; }
+  .shot-chip {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+    background: rgba(10,22,40,.78); backdrop-filter: blur(14px);
+    border: 1px solid var(--4dp-hairline-s); border-radius: var(--4dp-r-md);
+    padding: 14px 22px; min-width: 180px;
+    cursor: pointer; transition: all .25s var(--4dp-ease);
+    position: relative;
+  }
+  .shot-chip:hover { transform: translateY(-3px); border-color: var(--dim); }
+  .shot-chip.active {
+    background: color-mix(in srgb, var(--dim) 16%, rgba(10,22,40,.88));
+    border-color: var(--dim);
+    box-shadow: var(--dim-glow);
+  }
+  .shot-chip .num {
+    font-family: var(--4dp-font-data); font-weight: 700; font-size: 10px;
+    letter-spacing: 2px; color: var(--dim); text-transform: uppercase;
+  }
+  .shot-chip .name {
+    font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+    font-size: 22px; letter-spacing: -.5px; line-height: 1; color: var(--4dp-text);
+  }
+  .shot-chip .kbd {
+    position: absolute; top: 10px; right: 10px;
+    font-family: var(--4dp-font-data); font-size: 9px; font-weight: 700;
+    color: var(--4dp-text-faint);
+    padding: 1px 5px; border-radius: 4px; background: rgba(245,243,238,.06);
+  }
+  .shot-chip.active .kbd { color: var(--dim); background: rgba(255,255,255,.08); }
+  @media (max-width: 760px) {
+    .shot-bar { flex-wrap: wrap; gap: 8px; padding: 16px 12px 20px; }
+    .shot-chip { min-width: 0; flex: 1 1 40%; padding: 10px 14px; }
+    .shot-chip .name { font-size: 18px; }
+    .shot-chip .kbd { display: none; }
+  }
+
+  /* Side readout — hidden; kept in DOM so embedded-mode JS doesn't null-deref */
+  .side-card { display: none !important; }
+  .side-card .label {
+    font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--dim); margin-bottom: 10px;
+  }
+  .side-card .coach-role {
+    font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+    font-size: 26px; line-height: 1.1; color: var(--4dp-text); margin-bottom: 14px;
+    text-transform: none; letter-spacing: -.3px;
+  }
+  .side-card .mantra {
+    font-size: 14px; color: var(--4dp-text); line-height: 1.5; font-style: italic;
+    padding-top: 14px; border-top: 1px solid var(--4dp-hairline);
+  }
+  .side-card .trajectory {
+    margin-top: 14px; font-size: 12px; color: var(--4dp-text-dim); line-height: 1.55;
+  }
+
+  /* ── Camera hint ── */
+  .cam-hint {
+    position: fixed; bottom: 130px; left: 28px; z-index: 10;
+    font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--4dp-text-faint); pointer-events: none;
+    opacity: 1; transition: opacity 1s ease;
+  }
+  .cam-hint.hidden { opacity: 0; }
+
+  /* ── Badges ── */
+  .slowmo-badge {
+    position: fixed; top: 86px; left: 50%; transform: translateX(-50%); z-index: 10;
+    padding: 6px 18px; border-radius: var(--4dp-r-pill);
+    background: color-mix(in srgb, var(--4dp-defend) 18%, rgba(10,22,40,.88));
+    border: 1px solid color-mix(in srgb, var(--4dp-defend) 50%, transparent);
+    font-size: 10px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--4dp-defend);
+    opacity: 0; transition: opacity .3s ease; pointer-events: none;
+  }
+  .slowmo-badge.on { opacity: 1; }
+  .pause-badge {
+    position: fixed; top: 86px; left: 50%; transform: translateX(-50%); z-index: 10;
+    padding: 6px 18px; border-radius: var(--4dp-r-pill);
+    background: rgba(10,22,40,.88);
+    border: 1px solid rgba(245,243,238,.22);
+    font-size: 10px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--4dp-text);
+    opacity: 0; transition: opacity .3s ease; pointer-events: none;
+  }
+  .pause-badge.on { opacity: 1; }
+  html.embedded .pause-badge { top: 18px; }
+  .slowmo-badge.on ~ .pause-badge.on { top: 124px; }
+
+  .audio-toast {
+    position: fixed; top: 86px; left: 50%; transform: translateX(-50%); z-index: 11;
+    padding: 6px 18px; border-radius: var(--4dp-r-pill);
+    background: rgba(10,22,40,.92);
+    border: 1px solid var(--4dp-hairline-s);
+    font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--4dp-text);
+    opacity: 0; transition: opacity .3s ease;
+    pointer-events: none;
+  }
+  .audio-toast.on { opacity: 1; }
+
+  /* ── SCRUB-BAR TIMELINE — film-reel study tool ──
+     Segment ticks + dimension-colored moment markers + draggable playhead.
+     Toggle with B, hidden in embedded mode + when HUD is hidden. */
+  .timeline {
+    position: fixed; bottom: 94px; left: 28px; right: 28px; z-index: 9;
+    display: flex; flex-direction: column; gap: 6px;
+    pointer-events: none;
+    opacity: 0; transform: translateY(6px);
+    transition: opacity .4s ease, transform .4s ease;
+  }
+  .timeline.on { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .timeline-track {
+    position: relative;
+    height: 10px;
+    background: rgba(10,22,40,.78);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--4dp-hairline-s);
+    border-radius: 5px;
+    cursor: pointer;
+    overflow: visible;
+  }
+  .timeline-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--dim, var(--4dp-drop)) 70%, transparent));
+    border-radius: 5px 0 0 5px;
+    width: 0%;
+    pointer-events: none;
+  }
+  .timeline-seg {
+    position: absolute; top: 2px; bottom: 2px; width: 1px;
+    background: rgba(245,243,238,.26);
+    pointer-events: none;
+  }
+  .timeline-mom {
+    position: absolute; top: 50%;
+    width: 11px; height: 11px; border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--4dp-ink);
+    border: 2px solid var(--dim, var(--4dp-drop));
+    box-shadow: 0 0 10px color-mix(in srgb, var(--dim, var(--4dp-drop)) 60%, transparent);
+    pointer-events: auto;
+    cursor: help;
+    transition: transform .15s ease;
+  }
+  .timeline-mom:hover { transform: translate(-50%, -50%) scale(1.4); }
+  .timeline-mom.fired { background: var(--dim, var(--4dp-drop)); }
+  .timeline-playhead {
+    position: absolute; top: -3px; bottom: -3px;
+    width: 2px;
+    background: var(--dim, var(--4dp-text));
+    box-shadow: 0 0 10px var(--dim, var(--4dp-text));
+    transform: translateX(-1px);
+    pointer-events: none;
+    transition: left .04s linear;
+  }
+  .timeline-label {
+    font-family: var(--4dp-font-data);
+    font-size: 10px; color: var(--4dp-text-dim);
+    text-align: center; letter-spacing: 1px;
+    display: flex; justify-content: center; gap: 16px;
+  }
+  .timeline-label .lbl { color: var(--4dp-text-faint); text-transform: uppercase; letter-spacing: 1.5px; font-size: 9px; }
+  .timeline-label .val { color: var(--4dp-text); font-weight: 700; }
+  html.embedded .timeline { display: none !important; }
+  body.hud-hidden .timeline { display: none !important; }
+  @media (max-width: 620px) {
+    .timeline { bottom: 148px; left: 12px; right: 12px; }
+    .timeline-track { height: 8px; }
+    .timeline-mom { width: 10px; height: 10px; }
+  }
+
+  /* ── KEY-MOMENT LABEL — pinned screenspace annotation ── */
+  .moment-label {
+    position: fixed; z-index: 8; pointer-events: none;
+    transform: translate(-50%, -100%);
+    opacity: 0;
+    transition: opacity .32s var(--4dp-ease);
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    max-width: 320px;
+  }
+  .moment-label.on { opacity: 1; }
+  .moment-label .tag {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 6px;
+    background: var(--4dp-ink);
+    border: 1.5px solid var(--dim, var(--4dp-text));
+    font-family: var(--4dp-font-body);
+    font-weight: 800; font-size: 11px;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--dim, var(--4dp-text));
+    white-space: nowrap;
+    box-shadow: 0 2px 12px rgba(0,0,0,.6), 0 0 24px color-mix(in srgb, var(--dim) 32%, transparent);
+  }
+  .moment-label .why {
+    display: inline-block; padding: 6px 10px;
+    background: rgba(10,22,40,.88);
+    backdrop-filter: blur(8px);
+    border-radius: 6px;
+    border: 1px solid var(--4dp-hairline-s);
+    font-family: var(--4dp-font-body);
+    font-size: 12px; line-height: 1.45;
+    color: var(--4dp-text-dim);
+    max-width: 280px; text-align: center;
+  }
+  html.embedded .moment-label { display: none; }
+
+  /* ── Story Mode splash ── */
+  .story-splash {
+    position: fixed; inset: 0; z-index: 50;
+    display: none;
+    align-items: center; justify-content: center;
+    background: rgba(10,22,40,.82);
+    backdrop-filter: blur(18px);
+  }
+  .story-splash.on { display: flex; animation: storyFade .6s var(--4dp-ease); }
+  @keyframes storyFade { from { opacity: 0; } to { opacity: 1; } }
+  .story-card {
+    max-width: 880px; padding: 0 40px; text-align: center;
+    pointer-events: auto;
+  }
+  .story-card .eyebrow {
+    display: inline-block; padding: 6px 16px;
+    background: var(--dim-soft, rgba(245,243,238,.06));
+    border: 1px solid var(--dim, var(--4dp-hairline-s));
+    border-radius: var(--4dp-r-pill);
+    color: var(--dim, var(--4dp-text-dim));
+    font-family: var(--4dp-font-body);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .story-card h1 {
+    font-family: var(--4dp-font-display);
+    font-style: italic; font-weight: 400;
+    font-size: clamp(40px, 7vw, 88px);
+    line-height: 1.02; letter-spacing: -2px;
+    color: var(--4dp-text); margin: 0 0 28px;
+    text-shadow: 0 2px 32px rgba(0,0,0,.6);
+  }
+  .story-card .ladder {
+    display: flex; gap: 8px; justify-content: center; margin-top: 28px;
+  }
+  .story-card .ladder .rung {
+    width: 56px; height: 5px; border-radius: 3px;
+    background: var(--4dp-hairline);
+    transition: background .4s var(--4dp-ease);
+  }
+  .story-card .ladder .rung.done { background: var(--4dp-success); }
+  .story-card .ladder .rung.now { background: var(--dim, var(--4dp-text)); box-shadow: var(--dim-glow); }
+  .story-card .skip-hint {
+    margin-top: 28px;
+    font-family: var(--4dp-font-body);
+    font-size: 11px; letter-spacing: 1.5px;
+    color: var(--4dp-text-faint);
+    text-transform: uppercase;
+  }
+  .story-card .skip-hint .kbd-i {
+    display: inline-block; padding: 2px 8px;
+    border-radius: 4px; background: rgba(245,243,238,.06);
+    border: 1px solid var(--4dp-hairline-s);
+    font-family: var(--4dp-font-data);
+    color: var(--4dp-text-dim); margin: 0 4px;
+  }
+
+  /* ── Keyboard shortcut help overlay ── */
+  .shortcut-help {
+    position: fixed; inset: 0; z-index: 60;
+    display: none;
+    align-items: center; justify-content: center;
+    background: rgba(10,22,40,.92);
+    backdrop-filter: blur(14px);
+  }
+  .shortcut-help.on { display: flex; animation: storyFade .3s var(--4dp-ease); }
+  .shortcut-help .inner {
+    background: var(--4dp-surface);
+    border: 1px solid var(--4dp-hairline-s);
+    border-radius: var(--4dp-r-lg);
+    padding: 40px 48px;
+    max-width: 640px; width: 92%;
+    box-shadow: var(--4dp-shadow-lg);
+  }
+  .shortcut-help h2 {
+    font-family: var(--4dp-font-display);
+    font-style: italic; font-weight: 400;
+    font-size: 36px; letter-spacing: -1px;
+    margin: 0 0 8px;
+    color: var(--4dp-text);
+  }
+  .shortcut-help .sub { color: var(--4dp-text-dim); font-size: 14px; margin-bottom: 28px; }
+  .shortcut-help .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 28px; }
+  .shortcut-help .kb { display: flex; align-items: center; gap: 12px; font-size: 13px; }
+  .shortcut-help .kb .key {
+    display: inline-block; min-width: 30px; text-align: center;
+    padding: 4px 10px; border-radius: 6px;
+    background: rgba(245,243,238,.06); border: 1px solid var(--4dp-hairline-s);
+    font-family: var(--4dp-font-data); font-weight: 700; font-size: 11px;
+    color: var(--4dp-text);
+  }
+  .shortcut-help .kb .desc { color: var(--4dp-text-dim); }
+  .shortcut-help .close-hint {
+    margin-top: 28px;
+    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--4dp-text-faint);
+    text-align: center;
+  }
+
+  /* Capture flash */
+  .capture-flash {
+    position: fixed; inset: 0; z-index: 70;
+    background: #F5F3EE;
+    opacity: 0; pointer-events: none;
+    transition: opacity .18s ease;
+  }
+  .capture-flash.on { opacity: .85; transition: opacity 0s; }
+
+  /* Debug readout (D key) */
+  .debug-panel {
+    position: fixed; bottom: 140px; right: 28px; z-index: 9;
+    padding: 10px 14px;
+    background: rgba(10,22,40,.92);
+    border: 1px solid var(--4dp-hairline-s);
+    border-radius: 8px;
+    font-family: var(--4dp-font-data); font-size: 11px;
+    color: var(--4dp-text-dim); line-height: 1.7;
+    display: none; min-width: 200px; pointer-events: none;
+  }
+  .debug-panel.on { display: block; }
+  .debug-panel .line .k { color: var(--4dp-text-faint); }
+  .debug-panel .line .v { color: var(--4dp-text); font-weight: 700; }
+
+  /* HUD hide mode (H key) */
+  body.hud-hidden .hud-top,
+  body.hud-hidden .hud-stats,
+  body.hud-hidden .shot-bar,
+  body.hud-hidden .cam-hint,
+  body.hud-hidden .moment-label,
+  body.hud-hidden .slowmo-badge,
+  body.hud-hidden .pause-badge,
+  body.hud-hidden .debug-panel { display: none !important; }
+
+  /* ── Embedded mode (iframe in landing page — parent renders its own UI) ── */
+  html.embedded .shot-bar,
+  html.embedded .cam-hint,
+  html.embedded .hud-top,
+  html.embedded .hud-stats,
+  body.embedded .shot-bar,
+  body.embedded .cam-hint,
+  body.embedded .hud-top,
+  body.embedded .hud-stats {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* ── Showcase mode (?showcase=1 — used by 3d_module_template_SHOWCASE.html) ──
+     Hides just the shot bar + cam hint so the narration overlay has room,
+     but keeps the top HUD, stats, moment labels, and timeline visible so
+     they can be demo'd live. */
+  html.showcase .shot-bar,
+  html.showcase .cam-hint {
+    display: none !important;
+  }
+
+  /* Loading */
+  #loading {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--4dp-ink); color: var(--4dp-text);
+    font-family: var(--4dp-font-display); font-style: italic; font-size: 32px; letter-spacing: -.5px;
+    transition: opacity .8s ease;
+  }
+  #loading.gone { opacity: 0; pointer-events: none; }
+
+  /* Reduced motion — honor OS preference */
+  @media (prefers-reduced-motion: reduce) {
+    .moment-label, .story-splash, .hud-stats, .ctrl-btn { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<script>window.__errs=[];window.addEventListener("error",e=>window.__errs.push("ERR: "+e.message+" @"+e.filename+":"+e.lineno));window.addEventListener("unhandledrejection",e=>window.__errs.push("REJ: "+(e.reason?.message||e.reason)));</script>
+
+<!-- Embedded/showcase mode detection runs BEFORE the module so the internal overlays hide with no flash. -->
+<script>
+(function(){
+  try {
+    var p = new URLSearchParams(location.search);
+    if (p.get('embedded') === '1') document.documentElement.classList.add('embedded');
+    if (p.get('showcase') === '1') document.documentElement.classList.add('showcase');
+  } catch(e){}
+})();
+</script>
+
+<div id="loading">Loading the court…</div>
+<script>
+// FAILSAFE loading timer — if something in the module setup errors, we STILL hide the
+// loading screen after 4s so the user isn't stuck on "Loading the court..." forever.
+setTimeout(function(){
+  var el = document.getElementById('loading');
+  if (el && !el.classList.contains('gone')) el.classList.add('gone');
+}, 4000);
+</script>
+
+
+<div id="viewport"></div>
+<div id="vignette"></div>
+
+<div class="hud-top">
+  <a href="../index.html" class="brand-pill" style="text-decoration:none" title="Back to 4D Pickleball"><span class="d" id="brand-dot" style="background:#2B8BFC"></span> <span id="brand-label" style="color:#2B8BFC;font-weight:800;letter-spacing:2px">4D · PRESSURE DINKING</span></a>
+  <div class="hud-controls">
+    <button class="ctrl-btn" id="btn-camera">Camera<span class="kbd-hint">C</span></button>
+    <button class="ctrl-btn" id="btn-slowmo">Slow-Mo<span class="kbd-hint">S</span></button>
+    <button class="ctrl-btn" id="btn-pause" title="Space">Pause<span class="kbd-hint">␣</span></button>
+    <button class="ctrl-btn" id="btn-audio">Audio<span class="kbd-hint">A</span></button>
+    <button class="ctrl-btn" id="btn-story">Story<span class="kbd-hint">T</span></button>
+    <button class="ctrl-btn" id="btn-capture">Capture<span class="kbd-hint">K</span></button>
+    <button class="ctrl-btn" id="btn-replay">Replay<span class="kbd-hint">R</span></button>
+  </div>
+</div>
+
+<!-- Rally stats HUD (appears after first interaction) -->
+<div class="hud-stats" id="hud-stats">
+  <div class="stat-row"><span class="lbl">Rally</span><span class="dim-val" id="stat-rally">Cone #1</span></div>
+  <div class="stat-row"><span class="lbl">Shot</span><span class="val" id="stat-shot">—</span></div>
+  <div class="stat-row"><span class="lbl">Time</span><span class="val" id="stat-time">0.0s</span></div>
+</div>
+
+<!-- Placeholder (landing page owns the hero copy) -->
+<div class="center-hero dimmed" id="center-hero" aria-hidden="true" style="display:none"></div>
+
+<div class="slowmo-badge" id="slowmo-badge">◉ Slow-Mo</div>
+<div class="pause-badge" id="pause-badge">⏸ Paused · Press Space</div>
+<div class="audio-toast" id="audio-toast">Audio On</div>
+
+<div class="cam-hint" id="cam-hint">Click + drag to orbit · Scroll to zoom · Press ? for shortcuts</div>
+
+<div class="side-card" id="side-card">
+  <div class="label" id="side-label">Rally 1 · Cone #1</div>
+  <div class="coach-role" id="side-role">Cross-court depth</div>
+  <div class="mantra" id="side-mantra">"Depth is the key. Dink it to the cone at the cross-court T."</div>
+  <div class="trajectory" id="side-traj">Four players at the kitchen. Dink deep to the cone — make a speedup a losing exchange.</div>
+</div>
+
+<!-- Scrub-bar timeline — film-reel study tool. Toggle with B key. -->
+<div class="timeline" id="timeline">
+  <div class="timeline-track" id="timeline-track">
+    <div class="timeline-fill" id="timeline-fill"></div>
+  </div>
+  <div class="timeline-label">
+    <span><span class="lbl">Seg</span> <span class="val" id="timeline-seg-label">—/—</span></span>
+    <span><span class="lbl">Time</span> <span class="val" id="timeline-time-label">0.0s</span></span>
+    <span><span class="lbl">Moments</span> <span class="val" id="timeline-mom-label">0/0</span></span>
+  </div>
+</div>
+
+<div class="shot-bar">
+  <button class="shot-chip dim-drive active" data-shot="drive">
+    <span class="kbd">1</span>
+    <span class="num">Drill 1 · Red Cone</span>
+    <span class="name">Cross-Court Depth</span>
+  </button>
+  <button class="shot-chip dim-defend" data-shot="defend">
+    <span class="kbd">2</span>
+    <span class="num">Drill 2 · Yellow Cone</span>
+    <span class="name">Middle Deep</span>
+  </button>
+  <button class="shot-chip dim-drop" data-shot="drop">
+    <span class="kbd">3</span>
+    <span class="num">Drill 3 · Orange Cones</span>
+    <span class="name">Volley Dink</span>
+  </button>
+</div>
+
+<!-- Key-moment annotation label (JS repositions each frame during moment windows) -->
+<div class="moment-label" id="moment-label">
+  <span class="tag" id="moment-tag">DEPTH IS THE KEY</span>
+  <span class="why" id="moment-why">Dink deep enough that a speedup becomes a losing exchange.</span>
+</div>
+
+<!-- Story-mode title card (between dimensions in autoplay) -->
+<div class="story-splash" id="story-splash">
+  <div class="story-card dim-drive" id="story-card">
+    <div class="eyebrow" id="story-eyebrow">Rally 1 · Cone #1 · Cross-Court</div>
+    <h1 id="story-title">Depth is the key. Make the speedup a losing exchange.</h1>
+    <div class="ladder">
+      <div class="rung" data-rung="0"></div>
+      <div class="rung" data-rung="1"></div>
+      <div class="rung" data-rung="2"></div>
+      <div class="rung" data-rung="3"></div>
+    </div>
+    <div class="skip-hint">Press <span class="kbd-i">T</span> to skip · <span class="kbd-i">Esc</span> to exit</div>
+  </div>
+</div>
+
+<!-- Keyboard shortcut help (? key) -->
+<div class="shortcut-help" id="shortcut-help">
+  <div class="inner">
+    <h2>Keyboard shortcuts.</h2>
+    <div class="sub">Four rallies, one skill. Drive the projector with these keys.</div>
+    <div class="grid">
+      <div class="kb"><span class="key">1–4</span><span class="desc">Switch rally · Cone #1, Cone #2, Combined, Volley Dink</span></div>
+      <div class="kb"><span class="key">␣</span><span class="desc">Pause / resume</span></div>
+      <div class="kb"><span class="key">R</span><span class="desc">Replay current rally</span></div>
+      <div class="kb"><span class="key">S</span><span class="desc">Slow-motion (28% speed)</span></div>
+      <div class="kb"><span class="key">C</span><span class="desc">Cycle camera — skill / top-down / POV</span></div>
+      <div class="kb"><span class="key">A</span><span class="desc">Audio on / off</span></div>
+      <div class="kb"><span class="key">T</span><span class="desc">Story mode — autoplay all four</span></div>
+      <div class="kb"><span class="key">K</span><span class="desc">Capture screenshot (.png)</span></div>
+      <div class="kb"><span class="key">H</span><span class="desc">Hide HUD (clean frame)</span></div>
+      <div class="kb"><span class="key">D</span><span class="desc">Debug readouts</span></div>
+      <div class="kb"><span class="key">B</span><span class="desc">Show / hide scrub-bar timeline</span></div>
+      <div class="kb"><span class="key">←/→</span><span class="desc">Scrub rally ±5% (or drag the timeline)</span></div>
+      <div class="kb"><span class="key">?</span><span class="desc">Toggle this help</span></div>
+    </div>
+    <div class="close-hint">Any key to close</div>
+  </div>
+</div>
+
+<!-- Debug readout panel -->
+<div class="debug-panel" id="debug-panel">
+  <div class="line"><span class="k">shot </span><span class="v" id="dbg-shot">drive</span></div>
+  <div class="line"><span class="k">seg  </span><span class="v" id="dbg-seg">0</span> <span class="k">t </span><span class="v" id="dbg-t">0.00</span></div>
+  <div class="line"><span class="k">ball </span><span class="v" id="dbg-ball">0, 0, 0</span></div>
+  <div class="line"><span class="k">cam  </span><span class="v" id="dbg-cam">0, 0, 0</span></div>
+  <div class="line"><span class="k">fps  </span><span class="v" id="dbg-fps">60</span> <span class="k">tier </span><span class="v" id="dbg-tier">high</span></div>
+</div>
+
+<!-- Capture flash overlay -->
+<div class="capture-flash" id="capture-flash"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls }    from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer }   from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass }       from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass }  from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass }       from 'three/addons/postprocessing/OutputPass.js';
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 4DP CINEMATIC 3D MODULE TEMPLATE
+// -------------------------------------------------------------------------
+// Court units: 1 unit = 1 foot. Court 20×44. Kitchen 7 from net. Y up.
+//
+// Pure Three.js via CDN (R18 tech-stack lock). Single HTML file.
+// See 3D_MODULE_TEMPLATE_CAPABILITIES.md for the full feature map and
+// downstream-module integration guide.
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ═════ PRESSURE DINKING RALLIES ═════
+// Four rallies, each teaching one progression of pressure dinking.
+// All four players stand at the kitchen line — this is where offense is generated.
+// Keys preserved from template (drive/defend/drop/dink) so CSS + event wiring is reused.
+// Rally 1 = Cone #1 cross-court depth
+// Rally 2 = Cone #2 middle + simpler technique
+// Rally 3 = Combined targets + deception
+// Rally 4 = Volley dinking → speedup → finish
+const SHOTS = {
+  drive: {
+    label: 'Drill 1 · Red Cone',
+    dim: 'drive',
+    color: 0xEF4444,
+    role: 'Cross-court depth',
+    mantra: 'Hit the red cone. 100 balls, backhand first — then forehand. Blue friend feeds all kinds: forehand, backhand, out of air, bounce. Green hits low pressure dinks that stay tight to the net.',
+    traj: 'Blue drilling friend stands 5 ft behind the red cone — off the court, out of bounds. Friend feeds high-arc defensive drops (forehand / backhand / out of air). Green returns every feed with a low pressure dink on the red cone.',
+    cam: { pos: [32, 10, 0], look: [0, 2, 0] },
+    story: 'Drill #1 — hit the red cone. The simplest drill in the class and the foundation of pressure dinking.',
+    shot: {
+      segments: [
+        // ── Cycle 1 — forehand feed with bounce ──
+        // 1 - Blue friend (at 13, -9 OOB) feeds a high-arc drop to green's forehand (lands in front of green)
+        { from: [ 13, 2.3, -9], to: [-4,  0.15,  6.2], apex: 5.2, dur: 0.95 },
+        // 2 - ball bounces up into green's paddle
+        { from: [-4,  0.15,  6.2], to: [-4.5, 2.4, 7.5], apex: 2.2, dur: 0.40 },
+        // 3 - GREEN pressure dinks low + tight to the RED cone
+        { from: [-4.5, 2.4, 7.5], to: [ 9,  0.15, -6], apex: 2.3, dur: 0.85 },
+        // 4 - ball bounces on the cone
+        { from: [ 9,  0.15, -6], to: [ 9.5, 0.3, -6.7], apex: 0.4, dur: 0.38 },
+
+        // ── Cycle 2 — backhand feed out of the air (no bounce — higher, to volley) ──
+        // 5 - Friend feeds high to green's BACKHAND side
+        { from: [ 13, 2.3, -9], to: [-6,  2.7,  7.5], apex: 5.6, dur: 1.00 },
+        // 6 - GREEN volley-dinks out of air, low and tight to the RED cone
+        { from: [-6,  2.7,  7.5], to: [ 9,  0.15, -6], apex: 2.0, dur: 0.80, cinematic: true },
+        // 7 - ball bounces on the cone
+        { from: [ 9,  0.15, -6], to: [ 9.5, 0.3, -6.7], apex: 0.4, dur: 0.38 },
+
+        // ── Cycle 3 — bounce feed to middle ──
+        // 8 - Friend feeds high bouncy drop to center-green
+        { from: [ 13, 2.3, -9], to: [-5,  0.15,  5.5], apex: 5.1, dur: 0.95 },
+        // 9 - ball bounces up
+        { from: [-5,  0.15,  5.5], to: [-5,  2.4,  7.3], apex: 2.2, dur: 0.40 },
+        // 10 - GREEN dinks tight cross-court to the RED cone (third rep)
+        { from: [-5,  2.4,  7.3], to: [ 9,  0.15, -6], apex: 2.3, dur: 0.85 },
+        // 11 - ball bounces on the cone
+        { from: [ 9,  0.15, -6], to: [ 9.5, 0.3, -6.7], apex: 0.4, dur: 0.38 }
+      ]
+    },
+    playerFrames: [
+      // F0 - green at near kitchen line · blue friend OOB 5 ft behind red cone · others hidden off-scene
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
+      // F1 - feed in flight, green steady, friend recovered
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
+      // F2 - ball bouncing at green's forehand
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
+      // F3 - green contact · pressure dink in flight to red cone
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
+      // F4 - ball on red cone · friend reaches to retrieve
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
+      // F5 - second feed (to backhand, out of air)
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
+      // F6 - green volley dink to red cone (cinematic)
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
+      // F7 - ball on red cone
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
+      // F8 - third feed (middle, bounce)
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
+      // F9 - ball bounces at green
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
+      // F10 - green contact · dink to red cone
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
+      // F11 - ball on red cone
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] }
+    ],
+    moments: [
+      { at: 0.10, label: 'BLUE FRIEND · OFF THE COURT',
+        why: 'Drilling friend stands 5 ft behind the red cone — out of bounds. They feed; green hits.',
+        arrow: { type: 'player', key: 'farRight' }, hold: 1.6 },
+      { at: 0.28, label: 'HIT THE RED CONE · DEPTH',
+        why: 'Deep cross-court. Land the pressure dink on the red cone — low and tight to the net.',
+        arrow: { type: 'court', pos: [9, -6] }, hold: 1.7 },
+      { at: 0.55, label: 'VOLLEY DINK · OUT OF AIR',
+        why: 'Friend feeds high. Green takes it out of the air, stays tight to the net, and still hits the cone.',
+        arrow: { type: 'ball' }, hold: 1.5 },
+      { at: 0.92, label: '100 BALLS · BACKHAND FIRST, THEN FOREHAND',
+        why: 'The drill is extremely simple. You have to MASTER it. That is the foundation.',
+        arrow: { type: 'court', pos: [9, -6] }, hold: 1.9 }
+    ]
+  },
+  defend: {
+    label: 'Drill 2 · Yellow Cone',
+    dim: 'defend',
+    color: 0xFBBF24,
+    role: 'Middle deep',
+    mantra: 'Hit the yellow cone. Blue friend stands in line directly behind the cone and feeds with high-arc drops. Green hits low pressure dinks — shoulder, not wrist, under the ball.',
+    traj: 'Feeder stands on the centerline 5 ft behind the yellow cone. Feeds are higher and softer — reset-style drops. Green returns each one as a tight pressure dink onto the yellow cone, deep past the kitchen line.',
+    cam: { pos: [32, 10, 0], look: [0, 2, 0] },
+    story: 'Drill #2 — hit the yellow cone. Shorter dinks require simpler technique. Under the ball.',
+    shot: {
+      segments: [
+        // ── Cycle 1 — forehand feed with bounce ──
+        // 1 - Feeder (at 0, -13.5 on the centerline) feeds high-arc drop to green's forehand
+        { from: [ 0,   2.3, -13.5], to: [-4,  0.15,  6.2], apex: 5.8, dur: 0.98 },
+        // 2 - ball bounces up to green's paddle
+        { from: [-4,   0.15,  6.2], to: [-4.5, 2.4,  7.5], apex: 2.2, dur: 0.40 },
+        // 3 - GREEN pressure dinks tight + low onto the YELLOW cone
+        { from: [-4.5, 2.4,  7.5], to: [ 0,  0.15, -8.5], apex: 2.5, dur: 0.85 },
+        // 4 - ball bounces on the yellow cone
+        { from: [ 0,   0.15, -8.5], to: [ 0.3, 0.3, -9.1], apex: 0.4, dur: 0.38 },
+
+        // ── Cycle 2 — backhand feed out of the air ──
+        // 5 - Feeder sends high-arc floater to green's backhand side (no bounce)
+        { from: [ 0,   2.3, -13.5], to: [-6,  2.7,  7.5], apex: 6.0, dur: 1.02 },
+        // 6 - GREEN volley-dinks under the ball to the YELLOW cone
+        { from: [-6,   2.7,  7.5], to: [ 0,  0.15, -8.5], apex: 2.2, dur: 0.82, cinematic: true },
+        // 7 - ball bounces on the yellow cone
+        { from: [ 0,   0.15, -8.5], to: [ 0.3, 0.3, -9.1], apex: 0.4, dur: 0.38 },
+
+        // ── Cycle 3 — middle bounce feed ──
+        // 8 - Feeder feeds a bouncy drop to green's middle
+        { from: [ 0,   2.3, -13.5], to: [-5,  0.15,  5.5], apex: 5.6, dur: 0.98 },
+        // 9 - ball bounces up
+        { from: [-5,   0.15,  5.5], to: [-5,  2.4,  7.3], apex: 2.2, dur: 0.40 },
+        // 10 - GREEN dinks tight to the YELLOW cone (third rep)
+        { from: [-5,   2.4,  7.3], to: [ 0,  0.15, -8.5], apex: 2.5, dur: 0.85 },
+        // 11 - ball bounces on the yellow cone
+        { from: [ 0,   0.15, -8.5], to: [ 0.3, 0.3, -9.1], apex: 0.4, dur: 0.38 }
+      ]
+    },
+    playerFrames: [
+      // F0 - green at near kitchen line · blue feeder 5 ft behind yellow cone on the centerline · others hidden
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] }
+    ],
+    moments: [
+      { at: 0.10, label: 'FEEDER IN LINE · BEHIND YELLOW CONE',
+        why: 'Feeder stands on the centerline 5 ft behind the yellow cone. Higher-arc feeds — like a reset drop.',
+        arrow: { type: 'player', key: 'farRight' }, hold: 1.6 },
+      { at: 0.30, label: 'HIT THE YELLOW CONE · DEEP MIDDLE',
+        why: 'Target is 1.5 ft past the kitchen line. A dink this deep forces the opponent to take it out of the air.',
+        arrow: { type: 'court', pos: [0, -8.5] }, hold: 1.7 },
+      { at: 0.58, label: 'UNDER THE BALL · VOLLEY DINK',
+        why: 'Shorter dinks need simpler technique. Tip down, no wrist cock, shoulder swing.',
+        arrow: { type: 'ball' }, hold: 1.5 },
+      { at: 0.92, label: 'HIGH-ARC FEEDS · LOW PRESSURE DINKS',
+        why: 'Feeder arc is defensive and tall. Green\'s pressure dinks stay close to the net.',
+        arrow: { type: 'court', pos: [0, -8.5] }, hold: 1.8 }
+    ]
+  },
+  drop: {
+    label: 'Drill 3 · Orange Cones',
+    dim: 'drop',
+    color: 0xFB923C,
+    role: 'Volley dink · kitchen line',
+    mantra: 'Straight across, both at the kitchen line. High-arc unattackable volley dinks paddle-to-paddle. Trying to land on the orange cone just inside the kitchen line.',
+    traj: 'Both players straight across at the kitchen line. The ball never touches the ground — it goes paddle-to-paddle on gentle arcs that clear the net safely and drop onto the orange cone just inside the opponent\'s kitchen line.',
+    cam: { pos: [32, 10, 0], look: [0, 3, 0] },
+    story: 'Drill #3 — Unattackable volley dinks. Straight across. Hit each other\'s paddles. Trust the orange cones.',
+    shot: {
+      segments: [
+        // 1 - Green volley-dinks to blue's paddle — high-arc, lands on/above orange cone far side
+        { from: [-5, 2.6, 7.5], to: [-5, 2.4, -7.5], apex: 3.4, dur: 0.72 },
+        // 2 - Blue volleys back to green's paddle — mirror arc
+        { from: [-5, 2.4, -7.5], to: [-5, 2.6, 7.5], apex: 3.4, dur: 0.72 },
+        // 3 - Green volley-dink again (consistent rhythm)
+        { from: [-5, 2.6, 7.5], to: [-5, 2.4, -7.5], apex: 3.4, dur: 0.72 },
+        // 4 - Blue returns (cinematic mid-rally beat)
+        { from: [-5, 2.4, -7.5], to: [-5, 2.6, 7.5], apex: 3.4, dur: 0.72, cinematic: true },
+        // 5 - Green's third volley dink
+        { from: [-5, 2.6, 7.5], to: [-5, 2.4, -7.5], apex: 3.4, dur: 0.72 },
+        // 6 - Blue's closing volley dink
+        { from: [-5, 2.4, -7.5], to: [-5, 2.6, 7.5], apex: 3.4, dur: 0.72 }
+      ]
+    },
+    playerFrames: [
+      // Green at near-left kitchen line. Blue drilling friend STRAIGHT ACROSS at far-left kitchen line.
+      // Other two players hidden off-scene.
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[-5,-7.8] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[-5,-7.8] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[-5,-7.8] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[-5,-7.8] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[-5,-7.8] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[-5,-7.8] },
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[-5,-7.8] }
+    ],
+    moments: [
+      { at: 0.08, label: 'STRAIGHT ACROSS · BOTH AT KITCHEN LINE',
+        why: 'Green and blue stand directly across from each other at the kitchen line. Ball never bounces.',
+        arrow: { type: 'player', key: 'farRight' }, hold: 1.6 },
+      { at: 0.35, label: 'UNATTACKABLE VOLLEY DINKS',
+        why: 'High-arc, soft, paddle-to-paddle. The ball flies over the net too low and soft to attack.',
+        arrow: { type: 'ball' }, hold: 1.6 },
+      { at: 0.90, label: 'HIT THE ORANGE CONES · JUST INSIDE THE KITCHEN LINE',
+        why: 'Trust the cones. Aim for the disc — the volley dink partner\'s paddle will be right over it.',
+        arrow: { type: 'court', pos: [-5, -6] }, hold: 1.8 }
+    ]
+  },
+  dink: {
+    label: 'Rally 4 · Volley Dink',
+    dim: 'dink',
+    color: 0x2B8BFC,
+    role: 'Take time away',
+    mantra: 'Volley dinking takes time away and creates angles. The ball never bounces — their rhythm never resets.',
+    traj: 'Get under the ball MORE when leaning in — you\'re closer to the net. Reach in, stay low, wait for the high ball, then speed it up flat at the body.',
+    cam: { pos: [26, 10, 18], look: [0, 2.5, 0] },
+    story: 'Take the ball out of the air. Steal their setup time. Wait for the window.',
+    shot: {
+      segments: [
+        // 1 - nearLeft VOLLEY DINK crosscourt (no bounce) — close to net, low
+        { from: [-5, 2.8, 7.2], to: [ 5, 0.15, -5.5], apex: 2.2, dur: 0.58 },
+        // 2 - farRight takes the short-hop, hurried contact
+        { from: [ 5, 0.15, -5.5], to: [ 6, 1.8, -7], apex: 1.2, dur: 0.38 },
+        // 3 - farRight scrambled reply slightly high in mid-kitchen
+        { from: [ 6, 1.8, -7], to: [-3, 2.8, 6.5], apex: 3.0, dur: 0.65 },
+        // 4 - nearLeft VOLLEYS AGAIN — out of air, attacks the slightly-high ball
+        { from: [-3, 2.8, 6.5], to: [ 3, 1.2, -6.3], apex: 2.0, dur: 0.42, cinematic: true },
+        // 5 - farRight reflex pops up high into near kitchen
+        { from: [ 3, 1.2, -6.3], to: [-2, 3.3, 5], apex: 3.6, dur: 0.65 },
+        // 6 - FINISH: nearLeft overhead smash into open far-left
+        { from: [-2, 3.3, 5], to: [-6, 0.15, -10], apex: 2.6, dur: 0.42, cinematic: true }
+      ]
+    },
+    playerFrames: [
+      // F0 - four behind the kitchen line; nearLeft coiled to reach in (torso only)
+      { nearLeft:[-5,7.8],   nearRight:[5,7.8],   farLeft:[-5,-7.8],   farRight:[5,-7.8] },
+      // F1 - nearLeft reaches across for volley dink (feet stay behind line)
+      { nearLeft:[-4.7,7.8], nearRight:[5,7.8],   farLeft:[-5,-7.8],   farRight:[5.5,-7.8] },
+      // F2 - farRight has to short-hop; off-balance, steps back
+      { nearLeft:[-5,7.8],   nearRight:[5,7.8],   farLeft:[-5,-7.8],   farRight:[6,-7.9] },
+      // F3 - farRight hurried reply; nearLeft already coiled
+      { nearLeft:[-4.7,7.8], nearRight:[5,7.8],   farLeft:[-4.8,-7.8], farRight:[6,-7.9] },
+      // F4 - nearLeft speedup volley; far team frozen
+      { nearLeft:[-4.5,7.8], nearRight:[5,7.8],   farLeft:[-4.8,-7.8], farRight:[5,-7.8] },
+      // F5 - farRight reflex pop-up
+      { nearLeft:[-4.5,7.8], nearRight:[5,7.8],   farLeft:[-4.8,-7.8], farRight:[4.5,-7.8] },
+      // F6 - nearLeft overhead tracks; far-left corner wide open
+      { nearLeft:[-3,7.8],   nearRight:[5,7.8],   farLeft:[-4.5,-7.8], farRight:[4.5,-7.8] }
+    ],
+    moments: [
+      { at: 0.12, label: 'OUT OF THE AIR',
+        why: 'Reach in — take the ball before it bounces. You steal their reset time.',
+        arrow: { type: 'player', key: 'nearLeft' }, hold: 1.6 },
+      { at: 0.58, label: 'THE WINDOW OPENS',
+        why: 'Slightly high ball = attackable. Don\'t wait — volley it NOW.',
+        arrow: { type: 'ball' }, hold: 1.4 },
+      { at: 0.82, label: 'SPEED UP AT THE BODY',
+        why: 'Flat and fast at the hip. Paddle can\'t come down in time — pop-up.',
+        arrow: { type: 'player', key: 'farRight' }, hold: 1.6 },
+      { at: 0.96, label: 'FINISH',
+        why: 'Angle the smash where they aren\'t. Rally over.',
+        arrow: { type: 'court', pos: [-6, -10] }, hold: 1.6 }
+    ]  }
+};
+
+// ═════ GLOBAL STATE ═════
+let activeShotKey = 'drive';
+let slowMo = false;
+let paused = false;
+let wasInCinematic = false;  // tracks transition into/out of cinematic segments
+let cinematicCamPushed = false;  // whether we've pushed camera in for dramatic effect
+let audioOn = false;
+let storyMode = false;
+let storyIdx = 0;
+let storyTimer = null;
+let debugOn = false;
+let hudHidden = false;
+let cinematicReplay = true;   // multi-angle cinematic before auto-replay
+let camPresetIdx = 0;
+let userCameraOwned = false;
+let perfTier = 'high';         // 'high' | 'mid' | 'low'
+const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ═════ SCENE + CAMERA + RENDERER + COMPOSER ═════
+const vp = document.getElementById('viewport');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0A1628);
+scene.fog = new THREE.Fog(0x0A1628, 45, 90);
+
+const camera = new THREE.PerspectiveCamera(45, vp.clientWidth / vp.clientHeight, 0.1, 400);
+camera.position.set(...SHOTS[activeShotKey].cam.pos);
+camera.lookAt(new THREE.Vector3(...SHOTS[activeShotKey].cam.look));
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(vp.clientWidth, vp.clientHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+vp.appendChild(renderer.domElement);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.target.set(...SHOTS[activeShotKey].cam.look);
+controls.minDistance = 10;
+controls.maxDistance = 80;
+controls.maxPolarAngle = Math.PI * 0.49;
+controls.autoRotate = !reducedMotion;
+controls.autoRotateSpeed = 0.9;
+const stopAutoRotate = () => { controls.autoRotate = false; userCameraOwned = true; };
+controls.addEventListener('start', stopAutoRotate);
+document.querySelectorAll('.shot-chip').forEach(chip => {
+  chip.addEventListener('click', stopAutoRotate, { once: false });
+});
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(vp.clientWidth, vp.clientHeight), 0.55, 0.55, 0.82);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+// ═════ LIGHTING — key + ambient + fill + rim + volumetric shaft ═════
+const ambient = new THREE.AmbientLight(0xB8D4E8, 0.35);
+scene.add(ambient);
+
+const key = new THREE.DirectionalLight(0xFFF4E0, 1.15);
+key.position.set(18, 30, 14);
+key.castShadow = true;
+key.shadow.mapSize.set(512, 512);  // was 2048 — 4x faster compile
+key.shadow.camera.left = -30;  key.shadow.camera.right = 30;
+key.shadow.camera.top  =  35;  key.shadow.camera.bottom= -35;
+key.shadow.camera.near = 1;    key.shadow.camera.far   = 70;
+key.shadow.bias = -0.0003;
+scene.add(key);
+
+const fill = new THREE.DirectionalLight(0x88A8CC, 0.3);
+fill.position.set(-22, 14, -12);
+scene.add(fill);
+
+// (Rim light removed — Dave 2026-04-20: read as a distracting spotlight.)
+
+// ═════ COURT — NEPC aesthetic (R19) ═════
+const COURT_W = 20, COURT_L = 44, KITCHEN = 7, LINE = 0.18;
+const courtGroup = new THREE.Group();
+
+function makeDeckTexture() {
+  const c = document.createElement('canvas'); c.width = 512; c.height = 512;
+  const ctx = c.getContext('2d');
+  const g = ctx.createLinearGradient(0, 0, 0, 512);
+  g.addColorStop(0, '#7A8290'); g.addColorStop(1, '#646D7B');   // lightened 2026-04-20 per Dave
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 512, 512);
+  for (let i = 0; i < 2000; i++) {
+    ctx.fillStyle = `rgba(0,0,0,${Math.random() * 0.06})`;
+    ctx.fillRect(Math.random() * 512, Math.random() * 512, 1, 1);
+  }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+const deck = new THREE.Mesh(
+  new THREE.PlaneGeometry(COURT_W + 18, COURT_L + 18),
+  new THREE.MeshStandardMaterial({ map: makeDeckTexture(), roughness: 0.88, metalness: 0.02 })
+);
+deck.rotation.x = -Math.PI / 2; deck.position.y = -0.02; deck.receiveShadow = true;
+courtGroup.add(deck);
+
+function makeCourtTexture() {
+  const c = document.createElement('canvas'); c.width = 512; c.height = 512;  // was 1024 — 4x less pixel work for sharp enough look
+  const ctx = c.getContext('2d');
+  const g = ctx.createRadialGradient(256, 256, 20, 256, 256, 340);
+  g.addColorStop(0, '#2D5FA8'); g.addColorStop(0.7, '#234E8C'); g.addColorStop(1, '#1B3E72');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 512, 512);
+  const v = ctx.createRadialGradient(256, 256, 150, 256, 256, 360);
+  v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.25)');
+  ctx.fillStyle = v; ctx.fillRect(0, 0, 512, 512);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+const surface = new THREE.Mesh(
+  new THREE.PlaneGeometry(COURT_W, COURT_L),
+  new THREE.MeshStandardMaterial({ map: makeCourtTexture(), roughness: 0.68, metalness: 0.05 })
+);
+surface.rotation.x = -Math.PI / 2; surface.position.y = 0; surface.receiveShadow = true;
+courtGroup.add(surface);
+
+function makeKitchenTexture() {
+  const c = document.createElement('canvas'); c.width = 512; c.height = 256;
+  const ctx = c.getContext('2d');
+  const g = ctx.createLinearGradient(0, 0, 0, 256);
+  g.addColorStop(0, '#6B0F1A'); g.addColorStop(1, '#52090F');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 512, 256);
+  const glow = ctx.createRadialGradient(256, 128, 20, 256, 128, 260);
+  glow.addColorStop(0, 'rgba(255,61,90,0.14)'); glow.addColorStop(1, 'rgba(255,61,90,0)');
+  ctx.fillStyle = glow; ctx.fillRect(0, 0, 512, 256);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+const kitchenMat = new THREE.MeshStandardMaterial({ map: makeKitchenTexture(), roughness: 0.7, metalness: 0.02 });
+for (const z of [KITCHEN / 2, -KITCHEN / 2]) {
+  const k = new THREE.Mesh(new THREE.PlaneGeometry(COURT_W, KITCHEN), kitchenMat);
+  k.rotation.x = -Math.PI / 2; k.position.set(0, 0.003, z); k.receiveShadow = true;
+  courtGroup.add(k);
+}
+
+const lineMat = new THREE.MeshStandardMaterial({
+  color: 0xDEDBD0, emissive: 0xDEDBD0, emissiveIntensity: 0.02, roughness: 0.62,
+  transparent: true, opacity: 0.86
+});
+function addLine(x, z, w, l) {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, l), lineMat);
+  m.rotation.x = -Math.PI / 2; m.position.set(x, 0.005, z); m.receiveShadow = true;
+  courtGroup.add(m);
+}
+addLine(0,  COURT_L/2, COURT_W, LINE);
+addLine(0, -COURT_L/2, COURT_W, LINE);
+addLine( COURT_W/2, 0, LINE, COURT_L);
+addLine(-COURT_W/2, 0, LINE, COURT_L);
+addLine(0,  KITCHEN, COURT_W, LINE);
+addLine(0, -KITCHEN, COURT_W, LINE);
+addLine(0,  (COURT_L/2 + KITCHEN)/2, LINE, COURT_L/2 - KITCHEN);
+addLine(0, -(COURT_L/2 + KITCHEN)/2, LINE, COURT_L/2 - KITCHEN);
+
+// Net
+const netGroup = new THREE.Group();
+const netPostMat = new THREE.MeshStandardMaterial({ color: 0x1A1F2E, roughness: 0.3, metalness: 0.8 });
+for (const x of [-COURT_W/2 - 0.3, COURT_W/2 + 0.3]) {
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 3.4, 12), netPostMat);
+  post.position.set(x, 1.7, 0); post.castShadow = true;
+  netGroup.add(post);
+}
+const netMat = new THREE.MeshStandardMaterial({
+  color: 0x0F2138, transparent: true, opacity: 0.75,
+  side: THREE.DoubleSide, roughness: 0.9
+});
+const netMesh = new THREE.Mesh(new THREE.PlaneGeometry(COURT_W + 0.6, 3.0, 24, 8), netMat);
+netMesh.position.set(0, 1.5, 0);
+netGroup.add(netMesh);
+const tape = new THREE.Mesh(new THREE.BoxGeometry(COURT_W + 0.6, 0.08, 0.08), lineMat);
+tape.position.set(0, 3.0, 0);
+netGroup.add(tape);
+const weave = new THREE.LineSegments(
+  new THREE.WireframeGeometry(new THREE.PlaneGeometry(COURT_W + 0.6, 3.0, 18, 6)),
+  new THREE.LineBasicMaterial({ color: 0x3A4A60, transparent: true, opacity: 0.5 })
+);
+weave.position.set(0, 1.5, 0);
+netGroup.add(weave);
+courtGroup.add(netGroup);
+scene.add(courtGroup);
+
+// ═════ DRILL TARGETS — flat agility cones (soft plastic discs on the ground) ═════
+// Style: flat agility-cone discs like the ones in the reference image Dave sent —
+// solid saturated colors, no outline, safe for players to step on. Each drill
+// has a dedicated color so students remember which color = which target.
+//   RED    · Drill 1: cross-court T, 1 ft inside kitchen from the kitchen line
+//   YELLOW · Drill 2: middle, 1.5 ft past the kitchen line (deep middle)
+//   ORANGE · Drill 3: just inside the kitchen lines, both sides (volley dink drill)
+const coneGroup = new THREE.Group();
+const DRILL_SPOTS = [
+  { x:  9,  z: -6,   color: 0xEF4444, name: 'red'    },  // Drill 1 cross-court T
+  { x:  0,  z: -8.5, color: 0xFBBF24, name: 'yellow' },  // Drill 2 middle deep
+  { x: -5,  z: -6,   color: 0xFB923C, name: 'orange' },  // Drill 3 far-side volley target
+  { x: -5,  z:  6,   color: 0xFB923C, name: 'orange' }   // Drill 3 near-side volley target
+];
+
+function makeFlatTarget(x, z, color) {
+  // Flat plastic agility-cone disc — no height, so players can step on it.
+  const disc = new THREE.Mesh(
+    new THREE.CircleGeometry(1.0, 40),
+    new THREE.MeshStandardMaterial({
+      color, roughness: 0.55, metalness: 0.02,
+      emissive: color, emissiveIntensity: 0.3,
+      side: THREE.DoubleSide
+    })
+  );
+  disc.rotation.x = -Math.PI / 2;
+  disc.position.set(x, 0.03, z);
+  return disc;
+}
+
+DRILL_SPOTS.forEach(spot => {
+  coneGroup.add(makeFlatTarget(spot.x, spot.z, spot.color));
+});
+scene.add(coneGroup);
+
+// ═════ CROWD SILHOUETTES — stadium ambience beyond each baseline ═════
+// Instanced for cheap draw. Dark capsules, no shadows, just silhouettes in the fog.
+const crowdMat = new THREE.MeshBasicMaterial({ color: 0x050B15, fog: true });
+const crowdGroup = new THREE.Group();
+function makeCrowdRow(zRow) {
+  const heads = 48;
+  const headsGeo = new THREE.SphereGeometry(0.42, 10, 6);
+  const headMesh = new THREE.InstancedMesh(headsGeo, crowdMat, heads);
+  const shouldersGeo = new THREE.BoxGeometry(1.1, 0.7, 0.3);
+  const shouldersMesh = new THREE.InstancedMesh(shouldersGeo, crowdMat, heads);
+  const dummy = new THREE.Object3D();
+  for (let i = 0; i < heads; i++) {
+    const x = -22 + i * (44 / heads) + (Math.random() - 0.5) * 0.7;
+    const y = 2.2 + (Math.random() - 0.5) * 0.25;
+    const z = zRow + (Math.random() - 0.5) * 1.6;
+    dummy.position.set(x, y, z); dummy.updateMatrix();
+    headMesh.setMatrixAt(i, dummy.matrix);
+    dummy.position.set(x, 1.35, z); dummy.updateMatrix();
+    shouldersMesh.setMatrixAt(i, dummy.matrix);
+  }
+  crowdGroup.add(headMesh); crowdGroup.add(shouldersMesh);
+}
+makeCrowdRow(-35); makeCrowdRow(35);
+scene.add(crowdGroup);
+
+// ═════ PLAYERS — right-handed pickleball players in ready stance (R20) ═════
+function makePlayer({ jersey, shorts, z, x = 0, facing, hat }) {
+  const g = new THREE.Group();
+  const skin = new THREE.MeshStandardMaterial({ color: 0xE7B48C, roughness: 0.7 });
+  const shortMat = new THREE.MeshStandardMaterial({ color: shorts, roughness: 0.7, metalness: 0.05 });
+  const jerseyMat = new THREE.MeshStandardMaterial({ color: jersey, roughness: 0.55, metalness: 0.1 });
+  const paddleFaceMat = new THREE.MeshStandardMaterial({ color: 0x8B1A2B, roughness: 0.35, metalness: 0.25 });
+  const paddleEdgeMat = new THREE.MeshStandardMaterial({ color: 0x0A1628, roughness: 0.3, metalness: 0.55 });
+  const gripMat = new THREE.MeshStandardMaterial({ color: 0x1A1F2E, roughness: 0.85 });
+  const shoeMat  = new THREE.MeshStandardMaterial({ color: 0xF5F3EE, roughness: 0.5 });
+
+  for (const sign of [-1, 1]) {
+    const leg = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 1.1, 6, 10), shortMat);
+    leg.position.set(sign * 0.28, 0.9, 0); leg.castShadow = true; g.add(leg);
+    const shoe = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.22, 0.9), shoeMat);
+    shoe.position.set(sign * 0.28, 0.14, 0.12); shoe.castShadow = true; g.add(shoe);
+  }
+
+  const shortsBlock = new THREE.Mesh(new THREE.CapsuleGeometry(0.52, 0.28, 6, 10), shortMat);
+  shortsBlock.position.y = 1.7; shortsBlock.castShadow = true; g.add(shortsBlock);
+
+  const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.55, 1.1, 8, 14), jerseyMat);
+  torso.position.y = 2.55; torso.castShadow = true; g.add(torso);
+
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.24, 0.28, 12), skin);
+  neck.position.y = 3.3; neck.castShadow = true; g.add(neck);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.42, 24, 16), skin);
+  head.position.y = 3.75; head.castShadow = true; g.add(head);
+  // Hat — each player gets a distinct color (Dave's request) so they're easy to tell apart.
+  // Falls back to jersey color if no hat passed (back-compat).
+  const hatColor = (hat != null) ? hat : jersey;
+  const hatMat = new THREE.MeshStandardMaterial({ color: hatColor, roughness: 0.55, metalness: 0.1, emissive: hatColor, emissiveIntensity: 0.06 });
+  const cap = new THREE.Mesh(new THREE.SphereGeometry(0.44, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), hatMat);
+  cap.position.y = 3.82; cap.scale.y = 0.6; cap.castShadow = true; g.add(cap);
+
+  const leftArm = new THREE.Mesh(new THREE.CapsuleGeometry(0.14, 0.9, 5, 8), jerseyMat);
+  leftArm.position.set(-0.62, 2.55, 0.1); leftArm.rotation.z = 0.18; leftArm.castShadow = true; g.add(leftArm);
+  const leftHand = new THREE.Mesh(new THREE.SphereGeometry(0.14, 12, 8), skin);
+  leftHand.position.set(-0.72, 1.95, 0.12); leftHand.castShadow = true; g.add(leftHand);
+
+  // ─── RIGHT ARM + PADDLE — wrapped in a shoulder-pivoted group so the whole arm
+  //     swings together. Group origin = shoulder joint; rotation.x swings arm back/forward.
+  const SH = { x: 0.48, y: 2.9, z: 0.2 };
+  const rightArm = new THREE.Group();
+  rightArm.position.set(SH.x, SH.y, SH.z);
+
+  const upperArm = new THREE.Mesh(new THREE.CapsuleGeometry(0.15, 0.7, 5, 8), jerseyMat);
+  upperArm.position.set(0.58 - SH.x, 2.62 - SH.y, 0.25 - SH.z);
+  upperArm.rotation.z = 0.22; upperArm.rotation.x = 0.4;
+  upperArm.castShadow = true; rightArm.add(upperArm);
+
+  const forearm = new THREE.Mesh(new THREE.CapsuleGeometry(0.13, 0.7, 5, 8), skin);
+  forearm.position.set(0.68 - SH.x, 2.35 - SH.y, 0.95 - SH.z);
+  forearm.rotation.x = Math.PI / 2 - 0.25;
+  forearm.castShadow = true; rightArm.add(forearm);
+
+  const paddleGroup = new THREE.Group();
+  const grip = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.085, 0.5, 12), gripMat);
+  grip.position.y = -0.7; grip.castShadow = true; paddleGroup.add(grip);
+  const throat = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.08, 0.12, 8), paddleEdgeMat);
+  throat.position.y = -0.38; paddleGroup.add(throat);
+  const face = new THREE.Mesh(new THREE.BoxGeometry(0.62, 1.1, 0.06), paddleFaceMat);
+  face.position.y = 0.22; face.castShadow = true; paddleGroup.add(face);
+  const edge = new THREE.Mesh(new THREE.BoxGeometry(0.66, 1.14, 0.04), paddleEdgeMat);
+  edge.position.y = 0.22; edge.position.z = -0.01; paddleGroup.add(edge);
+  const paddleLogo = new THREE.Mesh(
+    new THREE.CircleGeometry(0.08, 16),
+    new THREE.MeshStandardMaterial({ color: 0xF5F3EE, emissive: 0xF5F3EE, emissiveIntensity: 0.2 })
+  );
+  paddleLogo.position.set(0, 0.22, 0.032);
+  paddleGroup.add(paddleLogo);
+  paddleGroup.position.set(0.72 - SH.x, 2.9 - SH.y, 1.55 - SH.z);
+  paddleGroup.rotation.x = -0.4; paddleGroup.rotation.z = 0.15;
+  rightArm.add(paddleGroup);
+  g.add(rightArm);
+
+  g.rotation.x = -0.05;
+  g.position.set(x, 0, z);
+  if (facing === -1) {
+    g.rotation.y = Math.PI;
+    // Mirror X so the paddle appears on the camera-visible side from the +x skill-view.
+    // Without this, near-side players' paddles render BEHIND their bodies, which reads
+    // as left-handed. Combined with the 180° Y rotation, this preserves "paddle on
+    // right hand" visually from every skill-view camera angle.
+    g.scale.x = -1;
+  }
+
+  // Expose for animation: whole-arm swing, paddle-face twist, head tracking, body lean
+  g.userData.rightArm = rightArm;
+  g.userData.paddle = paddleGroup;
+  g.userData.paddleDefault = { rx: -0.4, rz: 0.15 };
+  g.userData.head = head;
+  g.userData.torso = torso;
+  g.userData.bodyLeanDefault = -0.05;
+  return g;
+}
+// Distinct hat colors per player (Dave 2026-04-20) — easy-ID at a glance. Team jerseys
+// still distinguish teams (navy far vs burgundy near); hats distinguish positions within
+// each team. Colors are bright enough to pop against both jerseys.
+const playerFarLeft   = makePlayer({ jersey: 0x1B4079, shorts: 0x0F2138, hat: 0x4ADE80, z: -20, x: -5, facing: +1 });  // GREEN
+const playerFarRight  = makePlayer({ jersey: 0x2B8BFC, shorts: 0x0F2138, hat: 0xFB923C, z: -20, x:  5, facing: +1 });  // BRIGHT BLUE SHIRT · ORANGE HAT — this is the DRILLING FRIEND (feeder) for the green dinker
+const playerNearLeft  = makePlayer({ jersey: 0x22C55E, shorts: 0x0F2138, hat: 0xFDE047, z:  20, x: -5, facing: -1 });  // GREEN SHIRT · YELLOW HAT — this is the pressure-dinking DINKER (our POV)
+const playerNearRight = makePlayer({ jersey: 0x8B1A2B, shorts: 0x0F2138, hat: 0x22D3EE, z:  20, x:  5, facing: -1 });  // CYAN
+scene.add(playerFarLeft, playerFarRight, playerNearLeft, playerNearRight);
+const playerFar = playerFarLeft, playerNear = playerNearLeft;
+
+const players = {
+  nearLeft:  playerNearLeft, nearRight: playerNearRight,
+  farLeft:   playerFarLeft,  farRight:  playerFarRight
+};
+const PLAYER_KEYS = ['nearLeft', 'nearRight', 'farLeft', 'farRight'];
+const INITIAL_POS = {
+  nearLeft:  [-5,  20], nearRight: [ 5,  20],
+  farLeft:   [-5, -20], farRight:  [ 5, -20]
+};
+
+function getSegmentInfo(shot, t) {
+  if (!shot.segments) return null;
+  const totalDur = shot.segments.reduce((a, s) => a + s.dur, 0);
+  const timeT = t * totalDur;
+  let acc = 0;
+  for (let i = 0; i < shot.segments.length; i++) {
+    const seg = shot.segments[i];
+    if (timeT <= acc + seg.dur || i === shot.segments.length - 1) {
+      const localT = Math.min(1, Math.max(0, (timeT - acc) / seg.dur));
+      return { idx: i, localT };
+    }
+    acc += seg.dur;
+  }
+  return { idx: shot.segments.length - 1, localT: 1 };
+}
+
+function updatePlayerPositions(dimKey, t) {
+  const dim = SHOTS[dimKey];
+  if (!dim.playerFrames) return;
+  const info = getSegmentInfo(dim.shot, t);
+  if (!info) return;
+  const startFrame = dim.playerFrames[info.idx]     || {};
+  const endFrame   = dim.playerFrames[info.idx + 1] || startFrame;
+  const e = info.localT; // linear tween — smooth sprints across segment boundaries
+  for (const k of PLAYER_KEYS) {
+    const from = startFrame[k] || INITIAL_POS[k];
+    const to   = endFrame[k]   || from;
+    const x = from[0] + (to[0] - from[0]) * e;
+    const z = from[1] + (to[1] - from[1]) * e;
+    players[k].position.set(x, 0, z);
+  }
+}
+
+function resetPlayerPositions(dimKey) {
+  const dim = SHOTS[dimKey];
+  const f0 = (dim.playerFrames && dim.playerFrames[0]) || {};
+  for (const k of PLAYER_KEYS) {
+    const pos = f0[k] || INITIAL_POS[k];
+    players[k].position.set(pos[0], 0, pos[1]);
+  }
+  // Reset all paddles to ready position (cleared between shots)
+  for (const k of PLAYER_KEYS) {
+    const paddle = players[k].userData.paddle;
+    const def = players[k].userData.paddleDefault;
+    if (paddle && def) { paddle.rotation.x = def.rx; paddle.rotation.z = def.rz; }
+  }
+}
+
+// Dave's hitter-finder: nearest player to a segment's from point.
+// Ball-launching segments start at paddle height (y ≥ 1.5); bounce segments start
+// at ground level and have no hitter. Used by paddle swing + segment FX.
+function getSegmentHitter(dimKey, segIdx) {
+  const dim = SHOTS[dimKey];
+  const segs = dim.shot && dim.shot.segments;
+  if (!segs || !dim.playerFrames) return null;
+  const seg = segs[segIdx];
+  if (!seg || !seg.from) return null;
+  if (seg.from[1] < 1.5) return null;
+  const frame = dim.playerFrames[segIdx] || dim.playerFrames[0];
+  if (!frame) return null;
+  let minD2 = Infinity, hitter = null;
+  for (const k of PLAYER_KEYS) {
+    const p = frame[k] || INITIAL_POS[k];
+    const dx = p[0] - seg.from[0];
+    const dz = p[1] - seg.from[2];
+    const d2 = dx*dx + dz*dz;
+    if (d2 < minD2) { minD2 = d2; hitter = k; }
+  }
+  if (minD2 > 64) return null;
+  return hitter;
+}
+
+// ═════ STROKE SYSTEM — zone-based ready poses + stroke-type-aware swings ═════
+// Real pickleball strokes change shape based on:
+//   (1) WHERE the player is:
+//       baseline (|z|>14)   → forehand-ready, paddle low-right, big swings.
+//       transition (10..14) → half-ready, between poses.
+//       kitchen   (|z|<10)  → backhand-ready, paddle UP in front of chest,
+//                              short blocking motions (no windup, brief push).
+//   (2) WHAT shot they're hitting:
+//       groundstroke  — backcourt forehand. Full windup + follow-through.
+//       volley/block  — kitchen-line exchange. Minimal prep, short forward push.
+//       drop          — soft underhand lift from mid-court. Small prep, open face.
+//       smash         — overhead chop. Load up, slam down.
+//
+// Stroke detection from segment data:
+//   - from.y ≥ 2.5         → smash (overhead)
+//   - from.y < 1.5 + apex ≥ 4 → drop (launched from near-ground with big lift)
+//   - prev seg ended airborne (to.y > 0.5) AND hitter at kitchen → volley/block
+//   - else                 → groundstroke
+
+function getPlayerZone(p) {
+  const zAbs = Math.abs(p.position.z);
+  if (zAbs > 14) return 'baseline';
+  if (zAbs < 10) return 'kitchen';
+  return 'transition';
+}
+
+// Zone-appropriate ready-pose defaults (arm + paddle rotations, relative to player group)
+const READY_POSE = {
+  baseline:   { arm: { x:  0.00, y: 0, z:  0.00 }, paddle: { x: -0.40, z:  0.15 } },  // forehand ready
+  transition: { arm: { x: -0.25, y: 0, z: -0.08 }, paddle: { x: -0.22, z:  0.05 } },  // half-ready
+  kitchen:    { arm: { x: -0.55, y: 0, z: -0.30 }, paddle: { x: -0.05, z: -0.35 } }   // backhand ready — paddle up at chest
+};
+
+function applyReadyPose(k) {
+  const p = players[k];
+  if (!p || !p.userData.rightArm || !p.userData.paddle) return;
+  const ready = READY_POSE[getPlayerZone(p)];
+  p.userData.rightArm.rotation.set(ready.arm.x, ready.arm.y, ready.arm.z);
+  p.userData.paddle.rotation.x = ready.paddle.x;
+  p.userData.paddle.rotation.z = ready.paddle.z;
+  p.rotation.x = p.userData.bodyLeanDefault ?? -0.05;
+}
+
+// Identify stroke type for a ball-launching segment
+function getStrokeType(dimKey, segIdx, hitterPlayer) {
+  const segs = SHOTS[dimKey].shot.segments;
+  const seg = segs[segIdx];
+  // Smash: overhead contact, ball coming down fast
+  if (seg.from[1] >= 2.5) return 'smash';
+  // Drop: launches from near-ground transition-zone bounce with a high-arc apex
+  if (seg.from[1] < 1.5 && seg.apex >= 4) return 'drop';
+  // Volley/block: ball didn't bounce first (prev segment ended airborne) and hitter is at the kitchen
+  if (segIdx > 0) {
+    const prev = segs[segIdx - 1];
+    const hitterZone = hitterPlayer ? getPlayerZone(hitterPlayer) : null;
+    if (prev.to[1] > 0.5 && seg.from[1] < 2.2 && hitterZone === 'kitchen') return 'volley';
+  }
+  return 'groundstroke';
+}
+
+// Compute stroke motion at phase ∈ [0,1] with contact at contactFrac.
+// Returns arm deltas + paddle-face delta + body-lean scale (applied on top of ready pose).
+//
+// AXIS CONVENTIONS for the right-arm shoulder-pivoted group:
+//   armY (rotation.y) — HORIZONTAL sweep: negative = arm behind player (windup),
+//                       positive = arm swept across body to front (follow-through).
+//                       This is the PRIMARY forehand swing axis.
+//   armX (rotation.x) — VERTICAL tilt: positive = arm rises, negative = arm lowers
+//                       (used for low-to-high finish, or overhead load for smash).
+//   armZ (rotation.z) — ROLL around the arm's long axis (rarely needed).
+//
+// This is the critical axis correction 2026-04-20: a pickleball forehand is a
+// HORIZONTAL sweep behind-to-across, not a vertical up-down rotation. The v1
+// used armX as primary which made the swing look like a tennis overhead, not
+// a groundstroke.
+function strokeMotion(strokeType, phase, contactFrac) {
+  if (strokeType === 'volley') {
+    // No windup. Short forward push from kitchen-ready. Firm wrist, minimal arm motion.
+    const pushCurve = Math.sin(Math.max(0, Math.min(1, phase)) * Math.PI);
+    return {
+      armX: 0, armY: 0.25 * pushCurve, armZ: 0,
+      paddleFaceAdj: 0.05 * pushCurve,
+      leanScale: 0.30
+    };
+  }
+  if (strokeType === 'smash') {
+    // Overhead: big vertical LOAD up-back, SLAM forward-down. Primary axis = X.
+    if (phase <= contactFrac) {
+      const w = phase / contactFrac;
+      const load = Math.sin(w * Math.PI);
+      return { armX: -1.35 * load, armY: 0, armZ: 0, paddleFaceAdj: -0.45 * Math.sin(phase * Math.PI), leanScale: 0.7 };
+    } else {
+      const w = (phase - contactFrac) / (1 - contactFrac);
+      const slam = Math.sin(w * Math.PI);
+      return { armX: 1.85 * slam, armY: 0.10 * slam, armZ: 0, paddleFaceAdj: -0.45 * Math.sin(phase * Math.PI), leanScale: 0.95 };
+    }
+  }
+  if (strokeType === 'drop') {
+    // Soft underhand lift. Small horizontal prep back, smooth forward-up lift.
+    // Paddle face opens (positive paddleFaceAdj).
+    if (phase <= contactFrac) {
+      const w = phase / contactFrac;
+      const prep = Math.sin(w * Math.PI);
+      return { armX: 0, armY: -0.30 * prep, armZ: 0, paddleFaceAdj: 0.55 * Math.sin(phase * Math.PI), leanScale: 0.30 };
+    } else {
+      const w = (phase - contactFrac) / (1 - contactFrac);
+      const lift = Math.sin(w * Math.PI);
+      return { armX: -0.15 * lift, armY: 0.35 * lift, armZ: 0, paddleFaceAdj: 0.55 * Math.sin(phase * Math.PI), leanScale: 0.45 };
+    }
+  }
+  // GROUNDSTROKE — classic pickleball forehand. HORIZONTAL sweep.
+  //   Windup: arm swings BEHIND player (armY very negative) at roughly waist level.
+  //   Contact: arm extended to the side/forward meeting the ball.
+  //   Follow-through: arm sweeps ACROSS body to front-left (armY positive) and UP
+  //                   (armX slightly negative for high finish over opposite shoulder).
+  if (phase <= contactFrac) {
+    const w = phase / contactFrac;
+    const turn = Math.sin(w * Math.PI);
+    return {
+      armX: 0.05 * turn,           // slight low-set
+      armY: -1.10 * turn,          // PRIMARY: arm swings way behind
+      armZ: 0,
+      paddleFaceAdj: -0.15 * Math.sin(phase * Math.PI),
+      leanScale: 0.85
+    };
+  } else {
+    const w = (phase - contactFrac) / (1 - contactFrac);
+    const swing = Math.sin(w * Math.PI);
+    return {
+      armX: -0.25 * swing,         // finishes HIGH
+      armY: 1.15 * swing,          // PRIMARY: arm sweeps across body
+      armZ: 0,
+      paddleFaceAdj: -0.15 * Math.sin(phase * Math.PI),
+      leanScale: 1.0
+    };
+  }
+}
+
+// Real-time swing windows (seconds of rally time — auto-slow-mo scaling handles perception)
+const WINDUP_SEC = 0.28;
+const FOLLOW_SEC = 0.38;
+const VOLLEY_WINDUP_SEC = 0.08;   // volleys are quick exchanges, minimal prep
+const VOLLEY_FOLLOW_SEC = 0.18;
+
+function updateSwingAnimation(dimKey, shotT) {
+  // Reset everyone to their zone-appropriate ready pose each frame
+  for (const k of PLAYER_KEYS) applyReadyPose(k);
+
+  const dim = SHOTS[dimKey];
+  if (!dim.shot || !dim.shot.segments) return;
+  const segs = dim.shot.segments;
+  const totalDur = segs.reduce((a, s) => a + s.dur, 0);
+  const currentShotTime = shotT * totalDur;
+
+  let accum = 0;
+  for (let i = 0; i < segs.length; i++) {
+    const seg = segs[i];
+    const contactTime = accum;
+    accum += seg.dur;
+    // Skip non-hit segments (pure bounces). But allow drop-shot segments even though
+    // they start low — detected by apex relative to endpoints.
+    const isDropLaunch = (seg.from[1] < 1.5 && seg.apex >= 4);
+    if (seg.from[1] < 1.5 && !isDropLaunch) continue;
+    const hitter = getSegmentHitter(dimKey, i);
+    if (!hitter) continue;
+    const p = players[hitter];
+    if (!p) continue;
+
+    const strokeType = getStrokeType(dimKey, i, p);
+    const winUp = (strokeType === 'volley') ? VOLLEY_WINDUP_SEC : WINDUP_SEC;
+    const winDn = (strokeType === 'volley') ? VOLLEY_FOLLOW_SEC : FOLLOW_SEC;
+    const winStart = contactTime - winUp;
+    const winEnd   = contactTime + winDn;
+    if (currentShotTime < winStart || currentShotTime > winEnd) continue;
+
+    const windowLen = winEnd - winStart;
+    const phase = (currentShotTime - winStart) / windowLen;
+    const contactFrac = winUp / windowLen;
+
+    const motion = strokeMotion(strokeType, phase, contactFrac);
+    const ready = READY_POSE[getPlayerZone(p)];
+
+    // Apply stroke motion on top of ready pose.
+    // armY is the PRIMARY axis for groundstroke sweep (behind player → across body).
+    // armX handles vertical tilt (low-to-high finish, overhead load/slam).
+    p.userData.rightArm.rotation.x = ready.arm.x + motion.armX;
+    p.userData.rightArm.rotation.y = ready.arm.y + (motion.armY ?? 0);
+    p.userData.rightArm.rotation.z = ready.arm.z + motion.armZ;
+    p.userData.paddle.rotation.x = ready.paddle.x + motion.paddleFaceAdj;
+    p.userData.paddle.rotation.z = ready.paddle.z;
+    const leanCurve = Math.sin(phase * Math.PI);
+    p.rotation.x = (p.userData.bodyLeanDefault ?? -0.05) - 0.16 * leanCurve * motion.leanScale;
+  }
+}
+
+// ═════ HEAD TRACKING — every player watches the ball each frame ═════
+// Computes yaw + pitch from player-head to ball, subtracts player facing, clamps
+// to avoid unnatural neck angles, and lerps toward the target for organic motion.
+function updateHeadTracking() {
+  for (const k of PLAYER_KEYS) {
+    const p = players[k];
+    const head = p.userData.head;
+    if (!head) continue;
+    const dx = ball.position.x - p.position.x;
+    const dz = ball.position.z - p.position.z;
+    const dy = ball.position.y - 3.75;
+    const dist = Math.max(0.5, Math.sqrt(dx*dx + dz*dz));
+    const worldYaw = Math.atan2(dx, dz);
+    let yaw = worldYaw - p.rotation.y;
+    while (yaw > Math.PI)  yaw -= 2 * Math.PI;
+    while (yaw < -Math.PI) yaw += 2 * Math.PI;
+    yaw = Math.max(-0.85, Math.min(0.85, yaw));
+    const pitch = Math.max(-0.55, Math.min(0.35, -Math.atan2(dy, dist)));
+    // Lerp toward target (0.2 factor) for organic follow
+    head.rotation.y += (yaw - head.rotation.y) * 0.22;
+    head.rotation.x += (pitch - head.rotation.x) * 0.22;
+  }
+}
+
+// ═════ BALL — emissive sphere with subtle seam texture for visible spin ═════
+function makeBallTexture() {
+  const c = document.createElement('canvas'); c.width = 256; c.height = 128;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#FFF4D6'; ctx.fillRect(0, 0, 256, 128);
+  ctx.fillStyle = 'rgba(60,40,20,0.22)';
+  for (let i = 0; i < 12; i++) {
+    for (let j = 0; j < 6; j++) {
+      ctx.beginPath();
+      ctx.arc((i + 0.5) * 256/12, (j + 0.5) * 128/6, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  ctx.strokeStyle = 'rgba(60,40,20,0.18)'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(0, 64); ctx.lineTo(256, 64); ctx.stroke();
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+const ballMat = new THREE.MeshStandardMaterial({
+  color: 0xE8FF80, emissive: 0xCCFF00, emissiveIntensity: 1.6,
+  roughness: 0.5, metalness: 0.1, map: makeBallTexture()
+});
+const ball = new THREE.Mesh(new THREE.SphereGeometry(0.24, 20, 14), ballMat);
+ball.castShadow = true;
+ball.position.set(0, 3, 14);
+scene.add(ball);
+
+const ballLight = new THREE.PointLight(0xCCFF00, 0.9, 8, 2);
+scene.add(ballLight);
+
+const ballShadowMat = new THREE.MeshBasicMaterial({
+  color: 0x000000, transparent: true, opacity: 0.32, depthWrite: false
+});
+const ballShadow = new THREE.Mesh(new THREE.CircleGeometry(0.28, 24), ballShadowMat);
+ballShadow.rotation.x = -Math.PI / 2;
+ballShadow.position.y = 0.015;
+scene.add(ballShadow);
+
+// ═════ BALL TRAIL — TubeGeometry rebuilt per frame ═════
+const TRAIL_MAX = 64;
+let trailPoints = [];
+let trailMesh = null;
+const trailMat = new THREE.MeshStandardMaterial({
+  color: 0xCCFF00, emissive: 0xCCFF00, emissiveIntensity: 2.2,
+  transparent: true, opacity: 0.85, roughness: 0.2, metalness: 0.0
+});
+let _trailFrameSkip = 0;
+function rebuildTrail() {
+  // Throttle: rebuild every other frame. The ball still moves smoothly because
+  // ball.position is updated every frame; only the trail mesh skips a beat.
+  // Cuts TubeGeometry allocation cost in half, which removes the jitter Dave
+  // was seeing while the ball was soaring (2026-04-22).
+  _trailFrameSkip = (_trailFrameSkip + 1) % 2;
+  if (_trailFrameSkip !== 0 && trailMesh) return;
+  if (trailMesh) { scene.remove(trailMesh); trailMesh.geometry.dispose(); }
+  if (trailPoints.length < 4) return;
+  const curve = new THREE.CatmullRomCurve3(trailPoints);
+  // Density tuned down: ~1.6× points (was 3×) and 6 radial slices (was 8).
+  // Curve still reads smooth because Catmull-Rom interpolates between samples.
+  const tubularSegments = Math.min(Math.round(trailPoints.length * 1.6), 80);
+  const geo = new THREE.TubeGeometry(curve, tubularSegments, 0.09, 6, false);
+  trailMesh = new THREE.Mesh(geo, trailMat);
+  scene.add(trailMesh);
+}
+function setDimensionColor(hex) {
+  // Ball + trail intentionally NOT recolored per dimension — they stay
+  // neon-pickleball green (Dave 2026-04-22). Dimension color lives in chips,
+  // info panel, and burst FX only.
+}
+
+// ═════ IMPACT BURST — particle pop at rally end ═════
+const bursts = [];
+function spawnBurst(pos, colorHex, { count = 18, speed = 4, life = 0.8 } = {}) {
+  const grp = new THREE.Group();
+  grp.position.copy(pos);
+  for (let i = 0; i < count; i++) {
+    const m = new THREE.Mesh(
+      new THREE.SphereGeometry(0.08, 8, 6),
+      new THREE.MeshStandardMaterial({
+        color: colorHex, emissive: colorHex, emissiveIntensity: 2.5,
+        transparent: true, opacity: 1
+      })
+    );
+    m.userData.vel = new THREE.Vector3(
+      (Math.random() - 0.5) * speed,
+      Math.random() * (speed * 0.7) + 1,
+      (Math.random() - 0.5) * speed
+    );
+    grp.add(m);
+  }
+  grp.userData.t = 0; grp.userData.life = life;
+  scene.add(grp); bursts.push(grp);
+}
+function updateBursts(dt) {
+  for (let i = bursts.length - 1; i >= 0; i--) {
+    const b = bursts[i];
+    b.userData.t += dt;
+    b.children.forEach(m => {
+      m.position.addScaledVector(m.userData.vel, dt);
+      m.userData.vel.y -= 14 * dt;
+      m.material.opacity = Math.max(0, 1 - b.userData.t / b.userData.life);
+    });
+    if (b.userData.t > b.userData.life) {
+      b.children.forEach(m => { m.geometry.dispose(); m.material.dispose(); });
+      scene.remove(b);
+      bursts.splice(i, 1);
+    }
+  }
+}
+
+// ═════ SHOCKWAVE RINGS — paddle strikes + bounces ═════
+const shockwaves = [];
+function spawnShockwave(pos, colorHex, { maxR = 1.8, life = 0.6, onGround = true, width = 0.06 } = {}) {
+  const geo = new THREE.RingGeometry(0.1, 0.1 + width, 32);
+  const mat = new THREE.MeshBasicMaterial({
+    color: colorHex, transparent: true, opacity: 0.9,
+    side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending
+  });
+  const m = new THREE.Mesh(geo, mat);
+  m.position.copy(pos);
+  if (onGround) { m.rotation.x = -Math.PI / 2; m.position.y = 0.02; }
+  m.userData.t = 0; m.userData.maxR = maxR; m.userData.life = life; m.userData.startR = 0.1;
+  scene.add(m); shockwaves.push(m);
+}
+function updateShockwaves(dt) {
+  for (let i = shockwaves.length - 1; i >= 0; i--) {
+    const m = shockwaves[i];
+    m.userData.t += dt;
+    const p = Math.min(1, m.userData.t / m.userData.life);
+    const r = m.userData.startR + (m.userData.maxR - m.userData.startR) * (1 - Math.pow(1 - p, 3));
+    m.scale.setScalar(r / m.userData.startR);
+    m.material.opacity = 0.9 * (1 - p);
+    if (p >= 1) {
+      m.geometry.dispose(); m.material.dispose(); scene.remove(m);
+      shockwaves.splice(i, 1);
+    }
+  }
+}
+
+// ═════ BOUNCE MARKS — fading dots where ball hit the court ═════
+const bounceMarks = [];
+const BOUNCE_LIFE = 3.0, BOUNCE_MAX = 12;
+function spawnBounceMark(pos, colorHex) {
+  const geo = new THREE.CircleGeometry(0.22, 20);
+  const mat = new THREE.MeshBasicMaterial({
+    color: colorHex, transparent: true, opacity: 0.75,
+    depthWrite: false, blending: THREE.AdditiveBlending
+  });
+  const m = new THREE.Mesh(geo, mat);
+  m.rotation.x = -Math.PI / 2;
+  m.position.set(pos.x, 0.02, pos.z);
+  m.userData.t = 0;
+  scene.add(m); bounceMarks.push(m);
+  if (bounceMarks.length > BOUNCE_MAX) {
+    const old = bounceMarks.shift();
+    old.geometry.dispose(); old.material.dispose(); scene.remove(old);
+  }
+}
+function updateBounceMarks(dt) {
+  for (let i = bounceMarks.length - 1; i >= 0; i--) {
+    const m = bounceMarks[i];
+    m.userData.t += dt;
+    const p = Math.min(1, m.userData.t / BOUNCE_LIFE);
+    m.material.opacity = 0.75 * (1 - p);
+    m.scale.setScalar(1 + p * 0.4);
+    if (p >= 1) {
+      m.geometry.dispose(); m.material.dispose(); scene.remove(m);
+      bounceMarks.splice(i, 1);
+    }
+  }
+}
+function clearBounceMarks() {
+  while (bounceMarks.length) {
+    const m = bounceMarks.pop();
+    m.geometry.dispose(); m.material.dispose(); scene.remove(m);
+  }
+}
+
+// ═════ AUDIO ENGINE — Web Audio synth. No external assets. ═════
+// Paddle pluck, ball bounce, net whoosh, win ping, moment sting, ambient drone.
+// Autoplay policy: context starts suspended; resumed on first user gesture (audio button).
+let audioCtx = null;
+let masterGain = null;
+let ambientOsc = null;
+let ambientGain = null;
+
+function ensureAudio() {
+  if (audioCtx) return audioCtx;
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return null;
+  audioCtx = new AC();
+  masterGain = audioCtx.createGain();
+  masterGain.gain.value = 0.0;
+  masterGain.connect(audioCtx.destination);
+  return audioCtx;
+}
+function setAudioGain(v) {
+  if (!masterGain) return;
+  const now = audioCtx.currentTime;
+  masterGain.gain.cancelScheduledValues(now);
+  masterGain.gain.linearRampToValueAtTime(v, now + 0.12);
+}
+// Paddle "pock" — real pickleball paddles make a bright, sharp, short pop.
+// Primary pitch ~1000-1500Hz (not 500Hz tennis-style). Ultra-fast 2ms attack.
+// Two oscillators through bandpass + high-passed noise crack. 90ms decay.
+// Tuned 2026-04-20 (Dave "optimize audio"): brighter + sharper + shorter than v1.
+function playPaddle(freq = 1100, hardness = 1.0) {
+  if (!audioOn || !audioCtx) return;
+  const t = audioCtx.currentTime;
+
+  const oSine = audioCtx.createOscillator();
+  oSine.type = 'sine';
+  oSine.frequency.setValueAtTime(freq, t);
+  oSine.frequency.exponentialRampToValueAtTime(freq * 0.55, t + 0.06);
+
+  const oSaw = audioCtx.createOscillator();
+  oSaw.type = 'sawtooth';
+  oSaw.frequency.setValueAtTime(freq * 1.5, t);
+  oSaw.frequency.exponentialRampToValueAtTime(freq * 0.9, t + 0.04);
+
+  const bp = audioCtx.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.frequency.setValueAtTime(freq * 1.2, t);
+  bp.Q.value = 6;
+
+  const g = audioCtx.createGain();
+  g.gain.setValueAtTime(0.0, t);
+  g.gain.linearRampToValueAtTime(0.34 * hardness, t + 0.002);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+
+  oSine.connect(bp); oSaw.connect(bp);
+  bp.connect(g); g.connect(masterGain);
+  oSine.start(t); oSine.stop(t + 0.12);
+  oSaw.start(t);  oSaw.stop(t + 0.08);
+
+  // Impact crack — 12ms white noise, high-passed 2500Hz
+  const nDur = 0.012;
+  const nBuf = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * nDur), audioCtx.sampleRate);
+  const nData = nBuf.getChannelData(0);
+  for (let i = 0; i < nData.length; i++) nData[i] = (Math.random() * 2 - 1) * (1 - i / nData.length);
+  const nSrc = audioCtx.createBufferSource();
+  nSrc.buffer = nBuf;
+  const hp = audioCtx.createBiquadFilter();
+  hp.type = 'highpass'; hp.frequency.value = 2500;
+  const nG = audioCtx.createGain();
+  nG.gain.setValueAtTime(0.30 * hardness, t);
+  nG.gain.exponentialRampToValueAtTime(0.001, t + nDur);
+  nSrc.connect(hp); hp.connect(nG); nG.connect(masterGain);
+  nSrc.start(t); nSrc.stop(t + nDur);
+}
+// Bounce "tock" — short, crisp, mid-frequency. Not a boomy low thud.
+// Tuned 2026-04-20: brighter + shorter than v1's 160->80Hz low rumble.
+function playBounce() {
+  if (!audioOn || !audioCtx) return;
+  const t = audioCtx.currentTime;
+  const o = audioCtx.createOscillator();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(420, t);
+  o.frequency.exponentialRampToValueAtTime(220, t + 0.10);
+  const g = audioCtx.createGain();
+  g.gain.setValueAtTime(0.0, t);
+  g.gain.linearRampToValueAtTime(0.22, t + 0.003);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.13);
+  o.connect(g); g.connect(masterGain);
+  o.start(t); o.stop(t + 0.14);
+  // Click layered for impact
+  const nDur = 0.008;
+  const nBuf = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * nDur), audioCtx.sampleRate);
+  const nData = nBuf.getChannelData(0);
+  for (let i = 0; i < nData.length; i++) nData[i] = (Math.random() * 2 - 1) * (1 - i / nData.length);
+  const nSrc = audioCtx.createBufferSource();
+  nSrc.buffer = nBuf;
+  const bp2 = audioCtx.createBiquadFilter();
+  bp2.type = 'bandpass'; bp2.frequency.value = 1800; bp2.Q.value = 1.0;
+  const nG = audioCtx.createGain();
+  nG.gain.setValueAtTime(0.16, t);
+  nG.gain.exponentialRampToValueAtTime(0.001, t + nDur);
+  nSrc.connect(bp2); bp2.connect(nG); nG.connect(masterGain);
+  nSrc.start(t); nSrc.stop(t + nDur);
+}
+function playNetWhoosh() {
+  if (!audioOn || !audioCtx) return;
+  const t = audioCtx.currentTime;
+  const dur = 0.22;
+  const buf = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * dur), audioCtx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < d.length; i++) {
+    const p = i / d.length;
+    d[i] = (Math.random() * 2 - 1) * Math.sin(Math.PI * p) * 0.55;
+  }
+  const src = audioCtx.createBufferSource();
+  src.buffer = buf;
+  const bp = audioCtx.createBiquadFilter();
+  bp.type = 'bandpass'; bp.frequency.value = 800; bp.Q.value = 1.4;
+  const g = audioCtx.createGain();
+  g.gain.setValueAtTime(0.18, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  src.connect(bp); bp.connect(g); g.connect(masterGain);
+  src.start(t); src.stop(t + dur);
+}
+function playWin() {
+  if (!audioOn || !audioCtx) return;
+  const t = audioCtx.currentTime;
+  [880, 1320, 1760].forEach((freq, i) => {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(freq, t + i * 0.03);
+    g.gain.setValueAtTime(0, t + i * 0.03);
+    g.gain.linearRampToValueAtTime(0.12, t + i * 0.03 + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.001, t + i * 0.03 + 0.6);
+    o.connect(g); g.connect(masterGain);
+    o.start(t + i * 0.03); o.stop(t + i * 0.03 + 0.7);
+  });
+}
+function playMomentSting(freq = 520) {
+  if (!audioOn || !audioCtx) return;
+  const t = audioCtx.currentTime;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(freq, t);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(0.09, t + 0.05);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+  o.connect(g); g.connect(masterGain);
+  o.start(t); o.stop(t + 0.5);
+}
+function startAmbient() {
+  // Soft stadium-ish ambience: low-pass filtered pink-ish noise, very quiet.
+  // Replaces v1's 55Hz sine which was too rumbly over long sessions.
+  if (!audioOn || !audioCtx || ambientOsc) return;
+  const t = audioCtx.currentTime;
+  const dur = 6;
+  const buf = audioCtx.createBuffer(1, Math.floor(audioCtx.sampleRate * dur), audioCtx.sampleRate);
+  const d = buf.getChannelData(0);
+  let last = 0;
+  for (let i = 0; i < d.length; i++) {
+    const w = (Math.random() * 2 - 1);
+    last = last * 0.97 + w * 0.03;
+    d[i] = last;
+  }
+  const src = audioCtx.createBufferSource();
+  src.buffer = buf; src.loop = true;
+  const lp = audioCtx.createBiquadFilter();
+  lp.type = 'lowpass'; lp.frequency.value = 480; lp.Q.value = 0.6;
+  ambientGain = audioCtx.createGain();
+  ambientGain.gain.value = 0.0;
+  ambientGain.gain.linearRampToValueAtTime(0.032, t + 2.5);
+  src.connect(lp); lp.connect(ambientGain); ambientGain.connect(masterGain);
+  src.start();
+  ambientOsc = src;  // track for stop
+}
+function stopAmbient() {
+  if (!ambientOsc || !audioCtx) return;
+  const t = audioCtx.currentTime;
+  ambientGain.gain.cancelScheduledValues(t);
+  ambientGain.gain.linearRampToValueAtTime(0, t + 0.6);
+  ambientOsc.stop(t + 0.7);
+  ambientOsc = null; ambientGain = null;
+}
+const PADDLE_FREQ_BY_DIM = { drive: 1300, defend: 980, drop: 900, dink: 1150 };  // bright pickleball pock
+
+// ═════ SEGMENT-BOUNDARY FX — classify each segment start, fire visuals + audio ═════
+// Ball-launching segments (from.y ≥ 1.5) = paddle strike → white + dimension shockwave + pluck
+// Ground segments (from.y < 0.5) = ball coming off bounce → ring + bounce mark + thud
+function fireSegmentStartFX(dimKey, segIdx) {
+  const s = SHOTS[dimKey].shot;
+  if (!s.segments || segIdx < 0 || segIdx >= s.segments.length) return;
+  const seg = s.segments[segIdx];
+  const color = SHOTS[dimKey].color;
+  if (seg.from[1] < 0.5) {
+    const pos = new THREE.Vector3(seg.from[0], 0.02, seg.from[2]);
+    spawnShockwave(pos, color, { maxR: 1.0, life: 0.55, width: 0.04 });
+    spawnBounceMark(pos, color);
+    playBounce();
+  } else if (seg.from[1] >= 1.2) {
+    const pos = new THREE.Vector3(seg.from[0], seg.from[1], seg.from[2]);
+    spawnShockwave(pos, 0xFFFFFF, { maxR: 0.7, life: 0.3, onGround: false, width: 0.05 });
+    spawnShockwave(pos, color, { maxR: 1.2, life: 0.55, onGround: false, width: 0.05 });
+    const freq = PADDLE_FREQ_BY_DIM[dimKey] || 500;
+    const isLast = segIdx === s.segments.length - 1;
+    playPaddle(freq + (Math.random() - 0.5) * 40, isLast ? 1.2 : 0.95);
+  }
+}
+
+// ═════ TRAJECTORY ═════
+function arcAt(from, to, apex, t) {
+  const x = from[0] + (to[0] - from[0]) * t;
+  const z = from[2] + (to[2] - from[2]) * t;
+  const baseY = from[1] + (to[1] - from[1]) * t;
+  const apexOffset = apex - (from[1] + to[1]) / 2;
+  const y = baseY + 4 * apexOffset * t * (1 - t);
+  return new THREE.Vector3(x, y, z);
+}
+function trajectoryAt(shot, t) {
+  if (shot.segments) {
+    const totalDur = shot.segments.reduce((a, s) => a + s.dur, 0);
+    const timeT = t * totalDur;
+    let acc = 0;
+    for (const seg of shot.segments) {
+      if (timeT <= acc + seg.dur || seg === shot.segments[shot.segments.length - 1]) {
+        const localT = Math.min(1, Math.max(0, (timeT - acc) / seg.dur));
+        return arcAt(seg.from, seg.to, seg.apex, localT);
+      }
+      acc += seg.dur;
+    }
+  }
+  return arcAt(shot.from, shot.to, shot.apex, t);
+}
+
+// ═════ ANIMATION STATE ═════
+let shotT = 0;
+let shotRunning = false;
+let shotStart = 0;
+let shotBurstFired = false;
+let lastSegFiredIdx = -1;
+let lastNetCrossZ = null;
+let activeMoment = null;
+const firedMoments = new Set();
+
+function startShot(key, resetCamera = true) {
+  activeShotKey = key;
+  const s = SHOTS[key];
+  setDimensionColor(s.color);
+  trailPoints = [];
+  if (trailMesh) { scene.remove(trailMesh); trailMesh.geometry.dispose(); trailMesh = null; }
+  clearBounceMarks();
+  hideMomentLabel();
+  activeMoment = null;
+  firedMoments.clear();
+  const firstFrom = s.shot.segments ? s.shot.segments[0].from : s.shot.from;
+  ball.position.set(...firstFrom);
+  if (resetCamera) {
+    animateCameraTo(s.cam.pos, s.cam.look, 1.1);
+    camPresetIdx = 0;
+  }
+  shotT = 0;
+  shotStart = performance.now();
+  shotRunning = true;
+  shotBurstFired = false;
+  lastSegFiredIdx = -1;
+  lastNetCrossZ = null;
+  // Reset cinematic camera state so push-in re-engages on the next cinematic segment
+  wasInCinematic = false;
+  cinematicCamPushed = false;
+  resetPlayerPositions(key);
+  updateSideCard(key);
+  updateShotChips(key);
+  updateBrandPill(key);
+  updateStatsHUD(key);
+  buildTimeline();
+  document.getElementById('center-hero').classList.add('dimmed');
+  updateDeepLink();
+}
+
+function updateSideCard(key) {
+  const s = SHOTS[key];
+  const card = document.getElementById('side-card');
+  const hex = '#' + s.color.toString(16).padStart(6, '0');
+  card.style.setProperty('--dim', hex);
+  document.getElementById('side-label').textContent = s.label;
+  document.getElementById('side-role').textContent  = s.role;
+  document.getElementById('side-mantra').textContent= s.mantra;
+  document.getElementById('side-traj').textContent  = s.traj;
+  card.classList.add('visible');
+  try {
+    window.parent.postMessage({
+      type: '4dp:shot-changed',
+      key, label: s.label, role: s.role, mantra: s.mantra, traj: s.traj, color: hex
+    }, '*');
+  } catch (e) { /* not embedded */ }
+}
+function updateShotChips(key) {
+  document.querySelectorAll('.shot-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.shot === key);
+  });
+}
+function updateBrandPill(key) {
+  const s = SHOTS[key];
+  const hex = '#' + s.color.toString(16).padStart(6, '0');
+  document.getElementById('brand-dot').style.background = hex;
+  // Keep the brand pill consistently branded as 4D · PRESSURE DINKING (link back home).
+  // Only the color adapts to the active rally — the label itself stays fixed.
+  const label = document.getElementById('brand-label');
+  label.textContent = '4D · PRESSURE DINKING';
+  label.style.color = hex;
+  document.body.style.setProperty('--dim', hex);
+}
+function updateBrandDot(hex) {
+  document.getElementById('brand-dot').style.background = '#' + hex.toString(16).padStart(6, '0');
+}
+function updateStatsHUD(key) {
+  const s = SHOTS[key];
+  const hex = '#' + s.color.toString(16).padStart(6, '0');
+  const rallyEl = document.getElementById('stat-rally');
+  rallyEl.textContent = s.role;
+  rallyEl.style.color = hex;
+  const segs = s.shot.segments ? s.shot.segments.length : 1;
+  document.getElementById('stat-shot').textContent = `—/${segs}`;
+  document.getElementById('stat-time').textContent = '0.0s';
+  document.getElementById('hud-stats').classList.add('visible');
+}
+
+// ═════ KEY-MOMENT ANNOTATIONS — world-space pinned label ═════
+const _pScreen = new THREE.Vector3();
+function showMomentLabel(mom) {
+  const tag = document.getElementById('moment-tag');
+  const why = document.getElementById('moment-why');
+  const lab = document.getElementById('moment-label');
+  tag.textContent = mom.label;
+  why.textContent = mom.why;
+  lab.classList.add('on');
+  playMomentSting(PADDLE_FREQ_BY_DIM[activeShotKey] || 520);
+}
+function hideMomentLabel() {
+  document.getElementById('moment-label').classList.remove('on');
+}
+function projectTo2D(v) {
+  _pScreen.copy(v).project(camera);
+  return {
+    x: (_pScreen.x *  0.5 + 0.5) * window.innerWidth,
+    y: (-_pScreen.y * 0.5 + 0.5) * window.innerHeight,
+    inFront: _pScreen.z < 1
+  };
+}
+function updateMomentLabelPosition(mom) {
+  if (!mom) return;
+  let worldPos;
+  if (mom.arrow.type === 'ball') {
+    worldPos = ball.position.clone();
+  } else if (mom.arrow.type === 'player') {
+    const p = players[mom.arrow.key];
+    worldPos = p ? new THREE.Vector3(p.position.x, 3.5, p.position.z) : ball.position.clone();
+  } else if (mom.arrow.type === 'court') {
+    worldPos = new THREE.Vector3(mom.arrow.pos[0], 0.2, mom.arrow.pos[1]);
+  } else {
+    worldPos = ball.position.clone();
+  }
+  const screen = projectTo2D(worldPos.clone().add(new THREE.Vector3(0, 1.4, 0)));
+  const lab = document.getElementById('moment-label');
+  if (!screen.inFront) { lab.style.opacity = '0'; return; }
+  lab.style.opacity = '';   // let the .on class drive opacity
+  lab.style.left = `${Math.round(screen.x)}px`;
+  lab.style.top  = `${Math.round(screen.y)}px`;
+}
+function updateMoments() {
+  const moments = SHOTS[activeShotKey].moments || [];
+  for (const mom of moments) {
+    if (firedMoments.has(mom)) continue;
+    if (shotT >= mom.at) {
+      firedMoments.add(mom);
+      activeMoment = { mom, expireT: performance.now() + mom.hold * 1000 };
+      showMomentLabel(mom);
+    }
+  }
+  if (activeMoment) {
+    updateMomentLabelPosition(activeMoment.mom);
+    if (performance.now() > activeMoment.expireT) {
+      hideMomentLabel();
+      activeMoment = null;
+    }
+  }
+}
+
+// ═════ SCRUB-BAR TIMELINE — film-reel study tool ═════
+// Visible bar at the bottom of the viewport. Shows segment ticks,
+// dimension-colored moment markers, and a draggable playhead.
+// Toggle with B; hidden in embedded + hud-hidden modes.
+
+let timelineVisible = true;   // default on — it's one of the template's signature features
+
+function buildTimeline() {
+  const track = document.getElementById('timeline-track');
+  if (!track) return;
+  // Clear prior ticks + moment markers + playhead (preserve the fill)
+  track.querySelectorAll('.timeline-seg, .timeline-mom, .timeline-playhead').forEach(el => el.remove());
+  const s = SHOTS[activeShotKey].shot;
+  if (!s.segments) return;
+  const totalDur = s.segments.reduce((a, seg) => a + seg.dur, 0);
+  // Segment boundary ticks
+  let accum = 0;
+  for (let i = 1; i < s.segments.length; i++) {
+    accum += s.segments[i-1].dur;
+    const pct = (accum / totalDur) * 100;
+    const tick = document.createElement('div');
+    tick.className = 'timeline-seg';
+    tick.style.left = pct + '%';
+    track.appendChild(tick);
+  }
+  // Moment markers
+  const moments = SHOTS[activeShotKey].moments || [];
+  moments.forEach((mom, idx) => {
+    const marker = document.createElement('div');
+    marker.className = 'timeline-mom';
+    marker.style.left = (mom.at * 100) + '%';
+    marker.title = mom.label + ' — ' + mom.why;
+    marker.dataset.momIdx = idx;
+    marker.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // Jump to just before the moment so it fires fresh
+      scrub(Math.max(0, mom.at - 0.005));
+    });
+    track.appendChild(marker);
+  });
+  // Playhead
+  const playhead = document.createElement('div');
+  playhead.className = 'timeline-playhead';
+  playhead.id = 'timeline-playhead';
+  playhead.style.left = '0%';
+  track.appendChild(playhead);
+  // Tag moments label text
+  document.getElementById('timeline-mom-label').textContent = `0/${moments.length}`;
+}
+
+function updateTimelineUI() {
+  if (!timelineVisible) return;
+  const fill = document.getElementById('timeline-fill');
+  const playhead = document.getElementById('timeline-playhead');
+  if (!fill || !playhead) return;
+  const pct = (shotT * 100).toFixed(2) + '%';
+  fill.style.width = pct;
+  playhead.style.left = pct;
+  const moments = SHOTS[activeShotKey].moments || [];
+  document.querySelectorAll('.timeline-mom').forEach((m, i) => {
+    if (moments[i] && firedMoments.has(moments[i])) m.classList.add('fired');
+    else m.classList.remove('fired');
+  });
+  const s = SHOTS[activeShotKey].shot;
+  if (s.segments) {
+    const info = getSegmentInfo(s, shotT);
+    const totalDur = s.segments.reduce((a, seg) => a + seg.dur, 0);
+    document.getElementById('timeline-seg-label').textContent =
+      `${(info?.idx ?? 0) + 1}/${s.segments.length}`;
+    document.getElementById('timeline-time-label').textContent =
+      (shotT * totalDur).toFixed(1) + 's';
+    document.getElementById('timeline-mom-label').textContent =
+      `${firedMoments.size}/${moments.length}`;
+  }
+}
+
+// Scrub to a specific shotT fraction. Used by timeline, arrow keys, postMessage API.
+function scrub(t) {
+  shotT = Math.max(0, Math.min(1, t));
+  lastSegFiredIdx = -1;            // re-enable segment FX for fresh re-fire
+  firedMoments.clear();
+  activeMoment = null;
+  hideMomentLabel();
+  // Pre-mark moments BEFORE this position as already fired (they shouldn't re-show)
+  const moments = SHOTS[activeShotKey].moments || [];
+  for (const mom of moments) {
+    if (mom.at < shotT - 0.002) firedMoments.add(mom);
+  }
+  // Also pre-mark segments before this position as already FX-fired to avoid burst spam
+  const s = SHOTS[activeShotKey].shot;
+  if (s.segments) {
+    const info = getSegmentInfo(s, shotT);
+    if (info) lastSegFiredIdx = info.idx - 1;  // re-fires current segment only
+  }
+  // Reset shot-completion state so we keep playing past the scrub
+  if (shotT < 1) { shotRunning = true; shotBurstFired = false; }
+}
+
+function setTimelineVisible(on) {
+  timelineVisible = on;
+  document.getElementById('timeline').classList.toggle('on', on);
+}
+
+// Debug hooks (R21 canonical template — expose for QA / downstream modules)
+window.__4dp = {
+  getState: () => ({
+    activeShotKey, shotT, shotRunning, paused, slowMo, audioOn,
+    storyMode, storyIdx, perfTier, fps: fpsDisplay, timelineOn: timelineVisible,
+    activeMoment: activeMoment && { label: activeMoment.mom.label, expiresIn: activeMoment.expireT - performance.now() },
+    firedMoments: firedMoments.size,
+    totalMoments: (SHOTS[activeShotKey].moments || []).length
+  }),
+  scrub,  // use the full scrub() so moments/segments replay cleanly
+  startShot, setSlowMo, setPaused, setAudio, setTimelineVisible,
+  // Synchronous full-frame pose application (for QA when rAF is throttled)
+  applyPoseNow: () => {
+    updatePlayerPositions(activeShotKey, shotT);
+    updateSwingAnimation(activeShotKey, shotT);
+    updateHeadTracking();
+  },
+  SHOTS,
+  // Live references for QA + downstream modules
+  get players() { return players; },
+  get ball() { return ball; },
+  get camera() { return camera; }
+};
+
+// ═════ SMOOTH CAMERA TWEEN ═════
+let camTween = null;
+function animateCameraTo(pos, look, duration = 1.0) {
+  const startPos = camera.position.clone();
+  const startLook = controls.target.clone();
+  const endPos = new THREE.Vector3(...pos);
+  const endLook = new THREE.Vector3(...look);
+  const t0 = performance.now();
+  camTween = { startPos, startLook, endPos, endLook, t0, duration: duration * 1000 };
+}
+function updateCameraTween(now) {
+  if (!camTween) return;
+  const t = Math.min(1, (now - camTween.t0) / camTween.duration);
+  // ease-in-out cubic — symmetric, smoother when chaining multi-angle legs
+  const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  camera.position.lerpVectors(camTween.startPos, camTween.endPos, e);
+  controls.target.lerpVectors(camTween.startLook, camTween.endLook, e);
+  if (t >= 1) camTween = null;
+}
+
+// ═════ SMART CAMERA BREATHING — subtle lerp toward ball when user idle ═════
+const _desiredTarget = new THREE.Vector3();
+function updateCameraBreathing(dt) {
+  if (userCameraOwned || camTween || reducedMotion) return;
+  if (!shotRunning) return;
+  _desiredTarget.set(
+    ball.position.x * 0.4,
+    3 + ball.position.y * 0.25,
+    ball.position.z * 0.2
+  );
+  controls.target.lerp(_desiredTarget, Math.min(1, dt * 0.8));
+}
+
+// ═════ CINEMATIC MULTI-ANGLE REPLAY — 3 angles pan before loop ═════
+function playCinematicReplay(onDone) {
+  if (!cinematicReplay || reducedMotion || userCameraOwned) { onDone(); return; }
+  const s = SHOTS[activeShotKey];
+  // Gentler replay: one soft hero-angle pulled from the signature preset, then glide back.
+  // Smaller swings + longer durations + ease-in-out = no jerky junctions.
+  const px = s.cam.pos[0], py = s.cam.pos[1], pz = s.cam.pos[2];
+  const lx = s.cam.look[0], ly = s.cam.look[1], lz = s.cam.look[2];
+  const angles = [
+    { pos: [px * 0.55, py * 0.85 + 2, pz * 0.55 + 12], look: [lx, ly, lz], dur: 1.3 },
+    { pos: s.cam.pos, look: s.cam.look, dur: 1.5 }
+  ];
+  let i = 0;
+  function step() {
+    if (i >= angles.length) { onDone(); return; }
+    const a = angles[i++];
+    animateCameraTo(a.pos, a.look, a.dur);
+    // No gap between legs — next animateCameraTo picks up from current camera position for continuous glide
+    setTimeout(step, a.dur * 1000);
+  }
+  step();
+}
+
+// ═════ STORY MODE — autoplay Drive → Defend → Drop → Dink ═════
+const STORY_ORDER = ['drive', 'defend', 'drop'];  // Only 3 drills — 'dink' is retained in SHOTS as legacy but no chip/story
+function enterStoryMode() {
+  if (storyMode) return;
+  storyMode = true;
+  storyIdx = 0;
+  document.getElementById('btn-story').classList.add('active');
+  showStoryCard(STORY_ORDER[0]);
+}
+function exitStoryMode() {
+  storyMode = false;
+  document.getElementById('story-splash').classList.remove('on');
+  document.getElementById('btn-story').classList.remove('active');
+  if (storyTimer) { clearTimeout(storyTimer); storyTimer = null; }
+}
+function showStoryCard(key) {
+  const splash = document.getElementById('story-splash');
+  const card = document.getElementById('story-card');
+  const s = SHOTS[key];
+  const hex = '#' + s.color.toString(16).padStart(6, '0');
+  const idx = STORY_ORDER.indexOf(key);
+  document.getElementById('story-eyebrow').textContent = `Rally ${idx + 1} · ${s.role}`;
+  document.getElementById('story-title').textContent = s.story;
+  document.querySelectorAll('#story-card .ladder .rung').forEach((r, i) => {
+    r.classList.remove('done', 'now');
+    if (i < idx) r.classList.add('done');
+    if (i === idx) r.classList.add('now');
+  });
+  card.className = 'story-card dim-' + s.dim;
+  card.style.setProperty('--dim', hex);
+  splash.classList.add('on');
+  storyTimer = setTimeout(() => {
+    if (!storyMode) return;
+    splash.classList.remove('on');
+    startShot(key);
+  }, 2800);
+}
+function advanceStory() {
+  storyIdx += 1;
+  if (storyIdx >= STORY_ORDER.length) { exitStoryMode(); return; }
+  showStoryCard(STORY_ORDER[storyIdx]);
+}
+
+// ═════ CAPTURE — PNG export of current frame ═════
+function captureScreenshot() {
+  const flash = document.getElementById('capture-flash');
+  flash.classList.add('on');
+  setTimeout(() => flash.classList.remove('on'), 180);
+  composer.render();
+  try {
+    const dataURL = renderer.domElement.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = dataURL;
+    a.download = `4dp-${activeShotKey}-${Date.now()}.png`;
+    a.click();
+  } catch (e) {
+    console.warn('[4DP] capture failed:', e);
+  }
+}
+
+// ═════ DEEP LINK — ?shot=drive&slowmo=1&audio=1 ═════
+function updateDeepLink() {
+  if (window.self !== window.top) return;
+  try {
+    const p = new URLSearchParams(location.search);
+    p.set('shot', activeShotKey);
+    p.set('slowmo', slowMo ? '1' : '0');
+    p.set('audio',  audioOn ? '1' : '0');
+    const url = `${location.pathname}?${p.toString()}${location.hash}`;
+    window.history.replaceState({}, '', url);
+  } catch (e) { /* no-op */ }
+}
+function applyDeepLink() {
+  const p = new URLSearchParams(location.search);
+  const s = p.get('shot');
+  if (s && SHOTS[s]) activeShotKey = s;
+  if (p.get('slowmo') === '1') {
+    slowMo = true;
+    document.getElementById('btn-slowmo').classList.add('active');
+    document.getElementById('slowmo-badge').classList.add('on');
+  }
+}
+
+// ═════ DEBUG GRID (D key) ═════
+const debugGroup = new THREE.Group();
+{
+  const axes = new THREE.AxesHelper(12);
+  axes.position.y = 0.1;
+  debugGroup.add(axes);
+  const grid = new THREE.GridHelper(40, 40, 0x4a7aa6, 0x2a4a66);
+  grid.position.y = 0.08;
+  debugGroup.add(grid);
+  const cornerColors = { nearLeft: 0xFF6B9E, nearRight: 0xFF6B9E, farLeft: 0x6BAAFF, farRight: 0x6BAAFF };
+  for (const k of PLAYER_KEYS) {
+    const m = new THREE.Mesh(
+      new THREE.SphereGeometry(0.35, 8, 6),
+      new THREE.MeshBasicMaterial({ color: cornerColors[k] })
+    );
+    const pos = INITIAL_POS[k];
+    m.position.set(pos[0], 4.5, pos[1]);
+    m.userData.playerKey = k;
+    debugGroup.add(m);
+  }
+}
+debugGroup.visible = false;
+scene.add(debugGroup);
+
+function updateDebugReadout() {
+  if (!debugOn) return;
+  const info = getSegmentInfo(SHOTS[activeShotKey].shot, shotT);
+  document.getElementById('dbg-shot').textContent = activeShotKey;
+  document.getElementById('dbg-seg').textContent = info ? info.idx : '—';
+  document.getElementById('dbg-t').textContent = shotT.toFixed(2);
+  document.getElementById('dbg-ball').textContent =
+    `${ball.position.x.toFixed(1)}, ${ball.position.y.toFixed(1)}, ${ball.position.z.toFixed(1)}`;
+  document.getElementById('dbg-cam').textContent =
+    `${camera.position.x.toFixed(0)}, ${camera.position.y.toFixed(0)}, ${camera.position.z.toFixed(0)}`;
+  document.getElementById('dbg-fps').textContent = String(fpsDisplay);
+  document.getElementById('dbg-tier').textContent = perfTier;
+  for (const child of debugGroup.children) {
+    if (child.userData.playerKey) {
+      const p = players[child.userData.playerKey];
+      child.position.set(p.position.x, 4.5, p.position.z);
+    }
+  }
+}
+
+// ═════ PERFORMANCE DETECTOR — auto-downgrade on sustained low FPS ═════
+let fpsDisplay = 60;
+let _fpsAcc = 0, _fpsFrames = 0, _fpsLow = 0;
+function updatePerf(dt) {
+  _fpsAcc += dt; _fpsFrames++;
+  if (_fpsAcc >= 1.0) {
+    const fps = Math.round(_fpsFrames / _fpsAcc);
+    fpsDisplay = fps;
+    _fpsAcc = 0; _fpsFrames = 0;
+    if (fps < 45 && perfTier === 'high') { downgrade('mid'); }
+    else if (fps < 30 && perfTier === 'mid') { downgrade('low'); }
+    else if (fps < 20) { _fpsLow++; if (_fpsLow > 3) downgrade('low'); }
+    else { _fpsLow = 0; }
+  }
+}
+function downgrade(tier) {
+  if (tier === 'mid' && perfTier === 'high') {
+    bloom.strength = 0.38;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    perfTier = 'mid';
+    console.info('[4DP] perf: high → mid');
+  } else if (tier === 'low' && perfTier !== 'low') {
+    bloom.strength = 0.25;
+    renderer.setPixelRatio(1);
+    renderer.shadowMap.enabled = false;
+    crowdGroup.visible = false;
+    perfTier = 'low';
+    console.info('[4DP] perf: → low');
+  }
+}
+
+// ═════ MAIN ANIMATION LOOP ═════
+let lastTime = performance.now();
+function animate() {
+  const now = performance.now();
+  const rawDt = Math.min(0.05, (now - lastTime) / 1000);
+  // Auto-slow-mo on cinematic segments (Dave 2026-04-20).
+  let autoSlowMo = false;
+  if (shotRunning) {
+    const dim = SHOTS[activeShotKey];
+    if (dim && dim.shot && dim.shot.segments) {
+      const info = getSegmentInfo(dim.shot, shotT);
+      const seg = info ? dim.shot.segments[info.idx] : null;
+      if (seg && seg.cinematic) autoSlowMo = true;
+    }
+  }
+  const speedMult = slowMo ? 0.28 : (autoSlowMo ? 0.42 : 1.0);
+  const dt = paused ? 0 : rawDt * speedMult;
+  lastTime = now;
+  // Badge reflects auto slow-mo too
+  const _sloBadge = document.getElementById('slowmo-badge');
+  if (_sloBadge) _sloBadge.classList.toggle('on', slowMo || autoSlowMo);
+
+  // Cinematic camera push-in — when entering a cinematic segment, tween camera
+  // ~14% closer to look target for broadcast-style drama. Tween back when exiting.
+  // Only engages if user hasn't manually dragged (autoRotate still true).
+  if (autoSlowMo && !wasInCinematic && !cinematicCamPushed && controls.autoRotate) {
+    const curPos = camera.position.clone();
+    const tgt = controls.target.clone();
+    const toward = tgt.clone().sub(curPos).multiplyScalar(0.14);
+    const newPos = curPos.clone().add(toward);
+    animateCameraTo([newPos.x, newPos.y, newPos.z], [tgt.x, tgt.y, tgt.z], 0.7);
+    cinematicCamPushed = true;
+  } else if (!autoSlowMo && wasInCinematic && cinematicCamPushed) {
+    const s = SHOTS[activeShotKey];
+    animateCameraTo(s.cam.pos, s.cam.look, 0.9);
+    cinematicCamPushed = false;
+  }
+  wasInCinematic = autoSlowMo;
+
+  controls.update();
+  updateCameraTween(now);
+  updateCameraBreathing(dt);
+
+  // Ball spin during flight
+  if (!paused && shotRunning) {
+    ball.rotation.x += dt * 12;
+    ball.rotation.y += dt * 9;
+  }
+
+  if (shotRunning) {
+    const s = SHOTS[activeShotKey].shot;
+    const totalDur = s.segments ? s.segments.reduce((a, seg) => a + seg.dur, 0) : s.duration;
+    shotT += dt / totalDur;
+
+    // Segment-boundary FX — fire once per newly-entered segment
+    const info = getSegmentInfo(s, shotT);
+    if (info && info.idx > lastSegFiredIdx) {
+      for (let k = lastSegFiredIdx + 1; k <= info.idx; k++) {
+        fireSegmentStartFX(activeShotKey, k);
+      }
+      lastSegFiredIdx = info.idx;
+      const segs = s.segments.length;
+      document.getElementById('stat-shot').textContent = `${info.idx + 1}/${segs}`;
+    }
+    document.getElementById('stat-time').textContent = (shotT * totalDur).toFixed(1) + 's';
+
+    if (shotT >= 1) {
+      shotT = 1;
+      shotRunning = false;
+      if (!shotBurstFired) {
+        spawnBurst(ball.position.clone(), SHOTS[activeShotKey].color);
+        playWin();
+        shotBurstFired = true;
+        // Multi-angle cinematic replay, then loop
+        playCinematicReplay(() => {
+          if (storyMode) {
+            advanceStory();
+          } else {
+            setTimeout(() => { if (activeShotKey) startShot(activeShotKey, false); }, 400);
+          }
+        });
+      }
+    }
+    const p = trajectoryAt(s, shotT);
+
+    // Net-whoosh detection: ball crosses z=0 plane near net height
+    if (lastNetCrossZ !== null && Math.sign(p.z) !== Math.sign(lastNetCrossZ) && Math.abs(p.y - 1.7) < 1.5) {
+      playNetWhoosh();
+    }
+    lastNetCrossZ = p.z;
+
+    ball.position.copy(p);
+    ballLight.position.copy(p);
+
+    // Players + realistic swing synced to shotT.
+    // Swing runs whole-arm (not just paddle), with anticipatory windup before
+    // contact and follow-through after. Head tracks ball every frame.
+    updatePlayerPositions(activeShotKey, shotT);
+    updateSwingAnimation(activeShotKey, shotT);
+    updateHeadTracking();
+
+    trailPoints.push(p.clone());
+    if (trailPoints.length > TRAIL_MAX) trailPoints.shift();
+    rebuildTrail();
+
+    updateMoments();
+  } else {
+    if (trailPoints.length > 2) {
+      trailPoints.shift();
+      rebuildTrail();
+    }
+  }
+
+  // Ball spin — rotates every frame so the ball reads as a physical object.
+  // ~1 rotation / 0.5s = fast pickleball topspin feel. Runs during pause too
+  // (a spinning ball mid-flight looks alive; a frozen sphere looks like cardboard).
+  ball.rotation.x += dt * 6.0;
+  ball.rotation.z += dt * 3.5;
+
+  // Ball polish (shadow + squash) — runs EVERY frame so effects persist during pauses.
+  // Dave 2026-04-20: the #1 cinematic trick to sell bouncing realism.
+  const _h = Math.max(0, ball.position.y - 0.24);
+  ballShadow.position.x = ball.position.x;
+  ballShadow.position.z = ball.position.z;
+  const _sScale = Math.max(0.55, 1 - _h * 0.06);
+  ballShadow.scale.setScalar(_sScale);
+  ballShadowMat.opacity = Math.max(0.12, 0.36 - _h * 0.022);
+  const _sq = Math.exp(-_h * 4);
+  ball.scale.y = 1 - _sq * 0.28;
+  ball.scale.x = 1 + _sq * 0.14;
+  ball.scale.z = 1 + _sq * 0.14;
+
+  updateBursts(dt);
+  updateShockwaves(dt);
+  updateBounceMarks(dt);
+  updateTimelineUI();
+  updateDebugReadout();
+  updatePerf(dt);
+
+  composer.render();
+  requestAnimationFrame(animate);
+}
+
+// ═════ INIT + EVENTS ═════
+
+(function(){
+  const params = new URLSearchParams(location.search);
+  if (params.get('embedded') === '1') document.body.classList.add('embedded');
+})();
+
+// Parent-page message bridge.
+// v1 API (preserved): 4dp:select-shot, 4dp:toggle-pause
+// v2 API (added for showcase + programmatic driving):
+//   4dp:set-slowmo { on }, 4dp:set-audio { on }, 4dp:cycle-camera,
+//   4dp:enter-story, 4dp:exit-story, 4dp:toggle-debug { on },
+//   4dp:scrub { t }, 4dp:capture, 4dp:reset-camera,
+//   4dp:set-timeline { on }
+window.addEventListener('message', (e) => {
+  if (!e.data || !e.data.type) return;
+  const msg = e.data;
+  switch (msg.type) {
+    case '4dp:select-shot':
+      if (msg.key && SHOTS[msg.key]) {
+        if (paused) setPaused(false);
+        if (storyMode) exitStoryMode();
+        startShot(msg.key);
+      }
+      break;
+    case '4dp:toggle-pause':    setPaused(!paused); break;
+    case '4dp:set-pause':       setPaused(!!msg.on); break;
+    case '4dp:set-slowmo':      setSlowMo(!!msg.on); break;
+    case '4dp:set-audio':       setAudio(!!msg.on); break;
+    case '4dp:cycle-camera':    document.getElementById('btn-camera').click(); break;
+    case '4dp:enter-story':     enterStoryMode(); break;
+    case '4dp:exit-story':      exitStoryMode(); break;
+    case '4dp:toggle-debug':
+      debugOn = (msg.on !== undefined) ? !!msg.on : !debugOn;
+      debugGroup.visible = debugOn;
+      document.getElementById('debug-panel').classList.toggle('on', debugOn);
+      break;
+    case '4dp:scrub':
+      if (typeof msg.t === 'number') scrub(msg.t);
+      break;
+    case '4dp:capture':         captureScreenshot(); break;
+    case '4dp:reset-camera':
+      userCameraOwned = false;
+      camPresetIdx = 0;
+      animateCameraTo(SHOTS[activeShotKey].cam.pos, SHOTS[activeShotKey].cam.look, 0.8);
+      break;
+    case '4dp:set-timeline':    setTimelineVisible(!!msg.on); break;
+  }
+});
+
+document.querySelectorAll('.shot-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    if (storyMode) exitStoryMode();
+    startShot(chip.dataset.shot);
+  });
+});
+
+document.getElementById('btn-camera').addEventListener('click', () => {
+  camPresetIdx = (camPresetIdx + 1) % 3;
+  const s = SHOTS[activeShotKey];
+  const presets = [
+    { pos: s.cam.pos, look: s.cam.look },
+    { pos: [0, 34, 0.1], look: [0, 0, 0] },
+    { pos: [0, 5.5, 28], look: [0, 3, 0] }
+  ];
+  userCameraOwned = true;
+  animateCameraTo(presets[camPresetIdx].pos, presets[camPresetIdx].look, 0.8);
+});
+
+function setSlowMo(on) {
+  slowMo = on;
+  document.getElementById('btn-slowmo').classList.toggle('active', slowMo);
+  document.getElementById('slowmo-badge').classList.toggle('on', slowMo);
+  updateDeepLink();
+}
+document.getElementById('btn-slowmo').addEventListener('click', () => setSlowMo(!slowMo));
+
+function setPaused(next) {
+  paused = next;
+  const btn = document.getElementById('btn-pause');
+  btn.classList.toggle('active', paused);
+  // first text node is the label; the <span class="kbd-hint"> is preserved
+  btn.childNodes[0].textContent = paused ? 'Play' : 'Pause';
+  document.getElementById('pause-badge').classList.toggle('on', paused);
+}
+document.getElementById('btn-pause').addEventListener('click', () => setPaused(!paused));
+
+function setAudio(on) {
+  audioOn = on;
+  const btn = document.getElementById('btn-audio');
+  btn.classList.toggle('active', audioOn);
+  const toast = document.getElementById('audio-toast');
+  toast.textContent = audioOn ? '♫ Audio On' : 'Audio Off';
+  toast.classList.add('on');
+  setTimeout(() => toast.classList.remove('on'), 1100);
+  if (audioOn) {
+    ensureAudio();
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    setAudioGain(0.55);
+    startAmbient();
+  } else {
+    stopAmbient();
+    setAudioGain(0.0);
+  }
+  updateDeepLink();
+}
+document.getElementById('btn-audio').addEventListener('click', () => setAudio(!audioOn));
+
+document.getElementById('btn-story').addEventListener('click', () => {
+  if (storyMode) { exitStoryMode(); startShot(activeShotKey); }
+  else enterStoryMode();
+});
+
+document.getElementById('btn-capture').addEventListener('click', captureScreenshot);
+
+document.getElementById('btn-replay').addEventListener('click', () => {
+  if (paused) setPaused(false);
+  startShot(activeShotKey);
+});
+
+// ── Timeline click / drag to scrub ──
+(function() {
+  const track = document.getElementById('timeline-track');
+  if (!track) return;
+  let dragging = false;
+  function pctFromEvent(e) {
+    const rect = track.getBoundingClientRect();
+    const x = (e.clientX ?? (e.touches && e.touches[0] && e.touches[0].clientX) ?? 0) - rect.left;
+    return Math.max(0, Math.min(1, x / rect.width));
+  }
+  track.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    scrub(pctFromEvent(e));
+    if (track.setPointerCapture && e.pointerId !== undefined) {
+      try { track.setPointerCapture(e.pointerId); } catch(_) {}
+    }
+  });
+  track.addEventListener('pointermove', (e) => { if (dragging) scrub(pctFromEvent(e)); });
+  const stop = () => { dragging = false; };
+  track.addEventListener('pointerup', stop);
+  track.addEventListener('pointercancel', stop);
+})();
+
+// Default: show the timeline. Auto-hide in embedded mode (CSS already handles this).
+if (!document.documentElement.classList.contains('embedded')) {
+  setTimeout(() => setTimelineVisible(true), 300);
+}
+
+// Keyboard shortcuts — a 12-key deck for module builders and power users
+window.addEventListener('keydown', (e) => {
+  if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+
+  const help = document.getElementById('shortcut-help');
+  if (help.classList.contains('on')) {
+    help.classList.remove('on');
+    if (e.key === '?' || e.key === '/') { e.preventDefault(); return; }
+    return;
+  }
+
+  switch (e.code) {
+    case 'Space':
+      if (e.repeat) return;
+      e.preventDefault();
+      setPaused(!paused);
+      return;
+    case 'Digit1': if (storyMode) exitStoryMode(); startShot('drive');  return;
+    case 'Digit2': if (storyMode) exitStoryMode(); startShot('defend'); return;
+    case 'Digit3': if (storyMode) exitStoryMode(); startShot('drop');   return;
+    case 'Digit4': if (storyMode) exitStoryMode(); startShot('dink');   return;
+    case 'KeyR':   startShot(activeShotKey); return;
+    case 'KeyS':   setSlowMo(!slowMo); return;
+    case 'KeyC':   document.getElementById('btn-camera').click(); return;
+    case 'KeyA':   setAudio(!audioOn); return;
+    case 'KeyT':
+      if (storyMode) { exitStoryMode(); startShot(activeShotKey); }
+      else enterStoryMode();
+      return;
+    case 'KeyK':   e.preventDefault(); captureScreenshot(); return;
+    case 'KeyH':
+      hudHidden = !hudHidden;
+      document.body.classList.toggle('hud-hidden', hudHidden);
+      return;
+    case 'KeyD':
+      debugOn = !debugOn;
+      debugGroup.visible = debugOn;
+      document.getElementById('debug-panel').classList.toggle('on', debugOn);
+      return;
+    case 'ArrowLeft':
+      e.preventDefault();
+      scrub(shotT - 0.05);
+      return;
+    case 'ArrowRight':
+      e.preventDefault();
+      scrub(shotT + 0.05);
+      return;
+    case 'KeyB':
+      setTimelineVisible(!timelineVisible);
+      return;
+    case 'Escape':
+      if (storyMode) exitStoryMode();
+      return;
+  }
+  if (e.key === '?' || e.key === '/') {
+    e.preventDefault();
+    document.getElementById('shortcut-help').classList.add('on');
+  }
+});
+
+// Hide cam hint after first interaction
+['click', 'wheel', 'pointerdown'].forEach(ev =>
+  window.addEventListener(ev, () => {
+    document.getElementById('cam-hint').classList.add('hidden');
+    document.getElementById('center-hero').classList.add('dimmed');
+  }, { once: true })
+);
+
+window.addEventListener('resize', () => {
+  camera.aspect = vp.clientWidth / vp.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(vp.clientWidth, vp.clientHeight);
+  composer.setSize(vp.clientWidth, vp.clientHeight);
+  bloom.setSize(vp.clientWidth, vp.clientHeight);
+});
+
+// Fade loading screen. On FIRST load only, hold the scene still for ~1s so the
+// viewer reads the court + players before the ball starts flying.
+// If user interacts during the pause, skip the auto-start so we don't restart their shot.
+window.addEventListener('load', () => {
+  applyDeepLink();
+  (() => {
+    document.getElementById('loading').classList.add('gone');
+    startShot(activeShotKey);
+    shotRunning = false;
+    animate();
+    setTimeout(() => {
+      if (shotRunning) return;
+      shotT = 0;
+      shotStart = performance.now();
+      shotBurstFired = false;
+      lastSegFiredIdx = -1;
+      shotRunning = true;
+    }, 1000);
+  })();
+});
+</script>
+
+</body>
+</html>
