@@ -717,6 +717,10 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
   border-color:rgba(52,211,153,.45);
   color:#34D399;
 }
+.zero-d-bedrock .zd-ctas{
+  display:inline-flex;flex-wrap:wrap;gap:14px;justify-content:center;
+  margin-top:4px;
+}
 .zero-d-bedrock .zd-cta{
   display:inline-block;background:#2B8BFC;color:#fff;
   padding:11px 26px;border-radius:999px;
@@ -724,13 +728,16 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
   letter-spacing:1.2px;text-transform:uppercase;
   text-decoration:none;box-shadow:0 6px 18px rgba(43,139,252,.32);
   transition:transform .2s;
-  margin-top:4px;  /* sits just under the Anticipation chip arrow */
 }
 .zero-d-bedrock .zd-cta:hover{transform:translateY(-1px)}
 @media(max-width:900px){
   .zero-d-bedrock .zd-rail{display:none}
   .zero-d-bedrock .zd-platform{border-radius:18px;border-top-width:1px;padding:20px 18px 22px}
   .zero-d-bedrock .zd-headline{font-size:14px}
+}
+@media(max-width:560px){
+  .zero-d-bedrock .zd-ctas{flex-direction:column;gap:8px;width:100%;align-items:stretch}
+  .zero-d-bedrock .zd-cta{text-align:center}
 }
 </style>
 </head>
@@ -814,11 +821,14 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
         <div class="zd-eyebrow">◆ 0D · Underneath every dimension</div>
         <div class="zd-headline"><em>And then there&apos;s 0D.</em> What comes before every shot.</div>
         <div class="zd-pillars">
-          <span class="zd-chip">Positioning</span>
+          <span class="zd-chip zd-chip-link">Positioning&nbsp;↓</span>
           <span class="zd-chip zd-chip-link">Anticipation&nbsp;↓</span>
           <span class="zd-chip">Ready Position</span>
         </div>
-        <a href="/outballs/" class="zd-cta">Train Out Balls</a>
+        <div class="zd-ctas">
+          <a href="/scoring/" class="zd-cta">Learn Scoring</a>
+          <a href="/outballs/" class="zd-cta">Train Out Balls</a>
+        </div>
       </div>
     </div>
   </section>
