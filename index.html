@@ -73,26 +73,27 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
   animation:fdPop .7s cubic-bezier(.16,1,.3,1) both;
   display:inline-block;
 }
-.fd-word:nth-of-type(1){animation-delay:.15s}
-.fd-word:nth-of-type(2){animation-delay:.35s}
-.fd-word:nth-of-type(3){animation-delay:.55s}
-.fd-word:nth-of-type(4){animation:fdPop .7s cubic-bezier(.16,1,.3,1) .75s both, dinkWobble 1.0s cubic-bezier(.34,1.56,.64,1) 1.15s both}
+.fd-word.fw-1{animation-delay:.10s}
+.fd-word.fw-2{animation-delay:.50s}
+.fd-word.fw-3{animation-delay:.90s}
+.fd-word.fw-4{animation:fdPop .7s cubic-bezier(.16,1,.3,1) 1.30s both, dinkWobble 1.0s cubic-bezier(.34,1.56,.64,1) 1.70s both}
 .fd-arrow{
   display:inline-block;color:var(--fa-c, #F5F3EE);
   /* MATCH the hero word size — arrows are sibling spans, not children, so they don't inherit font-size from .fd-word */
   font-size:clamp(28px,4.5vw,48px);font-weight:900;line-height:1;letter-spacing:-1.2px;
   text-shadow:0 0 28px color-mix(in srgb,var(--fa-c) 55%,transparent);
-  margin:0 .1em;opacity:0;transform:translateX(-12px);
+  margin:0 .1em;opacity:0;transform:translateX(-10px) scale(.6);
   filter:drop-shadow(0 0 10px var(--fa-c));
-  animation:fdArrowFade .55s cubic-bezier(.16,1,.3,1) forwards,
+  animation:fdArrowFade .45s cubic-bezier(.34,1.56,.64,1) forwards,
             fdArrowPulse 1.8s cubic-bezier(.4,0,.6,1) infinite;
-  animation-delay:.50s, 1.10s;
+  /* arrow #1 — fires between Drive and Defend */
+  animation-delay:.30s, 2.30s;
 }
-.fd-arrow.fa-2{animation-delay:.70s, 1.30s}
-.fd-arrow.fa-3{animation-delay:.90s, 1.50s}
+.fd-arrow.fa-2{animation-delay:.70s, 2.50s}  /* between Defend and Drop */
+.fd-arrow.fa-3{animation-delay:1.10s, 2.70s} /* between Drop and Dink — last one */
 @keyframes fdArrowFade{
-  from{opacity:0;transform:translateX(-12px)}
-  to{opacity:1;transform:translateX(0)}
+  from{opacity:0;transform:translateX(-10px) scale(.6)}
+  to{opacity:1;transform:translateX(0) scale(1)}
 }
 @keyframes fdArrowPulse{
   0%,100%{transform:translateX(-3px);opacity:.85}
@@ -755,13 +756,13 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
     <h1>Anyone can learn<br>to play 4D Pickleball.</h1>
 
     <div style="display:inline-flex;align-items:center;justify-content:center;gap:16px;margin:36px 0 8px;flex-wrap:wrap">
-      <span class="fd-word" style="--fd-c:#FBBF24">Drive</span>
+      <span class="fd-word fw-1" style="--fd-c:#FBBF24">Drive</span>
       <span class="fd-arrow fa-1" style="--fa-c:#F472B6">→</span>
-      <span class="fd-word" style="--fd-c:#F472B6">Defend</span>
+      <span class="fd-word fw-2" style="--fd-c:#F472B6">Defend</span>
       <span class="fd-arrow fa-2" style="--fa-c:#34D399">→</span>
-      <span class="fd-word" style="--fd-c:#34D399">Drop</span>
+      <span class="fd-word fw-3" style="--fd-c:#34D399">Drop</span>
       <span class="fd-arrow fa-3" style="--fa-c:#2B8BFC">→</span>
-      <span class="fd-word" style="--fd-c:#2B8BFC">Dink</span>
+      <span class="fd-word fw-4" style="--fd-c:#2B8BFC">Dink</span>
     </div>
 
   </div>
