@@ -937,81 +937,111 @@ const SHOTS = {
     dim: 'drop',
     color: 0xF97316,
     role: 'Combined · alternate targets',
-    mantra: 'Green alternates cones — red, yellow, red. The blue feeder walks between the two feeding positions so green hits a different target every rep. Make them MOVE.',
-    traj: 'Cycle 1: feeder behind the red cone, feeds, green dinks to red. Cycle 2: feeder walks to behind the yellow cone, feeds, green dinks to yellow. Cycle 3: feeder walks back, green hits red again. Every contact below the waist.',
+    mantra: 'Green alternates cones — red, yellow, red, yellow. The blue feeder jogs between the two feeding positions so green hits a different target every rep. Make them MOVE.',
+    traj: 'Strict alternation: red, yellow, red, yellow. Feeder smoothly jogs between the two positions during each green-dink + cone-bounce window (~1.4s for ~14 ft of walk = realistic jog). Ball is always sourced from where the feeder is.',
     cam: { pos: [32, 10, 0], look: [0, 2, 0] },
-    story: 'Drill #3 — Combined. Alternate between the red and yellow cones. Hit a different cone every rep — make the opponent move.',
+    story: 'Drill #3 — Combined. Strict alternation: red, yellow, red, yellow. Make the opponent move.',
     shot: {
       segments: [
-        // ── Cycle 1 — feeder behind RED cone · green dinks RED ──
-        // 1 - Feeder at A (13, -9 OOB) feeds high-arc drop to green's forehand
-        { from: [ 13, 2.3, -9], to: [-4, 0.15,  6.2], apex: 5.2, dur: 0.95 },
-        // 2 - bounces up to green
-        { from: [-4, 0.15, 6.2], to: [-4.5, 2.4,  7.5], apex: 2.2, dur: 0.40 },
-        // 3 - green pressure dinks to RED cone
-        { from: [-4.5, 2.4, 7.5], to: [ 9, 0.15, -6], apex: 2.3, dur: 0.85 },
-        // 4 - ball bounces realistically off RED cone  (feeder begins walking A→B)
-        { from: [ 9, 0.15, -6], to: [11.0, 0.15, -7.7], apex: 1.5, dur: 0.60 },
+        // ──────── 4 cycles, strict alternation R · Y · R · Y ────────
+        // Feeder walks SMOOTHLY between positions during the green-dink + cone-bounce
+        // window of each cycle (1.4s for ~14 ft = brisk jog). By the time the next feed
+        // begins, the feeder is already at the correct position to source the ball.
 
-        // ── Cycle 2 — feeder now behind YELLOW cone · green dinks YELLOW ──
-        // 5 - Feeder at B (0, -13.5 centerline) feeds high-arc drop to green's forehand
-        { from: [ 0, 2.3, -13.5], to: [-4, 0.15, 6.2], apex: 5.8, dur: 0.98 },
-        // 6 - bounces up to green
-        { from: [-4, 0.15, 6.2], to: [-4.5, 2.4,  7.5], apex: 2.2, dur: 0.40 },
-        // 7 - green pressure dinks to YELLOW cone
-        { from: [-4.5, 2.4, 7.5], to: [ 0, 0.15, -8.5], apex: 2.5, dur: 0.85, cinematic: true },
-        // 8 - ball bounces realistically off YELLOW cone (feeder begins walking B→A)
-        { from: [ 0, 0.15, -8.5], to: [ 1.4, 0.15, -10.2], apex: 1.5, dur: 0.60 },
+        // ── Cycle 1 · RED · feeder at A (13, -9) ──
+        // 1 · feed from A
+        { from: [ 13, 2.3, -9],  to: [-4,   0.15,  6.2], apex: 5.2, dur: 0.95 },
+        // 2 · bounces up to green's paddle
+        { from: [-4,  0.15, 6.2], to: [-4.5, 2.4,  7.5], apex: 2.2, dur: 0.40 },
+        // 3 · green pressure-dinks to RED cone (feeder begins walking A→B)
+        { from: [-4.5, 2.4, 7.5], to: [ 9,   0.15, -6 ], apex: 2.3, dur: 0.85 },
+        // 4 · ball bounces off RED cone (feeder finishes walking to B)
+        { from: [ 9,   0.15, -6], to: [11,   0.15, -7.7], apex: 1.5, dur: 0.55 },
 
-        // ── Cycle 3 — feeder back behind RED cone · green dinks RED ──
-        // 9 - Feeder at A again, feeds high-arc drop to green's forehand
-        { from: [ 13, 2.3, -9], to: [-4, 0.15, 6.2], apex: 5.2, dur: 0.95 },
-        // 10 - bounces up to green
-        { from: [-4, 0.15, 6.2], to: [-4.5, 2.4,  7.5], apex: 2.2, dur: 0.40 },
-        // 11 - green pressure dinks to RED cone (rhythm locked in)
-        { from: [-4.5, 2.4, 7.5], to: [ 9, 0.15, -6], apex: 2.3, dur: 0.85 },
-        // 12 - ball bounces realistically off RED cone
-        { from: [ 9, 0.15, -6], to: [11.0, 0.15, -7.7], apex: 1.5, dur: 0.60 }
+        // ── Cycle 2 · YELLOW · feeder now at B (0, -13.5) ──
+        // 5 · feed from B
+        { from: [ 0,   2.3, -13.5], to: [-4,   0.15,  6.2], apex: 5.8, dur: 0.98 },
+        // 6 · bounces up
+        { from: [-4,   0.15, 6.2],  to: [-4.5, 2.4,  7.5], apex: 2.2, dur: 0.40 },
+        // 7 · green pressure-dinks to YELLOW cone (feeder begins walking B→A)
+        { from: [-4.5, 2.4, 7.5],   to: [ 0,   0.15, -8.5], apex: 2.5, dur: 0.85 },
+        // 8 · ball bounces off YELLOW cone (feeder finishes walking to A)
+        { from: [ 0,   0.15, -8.5], to: [ 1.4, 0.15, -10.2], apex: 1.5, dur: 0.55 },
+
+        // ── Cycle 3 · RED · feeder back at A ──
+        // 9 · feed from A
+        { from: [ 13, 2.3, -9],  to: [-4,   0.15,  6.2], apex: 5.2, dur: 0.95 },
+        // 10 · bounces up
+        { from: [-4,  0.15, 6.2], to: [-4.5, 2.4,  7.5], apex: 2.2, dur: 0.40 },
+        // 11 · green dinks RED (feeder begins walking A→B)
+        { from: [-4.5, 2.4, 7.5], to: [ 9,   0.15, -6 ], apex: 2.3, dur: 0.85, cinematic: true },
+        // 12 · RED cone bounce (feeder finishes walking to B)
+        { from: [ 9,   0.15, -6], to: [11,   0.15, -7.7], apex: 1.5, dur: 0.55 },
+
+        // ── Cycle 4 · YELLOW · feeder back at B ──
+        // 13 · feed from B
+        { from: [ 0,   2.3, -13.5], to: [-4,   0.15,  6.2], apex: 5.8, dur: 0.98 },
+        // 14 · bounces up
+        { from: [-4,   0.15, 6.2],  to: [-4.5, 2.4,  7.5], apex: 2.2, dur: 0.40 },
+        // 15 · green dinks YELLOW (closing the loop)
+        { from: [-4.5, 2.4, 7.5],   to: [ 0,   0.15, -8.5], apex: 2.5, dur: 0.85 },
+        // 16 · YELLOW cone bounce
+        { from: [ 0,   0.15, -8.5], to: [ 1.4, 0.15, -10.2], apex: 1.5, dur: 0.55 }
       ]
     },
     playerFrames: [
-      // Feeder transitions between A (13, -9) [behind RED] and B (0, -13.5) [behind YELLOW].
-      // The walk happens across the cone-bounce + feed segments (~1.5s for 14 ft = realistic jog).
-      // F0 - start: feeder at A (RED position)
+      // 17 frames for 16 segments. Feeder walks smoothly during seg 3+4 (A→B), seg 7+8
+      // (B→A), and seg 11+12 (A→B). Each walk = 1.4s for ~14 ft = ~10 ft/s (brisk jog).
+      // The ball is always sourced from the feeder's CURRENT position because the walk
+      // completes BEFORE the next feed segment begins.
+      // F0 — start: feeder at A
       { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
-      // F1-F4 - cycle 1 with feeder at A
+      // F1 (during seg 1 feed) — feeder still at A
       { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
+      // F2 (during seg 2 bounce up) — still at A
       { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
+      // F3 (during seg 3 green dinks RED) — still at A; walk begins as ball leaves green's paddle
       { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
-      // F5 - during RED bounce (seg 4) feeder walks to midpoint (A→B)
+      // F4 (during seg 4 RED bounce) — feeder mid-walk at midpoint A→B
       { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[6.5,-11.2] },
-      // F6 - by start of cycle 2 proper, feeder has arrived at B (YELLOW position)
+      // F5 (during seg 5 feed from B) — feeder has arrived at B
       { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
-      // F7-F8 - cycle 2 with feeder at B
+      // F6 (during seg 6 bounce up) — at B
       { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
+      // F7 (during seg 7 green dinks YELLOW) — at B; walk back B→A begins
       { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
-      // F9 - during YELLOW bounce (seg 8) feeder walks to midpoint (B→A)
+      // F8 (during seg 8 YELLOW bounce) — feeder mid-walk B→A
       { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[6.5,-11.2] },
-      // F10 - feeder back at A (RED position) for cycle 3
+      // F9 (during seg 9 feed from A) — back at A
       { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
-      // F11-F12 - cycle 3 with feeder at A
+      // F10 (during seg 10 bounce up) — at A
       { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
+      // F11 (during seg 11 green dinks RED) — at A; walk A→B begins
       { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] },
-      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[13,-9] }
+      // F12 (during seg 12 RED bounce) — mid-walk
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[6.5,-11.2] },
+      // F13 (during seg 13 feed from B) — at B
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
+      // F14 (during seg 14 bounce up) — at B
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
+      // F15 (during seg 15 green dinks YELLOW) — at B
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] },
+      // F16 (during seg 16 YELLOW bounce) — at B (drill ends here)
+      { nearLeft:[-5,7.8], nearRight:[100,100], farLeft:[100,100], farRight:[0,-13.5] }
     ],
     moments: [
-      { at: 0.25, label: 'RED CONE · CROSS-COURT',
+      { at: 0.18, label: 'RED CONE · CROSS-COURT',
         why: 'Start with the safest target. Deep cross-court dink — longest diagonal, lowest net.',
         arrow: { type: 'court', pos: [9, -6] }, hold: 1.6 },
-      { at: 0.40, label: 'FEEDER WALKS TO YELLOW',
-        why: 'Feeder moves between cycles so green has to switch targets. Make the opponent MOVE — that\'s the whole point of pressure dinking.',
+      { at: 0.30, label: 'FEEDER JOGS TO YELLOW',
+        why: 'Feeder switches positions between every rep so green has to switch cones — strict alternation, no two reps in a row to the same target.',
         arrow: { type: 'player', key: 'farRight' }, hold: 1.8 },
-      { at: 0.55, label: 'YELLOW CONE · MIDDLE DEEP',
-        why: 'Second target, 1.5 ft past the kitchen line. Shorter dink, simpler technique, ball under the waist.',
+      { at: 0.45, label: 'YELLOW CONE · MIDDLE DEEP',
+        why: 'Second target. Different swing path, different distance — same low contact under the waist.',
         arrow: { type: 'court', pos: [0, -8.5] }, hold: 1.6 },
-      { at: 0.90, label: 'BACK TO RED · RHYTHM LOCKED',
-        why: 'Alternate targets so you never fall into a predictable pattern. Every cycle, make them guess where you\'re hitting.',
-        arrow: { type: 'court', pos: [9, -6] }, hold: 1.8 }
+      { at: 0.95, label: 'RED · YELLOW · RED · YELLOW · RHYTHM LOCKED',
+        why: 'Strict alternation. Once you can hit a different cone every rep, you can hit anywhere on the court your opponent isn\'t.',
+        arrow: { type: 'court', pos: [0, -8.5] }, hold: 2.0 }
     ]
   },
   dink: {
@@ -1019,26 +1049,28 @@ const SHOTS = {
     dim: 'dink',
     color: 0xA855F7,
     role: 'Low & soft · kitchen line',
-    mantra: 'Straight across. Both at the kitchen line. Arc the ball LOW — contact at the knees, ankles if you can. Nobody hits a ball above the waist.',
-    traj: 'Ball never bounces — paddle to paddle. But the arc drops BELOW the opponent\'s waist: contacts around knee level (~1.5 ft) and sometimes ankle. You stay bent low, ball clears the net just barely, drops steeply on the other side. If it ever sits up, you lose the drill.',
-    cam: { pos: [32, 10, 0], look: [0, 2, 0] },
-    story: 'Drill #4 — Low & soft volley dinks. Contact at the knees. If the ball ever rises above the waist, someone is cheating.',
+    // lowStance: triggers crouched ready-position for both players (compressed Y scale)
+    lowStance: true,
+    mantra: 'Both bent into the LOW pressure-dink ready stance. Knees deep, paddle at the ground, weight forward. Arc the ball softly — contacts at the knees or ankles. Nobody hits above the waist.',
+    traj: 'Ball never bounces — paddle to paddle. Slow gentle arcs, contacts around 1.0–1.5 ft (knee → ankle). Both players crouched in the proper pressure-dink ready stance: paddle DOWN at knee level, knees bent, weight forward, ready to handle anything low.',
+    cam: { pos: [32, 10, 0], look: [0, 1.6, 0] },
+    story: 'Drill #4 — Low & soft volley dinks from the proper ready stance. Knees bent, paddle down. Contact at the knees.',
     shot: {
       segments: [
-        // Every contact is 1.0–1.6 ft off the ground (ankle → knee). Apex has to clear
-        // the 3 ft net but comes down fast to stay low at the receiver's paddle.
-        // 1 - Green low-volleys across to blue at knee level
-        { from: [-5, 1.5, 7.8], to: [-5, 1.4, -7.8], apex: 3.3, dur: 0.70 },
-        // 2 - Blue returns, also low
-        { from: [-5, 1.4, -7.8], to: [-5, 1.5, 7.8], apex: 3.3, dur: 0.70 },
-        // 3 - Green dips lower — ball at mid-shin
-        { from: [-5, 1.5, 7.8], to: [-5, 1.2, -7.8], apex: 3.2, dur: 0.70, cinematic: true },
-        // 4 - Blue bends further, ball at ankle level
-        { from: [-5, 1.2, -7.8], to: [-5, 1.0, 7.8], apex: 3.2, dur: 0.70 },
-        // 5 - Green takes it at the ankles, low and soft
-        { from: [-5, 1.0, 7.8], to: [-5, 1.3, -7.8], apex: 3.2, dur: 0.70 },
-        // 6 - Blue returns — rhythm locked, always under the waist
-        { from: [-5, 1.3, -7.8], to: [-5, 1.5, 7.8], apex: 3.3, dur: 0.70 }
+        // Every contact 1.0–1.5 ft off the ground (ankle → knee).
+        // Slower dur (0.95) + higher arc (3.9–4.1 apex) = the gentle, soft volley dink rhythm.
+        // 1 — Green soft volley dink to blue (knee level → knee level), gentle high arc
+        { from: [-5, 1.5, 7.8], to: [-5, 1.4, -7.8], apex: 4.0, dur: 0.95 },
+        // 2 — Blue returns, mirror arc
+        { from: [-5, 1.4, -7.8], to: [-5, 1.5, 7.8], apex: 4.0, dur: 0.95 },
+        // 3 — Green dips lower, contact at mid-shin
+        { from: [-5, 1.5, 7.8], to: [-5, 1.2, -7.8], apex: 3.9, dur: 0.95, cinematic: true },
+        // 4 — Blue takes ankle-low, paddle on the ground
+        { from: [-5, 1.2, -7.8], to: [-5, 1.0, 7.8], apex: 3.8, dur: 0.95 },
+        // 5 — Green low and soft, ankle to knee
+        { from: [-5, 1.0, 7.8], to: [-5, 1.3, -7.8], apex: 3.9, dur: 0.95 },
+        // 6 — Blue closes, rhythm locked under the waist
+        { from: [-5, 1.3, -7.8], to: [-5, 1.5, 7.8], apex: 4.0, dur: 0.95 }
       ]
     },
     playerFrames: [
@@ -2204,6 +2236,7 @@ function startShot(key, resetCamera = true) {
   wasInCinematic = false;
   cinematicCamPushed = false;
   resetPlayerPositions(key);
+  applyPlayerStance(key);
   updateSideCard(key);
   updateShotChips(key);
   updateBrandPill(key);
@@ -2211,6 +2244,23 @@ function startShot(key, resetCamera = true) {
   buildTimeline();
   document.getElementById('center-hero').classList.add('dimmed');
   updateDeepLink();
+}
+
+// Per-drill ready stance: when SHOTS[key].lowStance is true, both visible players are
+// crouched (Y-scaled down) into the proper pressure-dink ready position — paddle at the
+// ground, knees deep, weight forward (the stance shown in Dave's reference image for
+// volley dinking). Otherwise restored to standing height.
+function applyPlayerStance(key) {
+  const lowStance = !!SHOTS[key].lowStance;
+  // Compress Y so the player visually reads as "crouched" — knees deep, paddle low.
+  // Combined with the LOW ball trajectory in this drill, viewers read this as the
+  // proper pressure-dink ready stance from Dave's reference image.
+  const yScale = lowStance ? 0.78 : 1.0;
+  for (const k of PLAYER_KEYS) {
+    const p = players[k];
+    if (!p) continue;
+    p.scale.set(1, yScale, 1);
+  }
 }
 
 function updateSideCard(key) {
