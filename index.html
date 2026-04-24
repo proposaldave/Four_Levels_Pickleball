@@ -670,9 +670,9 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
 }
 /* Four short "rebar" lines hanging from the chip row above into the bedrock */
 .zero-d-bedrock .zd-rail{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:38px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
   height:14px;margin-bottom:0;pointer-events:none;
-  padding:0 2px;
+  padding:0;
 }
 .zero-d-bedrock .zd-rail span{
   display:block;width:1px;height:100%;justify-self:center;
@@ -809,6 +809,27 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
             <span class="dc-name">Generating Kitchen Offense</span>
           </button>
         </div>
+
+        <!-- 0D Bedrock — sits INSIDE .dim-frame so its width = the chip row width.
+             That way the 4 rail lines align under the 4 dimension chips above. -->
+        <div class="zero-d-bedrock">
+          <div class="zd-rail" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <div class="zd-platform">
+            <div class="zd-eyebrow">◆ 0D · Underneath every dimension</div>
+            <div class="zd-headline"><em>And then there&apos;s 0D.</em> What comes before every shot.</div>
+            <div class="zd-pillars">
+              <span class="zd-chip zd-chip-link">Positioning&nbsp;↓</span>
+              <span class="zd-chip zd-chip-link">Anticipation&nbsp;↓</span>
+              <span class="zd-chip">Ready Position</span>
+            </div>
+            <div class="zd-ctas">
+              <a href="/scoring/" class="zd-cta">Beginner Scoring &amp; Positioning</a>
+              <a href="/outballs/" class="zd-cta">Train Out Balls</a>
+            </div>
+          </div>
+        </div>
       </div>
       <aside class="dim-info" id="dim-info" aria-live="polite">
         <div class="di-label" id="di-label" style="color:#FBBF24">1D · Drive</div>
@@ -817,27 +838,6 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
         <div class="di-traj" id="di-traj">In 1D pickleball, the points don't last very long, and they are, well, one dimensional. This is how many of us started.</div>
         <div class="di-hint">Tap a dimension · Pinch to zoom · Drag to orbit · Space (or ⏸) to pause</div>
       </aside>
-    </div>
-
-    <!-- 0D Bedrock — the foundation UNDER 1D-4D. No divider, no separate section.
-         Visually welded to the dimension chips above so it reads as the base layer. -->
-    <div class="zero-d-bedrock">
-      <div class="zd-rail" aria-hidden="true">
-        <span></span><span></span><span></span><span></span>
-      </div>
-      <div class="zd-platform">
-        <div class="zd-eyebrow">◆ 0D · Underneath every dimension</div>
-        <div class="zd-headline"><em>And then there&apos;s 0D.</em> What comes before every shot.</div>
-        <div class="zd-pillars">
-          <span class="zd-chip zd-chip-link">Positioning&nbsp;↓</span>
-          <span class="zd-chip zd-chip-link">Anticipation&nbsp;↓</span>
-          <span class="zd-chip">Ready Position</span>
-        </div>
-        <div class="zd-ctas">
-          <a href="/scoring/" class="zd-cta">Beginner Scoring &amp; Positioning</a>
-          <a href="/outballs/" class="zd-cta">Train Out Balls</a>
-        </div>
-      </div>
     </div>
   </section>
 
