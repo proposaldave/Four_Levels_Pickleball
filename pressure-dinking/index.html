@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#0A1628">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
 <link rel="dns-prefetch" href="https://unpkg.com">
 <!-- NOTE: NO modulepreload here. modulepreload initiates the module graph
@@ -16,8 +19,15 @@
 <link rel="stylesheet" href="/4dp/tokens.css">
 <style>
   html, body { margin: 0; height: 100%; overflow: hidden; background: var(--4dp-ink); }
-  body { font-family: var(--4dp-font-body); color: var(--4dp-text); -webkit-font-smoothing: antialiased; }
-  #viewport { position: fixed; inset: 0; z-index: 0; }
+  body {
+    font-family: var(--4dp-font-body); color: var(--4dp-text); -webkit-font-smoothing: antialiased;
+    /* Block iOS text-size adjust + double-tap zoom; allow scroll only inside scrollable elements (none here) */
+    -webkit-text-size-adjust: 100%;
+    overscroll-behavior: none;
+  }
+  /* Make every interactive UI element snappy on touch (no 300ms double-tap delay, no accidental selection) */
+  button, .brand-pill, .shot-chip, .ctrl-btn { touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; }
+  #viewport { position: fixed; inset: 0; z-index: 0; touch-action: none; /* let OrbitControls own gestures inside the canvas */ }
   #viewport canvas { display: block; width: 100% !important; height: 100% !important; }
 
   /* Vignette for cinematic feel */
@@ -30,7 +40,8 @@
   .hud-top {
     position: fixed; top: 0; left: 0; right: 0; z-index: 10;
     display: flex; justify-content: space-between; align-items: center;
-    padding: 20px 28px; pointer-events: none; gap: 12px;
+    padding: max(20px, env(safe-area-inset-top)) max(28px, env(safe-area-inset-right)) 20px max(28px, env(safe-area-inset-left));
+    pointer-events: none; gap: 12px;
   }
   .hud-top > * { pointer-events: auto; }
   .brand-pill {
@@ -62,15 +73,23 @@
   /* At narrow widths, drop the kbd hint to keep buttons on one row */
   @media (max-width: 900px) {
     .ctrl-btn .kbd-hint { display: none; }
-    .ctrl-btn { padding: 8px 10px; font-size: 10px; letter-spacing: 1px; }
+    .ctrl-btn { padding: 10px 12px; font-size: 11px; letter-spacing: 1px; min-height: 40px; }
   }
   @media (max-width: 620px) {
-    .ctrl-btn { padding: 7px 8px; font-size: 10px; }
-    .hud-controls { gap: 5px; }
+    /* Mobile phones: tap targets bumped to 44px min per Apple HIG / Google Material */
+    .ctrl-btn { padding: 12px 12px; font-size: 11px; min-height: 44px; min-width: 44px; }
+    .hud-controls { gap: 6px; }
     /* On mobile the 7 buttons wrap; hide stats HUD to avoid overlap */
     .hud-stats { display: none !important; }
-    /* Tuck the top HUD tighter */
-    .hud-top { padding: 14px 16px; }
+    /* Tuck the top HUD tighter, but keep safe-area for notches */
+    .hud-top { padding: max(10px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 10px max(12px, env(safe-area-inset-left)); }
+    /* Drop the brand pill to a compact dot when space is tight */
+    .brand-pill { padding: 8px 10px; font-size: 10px; letter-spacing: 1.5px; }
+  }
+  /* Very narrow (small phones in portrait): collapse Capture + Replay to icons via lower priority */
+  @media (max-width: 380px) {
+    .ctrl-btn { padding: 11px 9px; font-size: 10px; }
+    .brand-pill { font-size: 9px; padding: 7px 9px; gap: 6px; }
   }
 
   /* ── Stats HUD (top-right, below controls) ── */
@@ -105,7 +124,8 @@
   /* ── Bottom shot-switcher ── */
   .shot-bar {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 10;
-    display: flex; justify-content: center; gap: 12px; padding: 24px 20px 28px;
+    display: flex; justify-content: center; gap: 12px;
+    padding: 24px max(20px, env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
     pointer-events: none;
   }
   .shot-bar > * { pointer-events: auto; }
@@ -139,10 +159,22 @@
   }
   .shot-chip.active .kbd { color: var(--dim); background: rgba(255,255,255,.08); }
   @media (max-width: 760px) {
-    .shot-bar { flex-wrap: wrap; gap: 8px; padding: 16px 12px 20px; }
-    .shot-chip { min-width: 0; flex: 1 1 40%; padding: 10px 14px; }
-    .shot-chip .name { font-size: 18px; }
+    .shot-bar { flex-wrap: wrap; gap: 8px;
+      padding: 16px max(12px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+    }
+    .shot-chip { min-width: 0; flex: 1 1 30%; padding: 12px 14px; min-height: 56px; }
+    .shot-chip .name { font-size: 16px; }
+    .shot-chip .num { font-size: 9px; letter-spacing: 1.5px; }
     .shot-chip .kbd { display: none; }
+  }
+  /* Portrait phones — 3 chips in a single row are too cramped, stack to one column */
+  @media (max-width: 480px) {
+    .shot-bar { flex-direction: column; gap: 6px; padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+    .shot-chip { flex: 1 1 auto; width: 100%; padding: 10px 14px; min-height: 48px;
+      flex-direction: row; align-items: center; gap: 10px;
+    }
+    .shot-chip .num { flex-shrink: 0; }
+    .shot-chip .name { font-size: 15px; }
   }
 
   /* Side readout — hidden; kept in DOM so embedded-mode JS doesn't null-deref */
@@ -545,6 +577,16 @@ setTimeout(function(){
 <div class="audio-toast" id="audio-toast">Audio On</div>
 
 <div class="cam-hint" id="cam-hint">Click + drag to orbit · Scroll to zoom · Press ? for shortcuts</div>
+<script>
+  // Rewrite cam-hint copy to match the user's input modality (touch vs mouse).
+  // Done inline so it's correct on first paint — runs before the 3D module loads.
+  (function(){
+    var coarse = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ||
+                 ('ontouchstart' in window) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 1);
+    var el = document.getElementById('cam-hint');
+    if (el && coarse) el.textContent = 'Drag to orbit · Pinch to zoom · Tap a drill below';
+  })();
+</script>
 
 <div class="side-card" id="side-card">
   <div class="label" id="side-label">Rally 1 · Cone #1</div>
@@ -950,6 +992,16 @@ let userCameraOwned = false;
 let perfTier = 'high';         // 'high' | 'mid' | 'low'
 const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// ═════ DEVICE DETECTION — proactive perf tier + touch awareness ═════
+// Touch-first input vs mouse-first matters for the cam-hint copy + initial perf budget.
+const isTouch = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ||
+                ('ontouchstart' in window) ||
+                (navigator.maxTouchPoints && navigator.maxTouchPoints > 1);
+const isSmallScreen = Math.min(window.innerWidth, window.innerHeight) <= 480;
+const isMidScreen   = Math.min(window.innerWidth, window.innerHeight) <= 820 && !isSmallScreen;
+// Start mobile/tablet at a lower tier so the FPS-degrade loop doesn't have to fire.
+const initialTier = isSmallScreen ? 'low' : (isMidScreen ? 'mid' : (isTouch ? 'mid' : 'high'));
+
 // ═════ SCENE + CAMERA + RENDERER + COMPOSER ═════
 const vp = document.getElementById('viewport');
 const scene = new THREE.Scene();
@@ -960,15 +1012,20 @@ const camera = new THREE.PerspectiveCamera(45, vp.clientWidth / vp.clientHeight,
 camera.position.set(...SHOTS[activeShotKey].cam.pos);
 camera.lookAt(new THREE.Vector3(...SHOTS[activeShotKey].cam.look));
 
-const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+// Renderer config — adapts antialias + pixel ratio + shadows to the initial device tier.
+// Mobile/tablet start with cheaper settings so they're snappy from the first frame.
+const _aa = initialTier !== 'low';
+const _pixCap = initialTier === 'low' ? 1 : (initialTier === 'mid' ? 1.5 : 2);
+const renderer = new THREE.WebGLRenderer({ antialias: _aa, powerPreference: 'high-performance', preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, _pixCap));
 renderer.setSize(vp.clientWidth, vp.clientHeight);
-renderer.shadowMap.enabled = true;
+renderer.shadowMap.enabled = initialTier !== 'low';
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.05;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 vp.appendChild(renderer.domElement);
+perfTier = initialTier;
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -987,8 +1044,12 @@ document.querySelectorAll('.shot-chip').forEach(chip => {
 
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
-const bloom = new UnrealBloomPass(new THREE.Vector2(vp.clientWidth, vp.clientHeight), 0.55, 0.55, 0.82);
-composer.addPass(bloom);
+// Bloom is the most expensive pass on mobile GPUs. Lower-tier devices get a softer
+// bloom (or skip it on 'low'). Strength · radius · threshold scaled by tier.
+const _bloomStrength = initialTier === 'low' ? 0   : (initialTier === 'mid' ? 0.32 : 0.55);
+const _bloomRadius   = initialTier === 'low' ? 0   : (initialTier === 'mid' ? 0.40 : 0.55);
+const bloom = new UnrealBloomPass(new THREE.Vector2(vp.clientWidth, vp.clientHeight), _bloomStrength, _bloomRadius, 0.82);
+if (initialTier !== 'low') composer.addPass(bloom);
 composer.addPass(new OutputPass());
 
 // ═════ LIGHTING — key + ambient + fill + rim + volumetric shaft ═════
@@ -1124,16 +1185,15 @@ scene.add(courtGroup);
 //   ORANGE · Drill 3: just inside the kitchen lines, both sides (volley dink drill)
 const coneGroup = new THREE.Group();
 const DRILL_SPOTS = [
-  { x:  9,  z: -6,   color: 0xEF4444, name: 'red'    },  // Drill 1 cross-court T
-  { x:  0,  z: -8.5, color: 0xFBBF24, name: 'yellow' },  // Drill 2 middle deep
-  { x: -5,  z: -6,   color: 0xFB923C, name: 'orange' },  // Drill 3 far-side volley target
-  { x: -5,  z:  6,   color: 0xFB923C, name: 'orange' }   // Drill 3 near-side volley target
+  { x:  9,  z: -6,   color: 0xEF4444, name: 'red'    },  // Drill 1 cross-court T (Dave-marked)
+  { x:  0,  z: -8.5, color: 0xFBBF24, name: 'yellow' }   // Drill 2 middle deep (Dave-marked)
+  // Drill 3 orange cones: waiting for Dave to mark exact positions — do not guess.
 ];
 
 function makeFlatTarget(x, z, color) {
   // Flat plastic agility-cone disc — no height, so players can step on it.
   const disc = new THREE.Mesh(
-    new THREE.CircleGeometry(1.0, 40),
+    new THREE.CircleGeometry(0.65, 40),
     new THREE.MeshStandardMaterial({
       color, roughness: 0.55, metalness: 0.02,
       emissive: color, emissiveIntensity: 0.3,
@@ -2846,13 +2906,25 @@ window.addEventListener('keydown', (e) => {
   }, { once: true })
 );
 
-window.addEventListener('resize', () => {
-  camera.aspect = vp.clientWidth / vp.clientHeight;
+// Resize handler — debounced + handles iOS visualViewport (URL bar collapse).
+// Fires on window resize AND orientation change AND iOS bar resize, all in one path.
+let _resizeRaf = 0;
+function _doResize() {
+  const w = vp.clientWidth, h = vp.clientHeight;
+  if (w === 0 || h === 0) return;  // viewport not ready (initial paint on slow connections)
+  camera.aspect = w / h;
   camera.updateProjectionMatrix();
-  renderer.setSize(vp.clientWidth, vp.clientHeight);
-  composer.setSize(vp.clientWidth, vp.clientHeight);
-  bloom.setSize(vp.clientWidth, vp.clientHeight);
-});
+  renderer.setSize(w, h);
+  composer.setSize(w, h);
+  bloom.setSize(w, h);
+}
+function _scheduleResize() {
+  if (_resizeRaf) cancelAnimationFrame(_resizeRaf);
+  _resizeRaf = requestAnimationFrame(_doResize);
+}
+window.addEventListener('resize', _scheduleResize);
+window.addEventListener('orientationchange', _scheduleResize);
+if (window.visualViewport) window.visualViewport.addEventListener('resize', _scheduleResize);
 
 // Fade loading screen. On FIRST load only, hold the scene still for ~1s so the
 // viewer reads the court + players before the ball starts flying.
