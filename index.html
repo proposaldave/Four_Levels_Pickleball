@@ -539,6 +539,10 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
   .hero h1{font-size:clamp(42px,13vw,72px);letter-spacing:-1.2px}
   .hero-sub{font-size:15px;padding:0 8px}
   .fd-word{font-size:clamp(22px,7.5vw,36px);letter-spacing:-.8px}
+}
+@media(max-width:400px){
+  .fd-word{font-size:clamp(18px,5.5vw,26px);letter-spacing:-.5px}
+  .fd-arrow{font-size:clamp(18px,5.5vw,26px) !important}
   /* Progression section: less padding, smaller court */
   .prog-section{padding:36px 14px 28px;margin-top:12px}
   .prog-copy{font-size:15px;margin-bottom:16px}
@@ -630,7 +634,7 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
 }
 @media(max-width:560px){
   .dim-chips{gap:6px}
-  .dim-chip{padding:8px 12px;border-radius:12px}
+  .dim-chip{padding:10px 12px;border-radius:12px;min-height:48px;justify-content:center}
   .dim-chip .dc-num{font-size:9px;letter-spacing:1.5px}
   .dim-chip .dc-name{font-size:15px}
 }
@@ -732,13 +736,15 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
 }
 .zero-d-bedrock .zd-cta:hover{transform:translateY(-1px)}
 @media(max-width:900px){
-  .zero-d-bedrock .zd-rail{display:none}
   .zero-d-bedrock .zd-platform{border-radius:18px;border-top-width:1px;padding:20px 18px 22px}
-  .zero-d-bedrock .zd-headline{font-size:14px}
 }
-@media(max-width:560px){
-  .zero-d-bedrock .zd-ctas{flex-direction:column;gap:8px;width:100%;align-items:stretch}
-  .zero-d-bedrock .zd-cta{text-align:center}
+@media(max-width:600px){
+  .zero-d-bedrock .zd-rail{display:none}
+  .zero-d-bedrock .zd-headline{font-size:15px;line-height:1.35}
+}
+@media(max-width:680px){
+  .zero-d-bedrock .zd-ctas{flex-direction:column;gap:10px;width:100%;align-items:stretch}
+  .zero-d-bedrock .zd-cta{text-align:center;padding:14px 28px}
 }
 </style>
 </head>
@@ -781,6 +787,7 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
           src="../4dp/3d_module_template.html?embedded=1&v=1776726173"
           title="4D Pickleball cinematic 3D module"
           loading="eager"
+          fetchpriority="low"
         ></iframe>
         <!-- Shot chips live BELOW the iframe so they never overlay the 3D canvas.
              Clicks post {type:'4dp:select-shot', key} into the iframe. -->
