@@ -65,32 +65,131 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
 @keyframes pageIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── HERO ── */
-.hero{text-align:center;padding:48px 0 40px;position:relative}
+/* Screen-reader-only — keeps the H1 in the DOM for SEO/accessibility while hiding it visually */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Scroll cue — appears after the wordmark animation finishes; pulses to invite scrolling. Auto-hides on scroll. */
+.scroll-cue{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  margin:36px auto 0;background:transparent;border:0;cursor:pointer;
+  padding:8px 16px;color:var(--warm-mute,#7a8290);
+  font:inherit;-webkit-tap-highlight-color:transparent;
+  opacity:0;animation:cueFade 0.9s cubic-bezier(0.22,1,0.36,1) 5.8s forwards;
+  transition:opacity 0.45s ease, transform 0.45s ease;
+}
+.scroll-cue:hover{color:var(--blue-l,#2B8BFC)}
+.scroll-cue.is-hidden{opacity:0;transform:translateY(-8px);pointer-events:none;animation:none}
+/* Second scroll cue (end of animation section) — animates in via .reveal-section, no fixed delay */
+.scroll-cue-2{animation:none;margin:32px auto 8px}
+.scroll-cue-label{
+  font-family:var(--font-body);font-size:11px;font-weight:700;
+  letter-spacing:2.5px;text-transform:uppercase;
+}
+.scroll-cue-arrow{
+  width:22px;height:22px;display:block;
+  animation:cueBounce 1.8s cubic-bezier(0.4,0,0.6,1) 6.6s infinite;
+}
+@keyframes cueFade{from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)}}
+@keyframes cueBounce{0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)}}
+@media(prefers-reduced-motion:reduce){
+  .scroll-cue{animation:none;opacity:1}
+  .scroll-cue-arrow{animation:none}
+}
+.hero{
+  text-align:center;padding:32px 0 24px;position:relative;
+  /* Fill the viewport so the animation section sits below the fold on initial load.
+     dvh accounts for mobile browser chrome shrink/grow. */
+  min-height:calc(100vh - 32px);
+  min-height:calc(100dvh - 32px);
+  display:flex;flex-direction:column;align-items:center;
+}
+/* Scroll cue pinned to bottom of hero — main content stays top-aligned */
+.hero .scroll-cue{margin-top:auto}
+
+/* Full-viewport section template — sections 2 & 3 (animation, philosophy).
+   Each fills 100dvh so the next section can't peek above the fold. Content
+   centers vertically (justify-content); scroll cue auto-margins to the bottom. */
+.section-full{
+  min-height:calc(100vh - 32px);
+  min-height:calc(100dvh - 32px);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:48px 24px;box-sizing:border-box;
+  margin:0 auto !important;
+}
+.section-full > *{width:100%;max-width:1360px}
+.section-full .scroll-cue{margin-top:auto;width:auto;max-width:none}
+@media(max-width:620px){.section-full{padding:32px 16px}}
 .fourd-graphic{margin:12px 0 8px;filter:drop-shadow(0 6px 40px rgba(43,139,252,.15))}
+/* "The Progression" eyebrow ABOVE the wordmark — labels what's about to cascade in.
+   Fades in just before the wordmark cascade starts (3.2s). */
+.fd-eyebrow{
+  font-family:var(--font-body);
+  font-size:12px;font-weight:800;letter-spacing:5px;text-transform:uppercase;
+  color:var(--blue-l,#2B8BFC);
+  margin:24px 0 14px;display:flex;align-items:center;justify-content:center;gap:14px;
+  opacity:0;animation:hcFade 0.7s cubic-bezier(0.22,1,0.36,1) 3.2s forwards;
+}
+@media(prefers-reduced-motion:reduce){.fd-eyebrow{opacity:1;animation:none}}
+.fd-eyebrow::before,.fd-eyebrow::after{
+  content:"";display:inline-block;width:42px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(43,139,252,.4),transparent);
+}
+@media(max-width:620px){
+  .fd-eyebrow{font-size:10px;letter-spacing:3.5px;gap:10px}
+  .fd-eyebrow::before,.fd-eyebrow::after{width:24px}
+}
+/* Wordmark — flex layout. Each word and arrow has natural width; the gap
+   between them is consistent regardless of word length. This is the only
+   approach that bulletproofs against "Defend" (6 bold chars) crowding arrows.
+   Prior absolute-positioning approach used width:7ch boxes, but font-weight 900
+   text rendered wider than 7ch and overflowed both sides into the arrow zones. */
+.fd-row{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  gap:clamp(14px,2.4vw,32px);
+  width:100%;max-width:1080px;
+  margin:18px auto 4px;
+  padding:0 20px;
+  box-sizing:border-box;
+}
+.fd-pair{display:contents}
+.fd-row .fd-word, .fd-row .fd-arrow{margin:0}
+.fd-row .fd-word{display:inline-block;text-align:center}
+@media (max-width:620px){
+  .fd-row{gap:14px;padding:0 12px}
+  .fd-pair{display:inline-flex;align-items:center;gap:14px;flex-wrap:nowrap;flex-basis:100%;justify-content:center}
+  .fd-row .fd-arrow.fa-2{display:none}
+  .fd-row .fd-word, .fd-row .fd-arrow{animation:none;opacity:1;transform:none}
+}
 .fd-word{
-  font-size:clamp(28px,4.5vw,48px);font-weight:900;letter-spacing:-1.2px;
+  font-size:clamp(32px,5.5vw,64px);font-weight:900;letter-spacing:-1.2px;
   color:var(--fd-c);text-shadow:0 0 28px color-mix(in srgb,var(--fd-c) 35%,transparent);
   animation:fdPop .7s cubic-bezier(.16,1,.3,1) both;
   display:inline-block;
 }
-.fd-word.fw-1{animation-delay:.10s}
-.fd-word.fw-2{animation-delay:.50s}
-.fd-word.fw-3{animation-delay:.90s}
-.fd-word.fw-4{animation:fdPop .7s cubic-bezier(.16,1,.3,1) 1.30s both, dinkWobble 1.0s cubic-bezier(.34,1.56,.64,1) 1.70s both}
+/* Wordmark animation delays sequenced AFTER the chart climax (chart climax ~3.0s).
+   Chart goes first (the key visual); wordmark cascades in after as the brand reveal. */
+.fd-word.fw-1{animation-delay:3.40s}
+.fd-word.fw-2{animation-delay:3.80s}
+.fd-word.fw-3{animation-delay:4.20s}
+.fd-word.fw-4{animation:fdPop .7s cubic-bezier(.16,1,.3,1) 4.60s both, dinkWobble 1.0s cubic-bezier(.34,1.56,.64,1) 5.00s both}
 .fd-arrow{
   display:inline-block;color:var(--fa-c, #F5F3EE);
   /* MATCH the hero word size — arrows are sibling spans, not children, so they don't inherit font-size from .fd-word */
-  font-size:clamp(28px,4.5vw,48px);font-weight:900;line-height:1;letter-spacing:-1.2px;
+  font-size:clamp(32px,5.5vw,64px);font-weight:900;line-height:1;letter-spacing:-1.2px;
   text-shadow:0 0 28px color-mix(in srgb,var(--fa-c) 55%,transparent);
-  margin:0 .1em;opacity:0;transform:translateX(-10px) scale(.6);
+  opacity:0;transform:translateX(-10px) scale(.6);
   filter:drop-shadow(0 0 10px var(--fa-c));
   animation:fdArrowFade .45s cubic-bezier(.34,1.56,.64,1) forwards,
             fdArrowPulse 1.8s cubic-bezier(.4,0,.6,1) infinite;
-  /* arrow #1 — fires between Drive and Defend */
-  animation-delay:.30s, 2.30s;
+  /* arrow #1 — fires between Drive and Defend (delayed to follow the chart) */
+  animation-delay:3.60s, 5.60s;
 }
-.fd-arrow.fa-2{animation-delay:.70s, 2.50s}  /* between Defend and Drop */
-.fd-arrow.fa-3{animation-delay:1.10s, 2.70s} /* between Drop and Dink — last one */
+.fd-arrow.fa-2{animation-delay:4.00s, 5.80s}  /* between Defend and Drop */
+.fd-arrow.fa-3{animation-delay:4.40s, 6.00s}  /* between Drop and Dink — last one */
+/* Animation keyframes — clean transforms with no absolute-positioning baggage. */
 @keyframes fdArrowFade{
   from{opacity:0;transform:translateX(-10px) scale(.6)}
   to{opacity:1;transform:translateX(0) scale(1)}
@@ -99,13 +198,16 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
   0%,100%{transform:translateX(-3px);opacity:.85}
   50%{transform:translateX(4px);opacity:1}
 }
-@keyframes fdPop{from{opacity:0;transform:translateY(14px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes fdPop{
+  from{opacity:0;transform:translateY(14px) scale(.92)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
 @keyframes dinkWobble{
-  0%{transform:translateY(0) scale(1) rotate(0deg)}
-  20%{transform:translateY(0) scale(1.05) rotate(-8deg)}
-  45%{transform:translateY(0) scale(1.05) rotate(7deg)}
-  70%{transform:translateY(0) scale(1.03) rotate(-3deg)}
-  100%{transform:translateY(0) scale(1) rotate(0deg)}
+  0%{transform:scale(1) rotate(0deg)}
+  20%{transform:scale(1.05) rotate(-8deg)}
+  45%{transform:scale(1.05) rotate(7deg)}
+  70%{transform:scale(1.03) rotate(-3deg)}
+  100%{transform:scale(1) rotate(0deg)}
 }
 .dim-tag{
   display:inline-block;font-size:10px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;
@@ -131,6 +233,125 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
   font-family:var(--font-body);
 }
 .hero-sub strong{color:var(--warm);font-weight:600}
+/* Hero rally-length CHART — the KEY visual: 4-point growth curve from ~5 shots (1D) to 20+ (4D).
+   Animates on page load: line draws in, dots pop, labels fade with stagger. */
+.hero-chart{
+  margin:28px auto 0;max-width:1080px;width:100%;padding:0 20px;
+}
+@media(max-width:1080px){.hero-chart{max-width:920px}}
+@media(max-width:900px){.hero-chart{max-width:680px}}
+.hero-chart svg{width:100%;height:auto;display:block;overflow:visible}
+/* Figcaption removed: "Rally length" rides the curve and "Peak social pickleball"
+   sits on d4 — both moved INSIDE the SVG to reduce text and strengthen the visual. */
+/* SVG text */
+.hc-num{
+  font-family:var(--font-display);font-style:italic;font-weight:700;
+  font-size:24px;letter-spacing:-.5px;
+}
+.hc-num.l1{fill:#FBBF24}
+.hc-num.l2{fill:#F472B6}
+.hc-num.l3{fill:#34D399}
+.hc-num.l4{fill:#2B8BFC}
+.hc-num.hc-num-big{font-size:34px;font-weight:900}
+.hc-dim{
+  font-family:var(--font-body);font-weight:700;font-size:12px;letter-spacing:1.5px;
+}
+/* Y-axis label — rotated vertical on the LEFT side of the chart.
+   Reads bottom-up: "Builds tension + fun" with a chunky up-arrow above it.
+   Tells the visitor what the y-axis is measuring. */
+.hc-axis-y{
+  font-family:var(--font-body);font-weight:700;font-size:13px;letter-spacing:1.6px;
+}
+.hc-axis-y-arrow{
+  stroke-linecap:round;stroke-linejoin:round;
+}
+/* X-axis label below the dimension dots — Beth feedback #6 math-teacher fix. */
+.hc-axis-x{
+  font-family:var(--font-display);font-style:italic;font-weight:400;
+  font-size:13px;letter-spacing:.2px;
+  fill:#2B8BFC;opacity:.78;
+}
+/* "Rally length" — italic label riding ABOVE the curve (not on it).
+   Sits in clean dark space so it doesn't crash through the gradient line. */
+.hc-curve-label{
+  font-family:var(--font-display);font-style:italic;font-weight:400;
+  font-size:19px;letter-spacing:.2px;
+  fill:rgba(245,243,238,.55);
+}
+/* Peak emphasis at d4 (4D dot) — concentric glow rings + flag emblem.
+   Visual signal: summit reached. Replaces the "Peak social pickleball" text. */
+.hc-peak-glow{filter:blur(3px)}
+.hc-peak-glow-1{opacity:.30}
+.hc-peak-glow-2{opacity:.12}
+/* Peak emblem — solid 4D-blue swallowtail flag with white ◆ brand mark on it.
+   Reads as "the 4D Pickleball flag planted at the summit." Single-color so it
+   doesn't read as pride flag (which a multi-band gradient did). */
+.hc-peak-pole{stroke-linecap:round}
+.hc-peak-flag{filter:drop-shadow(0 2px 6px rgba(0,0,0,.45))}
+.hc-peak-flag-mark{letter-spacing:0}
+.hc-axis-r{
+  font-family:var(--font-body);font-weight:800;font-size:11px;letter-spacing:2.5px;
+  opacity:.85;
+}
+/* Dot glow — drop-shadow uses the dot's fill color via filter */
+.hc-dot.d1{filter:drop-shadow(0 0 8px rgba(251,191,36,.65))}
+.hc-dot.d2{filter:drop-shadow(0 0 8px rgba(244,114,182,.65))}
+.hc-dot.d3{filter:drop-shadow(0 0 8px rgba(52,211,153,.65))}
+.hc-dot.d4{filter:drop-shadow(0 0 14px rgba(43,139,252,.85))}
+
+/* Animations: line draws, dots pop, labels fade — staggered after page-load focus moment */
+.hc-line{
+  stroke-dasharray:1200;stroke-dashoffset:1200;
+  animation:hcDraw 2.4s cubic-bezier(0.65,0,0.35,1) 0.7s forwards;
+}
+@keyframes hcDraw{to{stroke-dashoffset:0}}
+
+.hc-area{opacity:0;animation:hcFade 1.2s ease 1.6s forwards}
+.hc-dot{opacity:0}
+.hc-dot.d1{animation:hcFade 0.5s ease 0.9s forwards}
+.hc-dot.d2{animation:hcFade 0.5s ease 1.5s forwards}
+.hc-dot.d3{animation:hcFade 0.5s ease 2.1s forwards}
+.hc-dot.d4{animation:hcFade 0.6s ease 2.7s forwards}
+.hc-labels-top text{opacity:0}
+.hc-labels-top .l1{animation:hcFade 0.5s ease 1.05s forwards}
+.hc-labels-top .l2{animation:hcFade 0.5s ease 1.65s forwards}
+.hc-labels-top .l3{animation:hcFade 0.5s ease 2.25s forwards}
+.hc-labels-top .l4{animation:hcFade 0.7s ease 2.9s forwards}
+.hc-labels-bot text, .hc-axis-y, .hc-axis-y-arrow, .hc-axis-x{opacity:0;animation:hcFade 0.7s ease 0.4s forwards}
+/* "Rally length" curve label fades in just as the line finishes drawing */
+.hc-curve-label{opacity:0;animation:hcFade 0.6s ease 2.4s forwards}
+/* Peak emphasis lands AFTER d4 dot pops (d4 = 2.7s); flag plants slightly after */
+.hc-peak-glow{opacity:0;animation:hcFade 0.7s ease 2.9s forwards}
+.hc-peak-glow-1{animation-delay:2.9s}
+.hc-peak-glow-2{animation-delay:2.9s}
+/* Flag lands AFTER d4 dot pops (d4 = 2.7s): pole fades in, then flag plants with bounce */
+.hc-peak-pole{opacity:0;animation:hcFade 0.6s ease 3.0s forwards}
+.hc-peak-flag{opacity:0;animation:hcFlagPlant 0.7s cubic-bezier(.34,1.56,.64,1) 3.2s forwards;transform-origin:720px 11px}
+.hc-peak-flag-mark{opacity:0;animation:hcFade 0.5s ease 3.7s forwards}
+@keyframes hcFade{to{opacity:1}}
+@keyframes hcFlagPlant{
+  0%{opacity:0;transform:scale(.4) rotate(-30deg)}
+  100%{opacity:1;transform:scale(1) rotate(0deg)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .hc-line{stroke-dashoffset:0;animation:none}
+  .hc-area, .hc-dot, .hc-labels-top text, .hc-labels-bot text,
+  .hc-axis-y, .hc-axis-y-arrow, .hc-curve-label, .hc-peak-glow,
+  .hc-peak-pole, .hc-peak-flag, .hc-peak-flag-mark{
+    opacity:1;animation:none;transform:none;
+  }
+}
+
+@media(max-width:620px){
+  .hero-chart{margin-top:22px;padding:0 8px}
+  .hc-num{font-size:18px}
+  .hc-num.hc-num-big{font-size:26px}
+  .hc-dim{font-size:10px;letter-spacing:1px}
+  /* On phone, scale curve label down + hide the side y-axis (chart speaks for itself) */
+  .hc-curve-label{font-size:18px}
+  .hc-axis-y, .hc-axis-y-arrow{display:none}
+}
 
 /* ── PAIN POINTS ── */
 .pain-row{
@@ -553,6 +774,131 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
   .prog-badge{margin-bottom:14px;font-size:10px;letter-spacing:1.5px}
 }
 
+/* ── Philosophy section: Two kinds of pickleball (competitive vs social) ── */
+.philosophy{max-width:1080px;margin:80px auto 40px;padding:0 24px}
+.phil-header{
+  font-family:var(--font-display);font-style:italic;font-weight:400;
+  font-size:clamp(32px,5vw,52px);line-height:1.05;letter-spacing:-1px;
+  text-align:center;color:var(--warm);margin:0 0 10px;
+}
+.phil-lede{
+  text-align:center;font-size:18px;color:var(--warm-dim);
+  margin:0 0 38px;font-family:var(--font-body);font-style:italic;line-height:1.5;
+}
+.phil-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:0}
+@media(max-width:760px){.phil-grid{grid-template-columns:1fr;gap:14px}}
+.phil-col{
+  background:rgba(10,22,40,.72);border:1px solid rgba(245,243,238,.08);
+  border-radius:18px;padding:28px 26px;
+}
+.phil-col.phil-comp{border-top:3px solid #FBBF24}
+.phil-col.phil-social{border-top:3px solid #2B8BFC}
+.phil-tag{
+  font-family:var(--font-body);font-size:11px;font-weight:800;
+  letter-spacing:2.5px;text-transform:uppercase;margin-bottom:6px;
+}
+.phil-comp .phil-tag{color:#FBBF24}
+.phil-social .phil-tag{color:#2B8BFC}
+/* Big stat number + small explainer (lives just under the column tag) */
+.phil-stat{display:flex;align-items:baseline;gap:10px;margin-bottom:18px}
+.phil-stat-num{
+  font-family:var(--font-display);font-style:italic;font-weight:400;
+  font-size:clamp(40px,5vw,56px);line-height:1;letter-spacing:-1.5px;
+}
+.phil-comp .phil-stat-num{color:#FBBF24}
+.phil-social .phil-stat-num{color:#2B8BFC}
+.phil-stat-label{
+  font-size:13px;color:var(--warm-dim);font-style:italic;
+  font-family:var(--font-body);
+}
+@media(max-width:620px){
+  .phil-stat-num{font-size:clamp(34px,9vw,42px);letter-spacing:-1px}
+  .phil-stat-label{font-size:12px}
+}
+.phil-col ul{list-style:none;padding:0;margin:0}
+.phil-col li{
+  font-size:16px;color:var(--warm);line-height:1.5;
+  padding:9px 0 9px 22px;position:relative;
+  border-bottom:1px solid rgba(245,243,238,.06);
+}
+.phil-col li:last-child{border-bottom:0}
+.phil-col li::before{
+  content:"";position:absolute;left:0;top:16px;
+  width:6px;height:6px;border-radius:50%;
+}
+.phil-comp li::before{background:#FBBF24}
+.phil-social li::before{background:#2B8BFC}
+/* In-card callout — lives at the bottom of the SOCIAL column to anchor the whole section */
+.phil-callout{
+  margin-top:18px;padding-top:18px;
+  border-top:1px solid rgba(43,139,252,.22);
+  font-size:15px;line-height:1.55;color:var(--warm);
+  font-family:var(--font-body);
+}
+.phil-callout strong{color:#2B8BFC;font-weight:700;display:block;margin-bottom:6px;font-size:16px}
+@media(max-width:620px){
+  .philosophy{margin:50px auto 30px}
+  .phil-lede{font-size:16px;margin-bottom:28px}
+  .phil-col{padding:22px 20px}
+  .phil-col li{font-size:15px}
+  .phil-callout{font-size:14px}
+}
+
+/* ── Reveal-on-scroll: hide below-the-hero sections at load, fade-up + stagger when they enter the viewport.
+   Hero gets a ~700ms focus moment first; respects prefers-reduced-motion. ── */
+.reveal-section{
+  opacity:0;transform:translateY(28px);
+  transition:opacity 0.95s cubic-bezier(0.22,1,0.36,1),
+             transform 0.95s cubic-bezier(0.22,1,0.36,1);
+  will-change:opacity,transform;
+}
+.reveal-section.is-visible{opacity:1;transform:translateY(0)}
+.reveal-section > *{
+  opacity:0;transform:translateY(18px);
+  transition:opacity 0.7s cubic-bezier(0.22,1,0.36,1),
+             transform 0.7s cubic-bezier(0.22,1,0.36,1);
+}
+.reveal-section.is-visible > *{opacity:1;transform:translateY(0)}
+.reveal-section.is-visible > *:nth-child(1){transition-delay:0.05s}
+.reveal-section.is-visible > *:nth-child(2){transition-delay:0.20s}
+.reveal-section.is-visible > *:nth-child(3){transition-delay:0.36s}
+.reveal-section.is-visible > *:nth-child(4){transition-delay:0.52s}
+@media(prefers-reduced-motion:reduce){
+  .reveal-section,.reveal-section > *{opacity:1;transform:none;transition:none}
+}
+
+/* ── Animation section header — "Your journey to 4D" + rally-length subtitle ── */
+.anim-header{
+  font-family:var(--font-display);font-style:italic;font-weight:400;
+  font-size:clamp(36px,5.5vw,60px);line-height:1.05;letter-spacing:-1px;
+  text-align:center;
+  /* width:fit-content + margin:auto so the gradient's 0%→100% maps to the actual text,
+     not the full container width. Otherwise the "O" sits at ~35% of the gradient (pink). */
+  width:fit-content;max-width:100%;
+  margin:0 auto 28px;
+  /* Each dimension color holds its own band (yellow/pink/green/blue) instead of bleeding
+     through muted middle tones. Sharper transitions match the Drive→Defend→Drop→Dink wordmark. */
+  background:linear-gradient(90deg,
+    #FBBF24 0%, #FBBF24 22%,
+    #F472B6 36%, #F472B6 50%,
+    #34D399 64%, #34D399 78%,
+    #2B8BFC 90%, #2B8BFC 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+}
+.anim-sub{
+  text-align:center;font-family:var(--font-body);
+  font-size:clamp(13px,1.5vw,15px);color:var(--warm-dim);
+  margin:0 auto 22px;max-width:760px;line-height:1.5;
+}
+.anim-sub .rs-num{font-weight:800;font-style:italic;font-family:var(--font-display);font-size:1.18em;letter-spacing:-.3px}
+.anim-sub .rs-arrow{color:var(--warm-mute);margin:0 4px;font-weight:700}
+@media(max-width:620px){
+  .anim-header{font-size:clamp(28px,7.5vw,38px);margin-bottom:20px;letter-spacing:-.5px}
+  .anim-sub{font-size:13px;margin-bottom:16px}
+  .anim-sub .rs-arrow{margin:0 2px}
+}
+
 /* ── Dimension info panel (side of iframe) ── */
 .dim-layout{display:flex;gap:22px;align-items:stretch}
 .dim-frame{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:14px}
@@ -619,6 +965,13 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
 .dim-chip[data-shot="defend"]{--dc:#F472B6}
 .dim-chip[data-shot="drop"]  {--dc:#34D399}
 .dim-chip[data-shot="dink"]  {--dc:#2B8BFC}
+/* Rally length stat — bottom of each chip, color-coded to dimension */
+.dc-rally{
+  font-family:var(--font-body);font-size:11px;font-weight:700;
+  letter-spacing:.5px;text-transform:uppercase;
+  color:var(--dc,#FBBF24);margin-top:6px;opacity:.92;
+}
+.dim-chip[data-shot="dink"] .dc-rally{font-weight:800;letter-spacing:.3px}
 .dim-chip .dc-num{
   font-weight:700;font-size:10px;letter-spacing:2px;
   color:var(--dc);text-transform:uppercase;
@@ -757,25 +1110,182 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
 <div class="page active" id="page-pyramid">
 
   <div class="hero">
+    <h1 class="sr-only">4D Pickleball — the progression for pickleball</h1>
     <div class="hero-badge">◆ 4D Pickleball</div>
 
-    <h1>Anyone can learn<br>to play 4D Pickleball.</h1>
+    <figure class="hero-chart" aria-label="Rally length grows from ~5 shots at 1D, to ~8 at 2D, ~12 at 3D, and 20+ at 4D">
+      <svg viewBox="0 0 800 290" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="hcLineGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#FBBF24"/>
+            <stop offset="33%" stop-color="#F472B6"/>
+            <stop offset="66%" stop-color="#34D399"/>
+            <stop offset="100%" stop-color="#2B8BFC"/>
+          </linearGradient>
+          <linearGradient id="hcAreaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2B8BFC" stop-opacity="0.22"/>
+            <stop offset="100%" stop-color="#2B8BFC" stop-opacity="0"/>
+          </linearGradient>
+          <!-- Solid 4D-blue flag gradient — light blue at top, deeper 4D blue at bottom,
+               for a subtle satin sheen. Single-color so it doesn't read as pride flag. -->
+          <linearGradient id="hcFlagGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#60A5FA"/>
+            <stop offset="100%" stop-color="#2B8BFC"/>
+          </linearGradient>
+        </defs>
+        <!-- Baseline grid -->
+        <line x1="80" y1="230" x2="720" y2="230" stroke="rgba(245,243,238,.12)" stroke-dasharray="3 6"/>
+        <!-- Area fill under the curve -->
+        <path class="hc-area" d="M 80,230 L 80,220 C 200,220, 200,184, 293,184 C 380,184, 420,136, 507,136 C 600,136, 660,40, 720,40 L 720,230 Z" fill="url(#hcAreaGrad)"/>
+        <!-- The growth line -->
+        <path class="hc-line" d="M 80,220 C 200,220, 200,184, 293,184 C 380,184, 420,136, 507,136 C 600,136, 660,40, 720,40" fill="none" stroke="url(#hcLineGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Peak emphasis halo BEHIND d4 (drawn before dots so the dot stays crisp on top). -->
+        <circle class="hc-peak-glow hc-peak-glow-2" cx="720" cy="40" r="34" fill="#2B8BFC"/>
+        <circle class="hc-peak-glow hc-peak-glow-1" cx="720" cy="40" r="22" fill="#2B8BFC"/>
+        <!-- Data points: mini pickleballs in each dimension's color (5-hole wiffle pattern) -->
+        <g class="hc-dots">
+          <g class="hc-dot d1" transform="translate(80,220)">
+            <circle r="9" fill="#FBBF24" stroke="#0a1628" stroke-width="1.5"/>
+            <circle cx="0" cy="-4" r="1.4" fill="#0a1628" opacity=".62"/>
+            <circle cx="3.5" cy="-1" r="1.4" fill="#0a1628" opacity=".62"/>
+            <circle cx="-3.5" cy="-1" r="1.4" fill="#0a1628" opacity=".62"/>
+            <circle cx="2.1" cy="3.5" r="1.4" fill="#0a1628" opacity=".62"/>
+            <circle cx="-2.1" cy="3.5" r="1.4" fill="#0a1628" opacity=".62"/>
+          </g>
+          <g class="hc-dot d2" transform="translate(293,184)">
+            <circle r="9" fill="#F472B6" stroke="#0a1628" stroke-width="1.5"/>
+            <circle cx="0" cy="-4" r="1.4" fill="#0a1628" opacity=".62"/>
+            <circle cx="3.5" cy="-1" r="1.4" fill="#0a1628" opacity=".62"/>
+            <circle cx="-3.5" cy="-1" r="1.4" fill="#0a1628" opacity=".62"/>
+            <circle cx="2.1" cy="3.5" r="1.4" fill="#0a1628" opacity=".62"/>
+            <circle cx="-2.1" cy="3.5" r="1.4" fill="#0a1628" opacity=".62"/>
+          </g>
+          <g class="hc-dot d3" transform="translate(507,136)">
+            <circle r="9" fill="#34D399" stroke="#0a1628" stroke-width="1.5"/>
+            <circle cx="0" cy="-4" r="1.4" fill="#0a1628" opacity=".62"/>
+            <circle cx="3.5" cy="-1" r="1.4" fill="#0a1628" opacity=".62"/>
+            <circle cx="-3.5" cy="-1" r="1.4" fill="#0a1628" opacity=".62"/>
+            <circle cx="2.1" cy="3.5" r="1.4" fill="#0a1628" opacity=".62"/>
+            <circle cx="-2.1" cy="3.5" r="1.4" fill="#0a1628" opacity=".62"/>
+          </g>
+          <g class="hc-dot d4" transform="translate(720,40)">
+            <circle r="9" fill="#2B8BFC" stroke="#0a1628" stroke-width="1.5"/>
+            <circle cx="0" cy="-4" r="1.4" fill="#0a1628" opacity=".62"/>
+            <circle cx="3.5" cy="-1" r="1.4" fill="#0a1628" opacity=".62"/>
+            <circle cx="-3.5" cy="-1" r="1.4" fill="#0a1628" opacity=".62"/>
+            <circle cx="2.1" cy="3.5" r="1.4" fill="#0a1628" opacity=".62"/>
+            <circle cx="-2.1" cy="3.5" r="1.4" fill="#0a1628" opacity=".62"/>
+          </g>
+        </g>
+        <!-- Shots-per-rally labels (above each dot) -->
+        <g class="hc-labels-top">
+          <text class="hc-num l1" x="80" y="202" text-anchor="middle">5</text>
+          <text class="hc-num l2" x="293" y="166" text-anchor="middle">8</text>
+          <text class="hc-num l3" x="507" y="118" text-anchor="middle">12</text>
+          <text class="hc-num l4 hc-num-big" x="700" y="32" text-anchor="end">20+</text>
+        </g>
+        <!-- Dimension labels (below baseline) -->
+        <g class="hc-labels-bot">
+          <text class="hc-dim" x="80" y="258" text-anchor="middle" fill="#FBBF24">1D</text>
+          <text class="hc-dim" x="293" y="258" text-anchor="middle" fill="#F472B6">2D</text>
+          <text class="hc-dim" x="507" y="258" text-anchor="middle" fill="#34D399">3D</text>
+          <text class="hc-dim" x="720" y="258" text-anchor="middle" fill="#2B8BFC">4D</text>
+        </g>
+        <!-- Y-axis label on the LEFT — Beth feedback #6 (math-teacher correctness):
+             the Y values are rally-length numbers (5, 8, 12, 20+), so the axis
+             label IS "Rally length". The up-arrow communicates "more is better." -->
+        <text class="hc-axis-y" x="38" y="158" text-anchor="middle" transform="rotate(-90 38 158)" fill="#2B8BFC">Rally length</text>
+        <path class="hc-axis-y-arrow" d="M 38 70 L 38 38 M 30 48 L 38 38 L 46 48" stroke="#2B8BFC" stroke-width="2.4" fill="none"/>
 
-    <div style="display:inline-flex;align-items:center;justify-content:center;gap:16px;margin:36px 0 8px;flex-wrap:wrap">
-      <span class="fd-word fw-1" style="--fd-c:#FBBF24">Drive</span>
-      <span class="fd-arrow fa-1" style="--fa-c:#F472B6">→</span>
-      <span class="fd-word fw-2" style="--fd-c:#F472B6">Defend</span>
+        <!-- X-axis label below the dimension labels. Tells the visitor what the
+             X-axis represents — the progression that builds tension + fun. -->
+        <text class="hc-axis-x" x="400" y="282" text-anchor="middle" fill="#2B8BFC">Progression — builds tension + fun</text>
+
+        <!-- Peak emblem at d4: silver pole + solid 4D-blue swallowtail flag with the
+             brand ◆ stamped in white. Single-color so it doesn't read as pride flag.
+             Pole rises from top of dot; flag flies right with a V-notch trailing edge. -->
+        <line class="hc-peak-pole" x1="720" y1="31" x2="720" y2="3" stroke="#94A3B8" stroke-width="1.6"/>
+        <path class="hc-peak-flag" d="M 720 3 L 744 3 L 740 11 L 744 19 L 720 19 Z" fill="url(#hcFlagGrad)"/>
+        <text class="hc-peak-flag-mark" x="730" y="11" text-anchor="middle" dominant-baseline="central" font-family="var(--font-body)" font-weight="900" font-size="10" fill="#FFFFFF">◆</text>
+      </svg>
+    </figure>
+
+    <div class="fd-eyebrow">The Progression</div>
+
+    <div class="fd-row">
+      <div class="fd-pair">
+        <span class="fd-word fw-1" style="--fd-c:#FBBF24">Drive</span>
+        <span class="fd-arrow fa-1" style="--fa-c:#F472B6">→</span>
+        <span class="fd-word fw-2" style="--fd-c:#F472B6">Defend</span>
+      </div>
       <span class="fd-arrow fa-2" style="--fa-c:#34D399">→</span>
-      <span class="fd-word fw-3" style="--fd-c:#34D399">Drop</span>
-      <span class="fd-arrow fa-3" style="--fa-c:#2B8BFC">→</span>
-      <span class="fd-word fw-4" style="--fd-c:#2B8BFC">Dink</span>
+      <div class="fd-pair">
+        <span class="fd-word fw-3" style="--fd-c:#34D399">Drop</span>
+        <span class="fd-arrow fa-3" style="--fa-c:#2B8BFC">→</span>
+        <span class="fd-word fw-4" style="--fd-c:#2B8BFC">Dink</span>
+      </div>
     </div>
+
+    <button class="scroll-cue" type="button" data-scroll-target=".philosophy" aria-label="Continue to: Two kinds of pickleball">
+      <span class="scroll-cue-label">Continue</span>
+      <svg class="scroll-cue-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M7 7l5 5 5-5M7 13l5 5 5-5"/>
+      </svg>
+    </button>
 
   </div>
 
-  <!-- Embedded cinematic 3D module (canonical at 06_ACADEMY/4dp/3d_module_template.html per R21)
-       + side info panel (parent-rendered, synced via postMessage from the iframe) -->
-  <section style="max-width:1360px;margin:40px auto 32px;padding:0 24px">
+  <!-- ── SECTION 2 — THE WHY: Two kinds of pickleball (thesis unpacked).
+       Moved here from the bottom of the page so the visitor learns WHY 4D matters
+       (85% social pickleball, long rallies = more fun) BEFORE exploring the dimensions. -->
+  <section class="philosophy reveal-section section-full">
+    <h2 class="phil-header">Two kinds of pickleball.</h2>
+    <p class="phil-lede">Both are amazing. They're not the same.</p>
+
+    <div class="phil-grid">
+      <div class="phil-col phil-comp">
+        <div class="phil-tag">Competitive</div>
+        <div class="phil-stat">
+          <span class="phil-stat-num">15%</span>
+          <span class="phil-stat-label">of all pickleball</span>
+        </div>
+        <ul>
+          <li>Tournaments, DUPR, leagues, written scores.</li>
+          <li>Win and get rewarded. Lose and you're punished.</li>
+          <li>Ice out the weaker player.</li>
+          <li>Easiest path for most amateurs to win is short-rally-style.</li>
+        </ul>
+      </div>
+      <div class="phil-col phil-social">
+        <div class="phil-tag">Social</div>
+        <div class="phil-stat">
+          <span class="phil-stat-num">85%</span>
+          <span class="phil-stat-label">of all pickleball</span>
+        </div>
+        <ul>
+          <li>Scores aren't written down.</li>
+          <li>The experience is in the rally and how you and your foursome <em>feel</em>.</li>
+        </ul>
+        <div class="phil-callout">
+          <strong>4D Pickleball is for the 85%.</strong>
+          4D pickleball turns short-rally-play into long-rally-play — the tension and fun builds with every ball over the net, until it ends with an incredible winner or a funny error. Not caring so much about the W or the L. Social pickleball is like any social situation: creating the best possible experience for each other.
+        </div>
+      </div>
+    </div>
+
+    <button class="scroll-cue scroll-cue-2" type="button" data-scroll-target="#four-d-journey" aria-label="Continue to: Our 4D journey">
+      <span class="scroll-cue-label">Continue</span>
+      <svg class="scroll-cue-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M7 7l5 5 5-5M7 13l5 5 5-5"/>
+      </svg>
+    </button>
+  </section>
+
+  <!-- ── SECTION 3 — THE HOW: Embedded cinematic 3D module (canonical at 06_ACADEMY/4dp/3d_module_template.html per R21)
+       + side info panel (parent-rendered, synced via postMessage from the iframe).
+       Page now ENDS with the journey + 0D modules so visitors close on action paths. -->
+  <section id="four-d-journey" class="reveal-section section-full">
+    <h2 class="anim-header">Let's go on this 4D journey together</h2>
     <div class="dim-layout">
       <div class="dim-frame">
         <div class="touch-ctrls" aria-label="Touch controls">
@@ -818,15 +1328,24 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
           </div>
           <div class="zd-platform">
             <div class="zd-eyebrow">◆ 0D · Underneath every dimension</div>
-            <div class="zd-headline"><em>And then there&apos;s 0D.</em> What comes before every shot.</div>
+            <div class="zd-headline">What comes before every shot?</div>
             <div class="zd-pillars">
               <span class="zd-chip zd-chip-link">Positioning&nbsp;↓</span>
               <span class="zd-chip zd-chip-link">Anticipation&nbsp;↓</span>
               <span class="zd-chip">Ready Position</span>
             </div>
+            <div class="zd-ctas-label">Open a module ↓</div>
             <div class="zd-ctas">
-              <a href="/scoring/" class="zd-cta">Beginner Scoring &amp; Positioning</a>
-              <a href="/outballs/" class="zd-cta">Train Out Balls</a>
+              <a href="/scoring/" class="zd-cta">
+                <span class="zd-cta-tag">Module · 0D</span>
+                <span class="zd-cta-name">Beginner Scoring &amp; Positioning</span>
+                <span class="zd-cta-arrow">→</span>
+              </a>
+              <a href="/outballs/" class="zd-cta">
+                <span class="zd-cta-tag">Module · 0D</span>
+                <span class="zd-cta-name">Train Out Balls</span>
+                <span class="zd-cta-arrow">→</span>
+              </a>
             </div>
           </div>
         </div>
@@ -991,6 +1510,55 @@ window.addEventListener('message', (e) => {
   const m = document.getElementById('di-mantra');  if (m) m.textContent = mantra;
   const t = document.getElementById('di-traj');    if (t) t.textContent = traj;
 });
+
+// ── Scroll cues: each cue clicks to scroll to its data-scroll-target (defaults to .dim-layout).
+//    The HERO cue auto-hides after first scroll past 60px. Subsequent cues stay visible
+//    (they're inline section transitions, not above-the-fold prompts).
+(function(){
+  const cues = document.querySelectorAll('.scroll-cue');
+  if (!cues.length) return;
+  cues.forEach(cue => {
+    cue.addEventListener('click', () => {
+      const sel = cue.getAttribute('data-scroll-target') || '.dim-layout';
+      const target = document.querySelector(sel) || document.querySelector('.reveal-section');
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+  // Hero cue (first .scroll-cue, sits inside .hero) auto-hides after first real scroll
+  const heroCue = document.querySelector('.hero .scroll-cue');
+  if (heroCue) {
+    let hidden = false;
+    window.addEventListener('scroll', () => {
+      if (hidden) return;
+      if (window.scrollY > 60) { heroCue.classList.add('is-hidden'); hidden = true; }
+    }, { passive: true });
+  }
+})();
+
+// ── Reveal-on-scroll: hide below-the-hero sections at load, fade-up + stagger when they enter the viewport.
+//    Hero gets a ~700ms focus moment first; respects prefers-reduced-motion.
+(function(){
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const targets = document.querySelectorAll('.reveal-section');
+  if (!targets.length) return;
+  if (reduced) { targets.forEach(el => el.classList.add('is-visible')); return; }
+  const HERO_FOCUS_MS = 700;
+  const loadedAt = performance.now();
+  const reveal = (el) => {
+    const elapsed = performance.now() - loadedAt;
+    const wait = Math.max(0, HERO_FOCUS_MS - elapsed);
+    setTimeout(() => el.classList.add('is-visible'), wait);
+  };
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        reveal(entry.target);
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -40px 0px', threshold: 0.04 });
+  targets.forEach(el => obs.observe(el));
+})();
 
 // ── INTERACTIVE PROGRESSION STORY ──
 (function(){
