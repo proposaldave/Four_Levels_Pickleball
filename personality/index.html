@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#0E1F38">
+<title>What does your game look like? · 4D Pickleball</title>
+<meta name="description" content="A behavior quiz for pickleball players. Eleven questions about what you bring to a court — your energy, your style, what you value, and what gets in the way of your fun. From the people running real community pickleball at NEPC.">
+<meta property="og:title" content="What does your game look like? · 4D Pickleball">
+<meta property="og:description" content="DUPR rates how well you hit the ball. We rate who's worth playing with. Different quiz. Different game.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://4dpickleball.com/personality">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232B8BFC'/%3E%3Ctext x='50' y='68' font-family='Inter,Arial,sans-serif' font-size='56' font-weight='900' fill='white' text-anchor='middle'%3E4D%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/4dp/tokens.css">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: var(--4dp-ink); color: var(--4dp-text); font-family: var(--4dp-font-body); -webkit-font-smoothing: antialiased; min-height: 100%; }
+body {
+  background-color: var(--4dp-ink);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 15% -10%, rgba(43,139,252,.10) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 85% 110%, rgba(245,158,11,.08) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(43,139,252,.04) 0%, transparent 70%);
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 22px;
+  background: rgba(14,31,56,.85);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--4dp-hairline);
+}
+.topbar .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.topbar .brand-mark {
+  width: 32px; height: 32px; border-radius: 9px;
+  background: linear-gradient(135deg, var(--4dp-dink), #1E6FD9);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 11px; color: #fff; letter-spacing: .3px;
+  box-shadow: 0 2px 12px rgba(43,139,252,.3);
+}
+.topbar .brand-text { font-weight: 700; font-size: 13px; color: var(--4dp-text); letter-spacing: -.2px; line-height: 1.15; }
+.topbar .brand-text span { display: block; font-weight: 500; font-size: 9px; opacity: .55; letter-spacing: 1.3px; text-transform: uppercase; margin-top: 1px; }
+.topbar .home-link {
+  font-family: var(--4dp-font-body); font-size: 11px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--4dp-text-dim); text-decoration: none;
+  padding: 8px 14px; border-radius: var(--4dp-r-pill);
+  border: 1px solid var(--4dp-hairline-s);
+  transition: all .25s var(--4dp-ease);
+}
+.topbar .home-link:hover { color: var(--4dp-text); border-color: var(--4dp-text-mute); }
+
+/* ── PAGES (state-machine) ── */
+.app { padding-top: 64px; min-height: 100vh; }
+.page { display: none; max-width: 720px; margin: 0 auto; padding: 32px 22px 80px; }
+.page.active { display: block; animation: pageIn .55s var(--4dp-ease); }
+.page-wide { max-width: 1100px; }
+@keyframes pageIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── HERO ── */
+.hero { text-align: center; padding: 60px 0 40px; }
+.hero .eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 18px; border-radius: var(--4dp-r-pill);
+  background: rgba(43,139,252,.10);
+  border: 1px solid rgba(43,139,252,.32);
+  font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--4dp-dink);
+  margin-bottom: 28px;
+}
+.hero .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--4dp-dink); box-shadow: 0 0 12px var(--4dp-dink); animation: pulse 2.4s ease infinite; }
+@keyframes pulse { 0%, 100% { opacity: .5; transform: scale(.85); } 50% { opacity: 1; transform: scale(1.1); } }
+
+.hero h1 {
+  font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+  font-size: clamp(48px, 8vw, 92px);
+  letter-spacing: -2px; line-height: .98;
+  color: var(--4dp-text);
+  margin-bottom: 24px;
+}
+.hero h1 .accent { color: var(--gnr-gold); text-shadow: 0 0 48px rgba(245,158,11,.45); }
+.hero .sub {
+  font-size: 18px; color: var(--4dp-text-dim);
+  max-width: 540px; margin: 0 auto 36px; line-height: 1.55;
+}
+.hero .meta {
+  display: inline-flex; gap: 28px; align-items: center;
+  font-family: var(--4dp-font-data); font-size: 12px; color: var(--4dp-text-mute);
+  margin-bottom: 36px;
+  letter-spacing: .5px;
+}
+.hero .meta .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--4dp-text-faint); }
+
+/* Animated bouncing ball above CTA */
+.ball-stage { position: relative; height: 110px; margin: 0 auto 32px; max-width: 260px; }
+.ball {
+  position: absolute; left: 50%; top: 0;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #FFE578, var(--gnr-gold) 60%, #B57400);
+  box-shadow: 0 0 28px rgba(245,158,11,.55), inset -3px -4px 8px rgba(0,0,0,.35);
+  transform: translateX(-50%);
+  animation: bounce 1.4s var(--4dp-ease) infinite;
+}
+.ball::before, .ball::after {
+  content: ''; position: absolute; background: rgba(0,0,0,.18); border-radius: 50%;
+}
+.ball::before { width: 6px; height: 6px; top: 8px; left: 14px; }
+.ball::after { width: 4px; height: 4px; top: 22px; left: 22px; }
+@keyframes bounce {
+  0%, 100% { top: 0; }
+  50% { top: 70px; }
+}
+.ball-shadow {
+  position: absolute; bottom: 0; left: 50%;
+  width: 50px; height: 8px; border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0,0,0,.45), transparent 70%);
+  transform: translateX(-50%);
+  animation: shadow 1.4s var(--4dp-ease) infinite;
+}
+@keyframes shadow {
+  0%, 100% { transform: translateX(-50%) scale(.5); opacity: .35; }
+  50% { transform: translateX(-50%) scale(1); opacity: .8; }
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 16px 32px;
+  background: var(--gnr-gold);
+  color: var(--4dp-ink);
+  border: none; border-radius: var(--4dp-r-pill);
+  font-family: var(--4dp-font-body); font-weight: 800; font-size: 14px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: var(--4dp-glow-gold);
+  transition: transform var(--4dp-dur-fast) var(--4dp-ease), box-shadow .25s var(--4dp-ease);
+  text-decoration: none;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 0 80px rgba(245,158,11,.55); }
+.btn:active { transform: translateY(0); }
+.btn-ghost {
+  background: transparent; color: var(--4dp-text);
+  border: 1px solid var(--4dp-hairline-s);
+  box-shadow: none;
+}
+.btn-ghost:hover { border-color: var(--4dp-text-mute); box-shadow: none; }
+.btn-blue {
+  background: var(--4dp-dink); color: #fff;
+  box-shadow: var(--4dp-glow-dink);
+}
+.btn-blue:hover { box-shadow: 0 0 80px rgba(43,139,252,.55); }
+
+/* ── PREAMBLE ── */
+.preamble {
+  margin-top: 48px; padding: 24px 28px;
+  background: var(--4dp-surface);
+  border: 1px solid var(--4dp-hairline);
+  border-radius: var(--4dp-r-md);
+  text-align: left;
+}
+.preamble .eyebrow-sm {
+  font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gnr-gold); margin-bottom: 10px;
+}
+.preamble p { font-size: 15px; color: var(--4dp-text-dim); line-height: 1.6; margin-bottom: 8px; }
+.preamble p:last-child { margin-bottom: 0; }
+
+/* ── PROGRESS ── */
+.progress {
+  position: sticky; top: 64px; z-index: 20;
+  background: rgba(14,31,56,.88); backdrop-filter: blur(14px);
+  padding: 16px 22px; margin: -32px -22px 28px;
+  border-bottom: 1px solid var(--4dp-hairline);
+  display: flex; align-items: center; gap: 14px;
+}
+.progress .label { font-family: var(--4dp-font-data); font-size: 11px; color: var(--4dp-text-mute); letter-spacing: 1px; text-transform: uppercase; min-width: 80px; }
+.progress .track { flex: 1; height: 4px; background: var(--4dp-hairline); border-radius: 2px; overflow: hidden; }
+.progress .fill { height: 100%; background: linear-gradient(90deg, var(--4dp-dink), var(--gnr-gold)); border-radius: 2px; transition: width .5s var(--4dp-ease); width: 0%; }
+.progress .num { font-family: var(--4dp-font-data); font-size: 13px; color: var(--4dp-text); font-weight: 700; }
+
+/* ── QUESTION ── */
+.q { animation: qIn .45s var(--4dp-ease); }
+@keyframes qIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+.q .qnum {
+  font-family: var(--4dp-font-data); font-size: 11px; color: var(--4dp-text-faint);
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px;
+}
+.q .qtext {
+  font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+  font-size: clamp(28px, 4vw, 40px);
+  letter-spacing: -.6px; line-height: 1.15;
+  color: var(--4dp-text);
+  margin-bottom: 8px;
+}
+.q .qhint {
+  font-size: 14px; color: var(--4dp-text-mute);
+  margin-bottom: 28px;
+}
+
+.opts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+.opt {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 20px;
+  background: var(--4dp-surface);
+  border: 1px solid var(--4dp-hairline);
+  border-radius: var(--4dp-r-md);
+  cursor: pointer;
+  font-size: 16px; color: var(--4dp-text);
+  transition: all var(--4dp-dur-fast) var(--4dp-ease);
+  text-align: left; line-height: 1.4;
+}
+.opt:hover {
+  border-color: var(--4dp-dink);
+  background: var(--4dp-surface-2);
+  transform: translateX(4px);
+}
+.opt.selected {
+  border-color: var(--gnr-gold);
+  background: rgba(245,158,11,.08);
+  box-shadow: 0 0 24px rgba(245,158,11,.18);
+}
+.opt .emoji { font-size: 22px; flex-shrink: 0; line-height: 1; }
+.opt .text { flex: 1; }
+
+/* Multi-select: triggers */
+.opts.multi .opt {
+  padding: 14px 18px; font-size: 15px;
+}
+.opts.multi .opt .check {
+  width: 20px; height: 20px; border-radius: 6px;
+  border: 1.5px solid var(--4dp-text-faint);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--4dp-dur-fast) var(--4dp-ease);
+}
+.opts.multi .opt.selected .check {
+  background: var(--gnr-gold); border-color: var(--gnr-gold);
+  color: var(--4dp-ink);
+}
+.opts.multi .opt.selected .check::after {
+  content: '✓'; font-size: 13px; font-weight: 900; color: var(--4dp-ink);
+}
+
+.q-actions {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  margin-top: 12px;
+}
+.q-actions .btn { padding: 12px 24px; font-size: 12px; }
+.q-actions .skip {
+  font-size: 12px; color: var(--4dp-text-mute);
+  background: none; border: none; cursor: pointer;
+  font-family: var(--4dp-font-body); letter-spacing: 1px; text-transform: uppercase;
+  padding: 8px 12px; border-radius: 8px;
+  transition: color .2s;
+}
+.q-actions .skip:hover { color: var(--4dp-text); }
+
+/* ── CAPTURE FORM ── */
+.capture h2 {
+  font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+  font-size: clamp(32px, 5vw, 52px);
+  letter-spacing: -1px; line-height: 1.05;
+  margin-bottom: 12px;
+}
+.capture .lede {
+  font-size: 16px; color: var(--4dp-text-dim); margin-bottom: 32px; line-height: 1.55;
+}
+.field { margin-bottom: 18px; }
+.field label {
+  display: block;
+  font-size: 11px; color: var(--4dp-text-mute);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+.field input[type="text"],
+.field input[type="email"] {
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--4dp-surface);
+  border: 1px solid var(--4dp-hairline-s);
+  border-radius: var(--4dp-r-md);
+  color: var(--4dp-text);
+  font-family: var(--4dp-font-body); font-size: 16px;
+  transition: border-color .2s;
+}
+.field input:focus { outline: none; border-color: var(--gnr-gold); }
+.field-row { display: flex; gap: 12px; }
+.field-row .field { flex: 1; }
+
+.toggle-row {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.toggle {
+  padding: 10px 16px;
+  background: var(--4dp-surface);
+  border: 1px solid var(--4dp-hairline-s);
+  border-radius: var(--4dp-r-pill);
+  color: var(--4dp-text);
+  font-size: 13px; font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+}
+.toggle.selected {
+  background: rgba(43,139,252,.18);
+  border-color: var(--4dp-dink);
+  color: var(--4dp-dink);
+}
+.skill-slider {
+  width: 100%;
+  -webkit-appearance: none; appearance: none;
+  height: 6px; background: var(--4dp-hairline);
+  border-radius: 3px; outline: none;
+  margin: 12px 0 6px;
+}
+.skill-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--gnr-gold);
+  cursor: pointer;
+  box-shadow: var(--4dp-glow-gold);
+}
+.skill-slider::-moz-range-thumb {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--gnr-gold); cursor: pointer; border: none;
+  box-shadow: var(--4dp-glow-gold);
+}
+.skill-display {
+  font-family: var(--4dp-font-data); font-size: 24px; font-weight: 700;
+  color: var(--gnr-gold);
+  margin-top: 4px;
+}
+.skill-scale { display: flex; justify-content: space-between; font-size: 10px; color: var(--4dp-text-faint); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+
+textarea.field-textarea {
+  width: 100%; min-height: 86px;
+  padding: 14px 18px;
+  background: var(--4dp-surface);
+  border: 1px solid var(--4dp-hairline-s);
+  border-radius: var(--4dp-r-md);
+  color: var(--4dp-text);
+  font-family: var(--4dp-font-body); font-size: 15px;
+  resize: vertical;
+}
+textarea.field-textarea:focus { outline: none; border-color: var(--gnr-gold); }
+
+.capture-disclaimer {
+  font-size: 11px; color: var(--4dp-text-faint); margin-top: 14px; line-height: 1.5;
+}
+
+/* ── EVENT MATRIX ── */
+.events-intro {
+  margin-bottom: 24px;
+}
+.events-intro h2 {
+  font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+  font-size: clamp(28px, 4vw, 40px);
+  letter-spacing: -.6px; line-height: 1.1;
+  color: var(--4dp-text);
+  margin-bottom: 10px;
+}
+.events-intro p { font-size: 15px; color: var(--4dp-text-dim); line-height: 1.55; }
+
+.event-row {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 14px;
+  padding: 14px 16px 16px;
+  background: var(--4dp-surface);
+  border: 1px solid var(--4dp-hairline);
+  border-radius: var(--4dp-r-md);
+  margin-bottom: 10px;
+}
+.event-row .ev-emoji { font-size: 24px; line-height: 1.1; padding-top: 2px; }
+.event-row .ev-body { min-width: 0; }
+.event-row .ev-name { font-weight: 700; color: var(--4dp-text); font-size: 15px; line-height: 1.2; margin-bottom: 2px; }
+.event-row .ev-blurb { font-size: 12px; color: var(--4dp-text-mute); line-height: 1.45; margin-bottom: 10px; }
+.event-row .ev-scale {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.event-row .ev-pill {
+  flex: 1 1 80px;
+  padding: 8px 4px;
+  background: transparent;
+  border: 1px solid var(--4dp-hairline-s);
+  border-radius: 8px;
+  color: var(--4dp-text-dim);
+  font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--4dp-dur-fast) var(--4dp-ease);
+  text-align: center;
+  min-width: 70px;
+}
+.event-row .ev-pill:hover { color: var(--4dp-text); border-color: var(--4dp-text-mute); }
+.event-row .ev-pill.selected.love     { background: rgba(245,158,11,.18); border-color: var(--gnr-gold); color: var(--gnr-gold); box-shadow: 0 0 16px rgba(245,158,11,.25); }
+.event-row .ev-pill.selected.like     { background: rgba(52,211,153,.14); border-color: var(--4dp-drop); color: var(--4dp-drop); }
+.event-row .ev-pill.selected.meh      { background: rgba(245,243,238,.06); border-color: var(--4dp-text-mute); color: var(--4dp-text); }
+.event-row .ev-pill.selected.dislike  { background: rgba(248,113,113,.10); border-color: var(--4dp-error); color: var(--4dp-error); }
+.event-row .ev-pill.selected.never    { background: rgba(43,139,252,.08); border-color: var(--4dp-dink); color: var(--4dp-dink); }
+
+@media (max-width: 540px) {
+  .event-row .ev-pill { font-size: 10px; padding: 8px 2px; min-width: 56px; }
+}
+
+/* Event preference summary on result page */
+.event-prefs-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.event-pref-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--4dp-surface);
+  border: 1px solid var(--4dp-hairline);
+  border-radius: var(--4dp-r-sm);
+}
+.event-pref-row .name { font-size: 14px; color: var(--4dp-text); font-weight: 600; }
+.event-pref-row .val { font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
+.event-pref-row .val.love    { background: rgba(245,158,11,.15); color: var(--gnr-gold); }
+.event-pref-row .val.like    { background: rgba(52,211,153,.12); color: var(--4dp-drop); }
+.event-pref-row .val.meh     { background: rgba(245,243,238,.06); color: var(--4dp-text-mute); }
+.event-pref-row .val.dislike { background: rgba(248,113,113,.10); color: var(--4dp-error); }
+.event-pref-row .val.never   { background: rgba(43,139,252,.08); color: var(--4dp-dink); }
+
+/* ── REVEAL ANIMATION ── */
+.reveal-loading {
+  text-align: center; padding: 80px 0;
+}
+.reveal-loading .pulse-court {
+  width: 100px; height: 60px; margin: 0 auto 24px;
+  background: var(--nepc-court-blue);
+  border: 2px solid var(--nepc-line-white);
+  border-radius: 4px;
+  position: relative;
+  animation: courtPulse 1.4s var(--4dp-ease) infinite;
+}
+.reveal-loading .pulse-court::before {
+  content: ''; position: absolute; inset: 14px 0;
+  background: var(--nepc-kitchen-burgundy);
+}
+.reveal-loading .pulse-court::after {
+  content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+  width: 1px; background: var(--nepc-line-white);
+}
+@keyframes courtPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(43,139,252,.6); }
+  50% { transform: scale(1.05); box-shadow: 0 0 60px rgba(43,139,252,.5); }
+}
+.reveal-loading .text {
+  font-family: var(--4dp-font-display); font-style: italic;
+  font-size: 24px; color: var(--4dp-text-dim);
+}
+.reveal-loading .dots span {
+  display: inline-block; opacity: 0;
+  animation: dotFade 1.4s ease infinite;
+}
+.reveal-loading .dots span:nth-child(1) { animation-delay: 0s; }
+.reveal-loading .dots span:nth-child(2) { animation-delay: .2s; }
+.reveal-loading .dots span:nth-child(3) { animation-delay: .4s; }
+@keyframes dotFade { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+
+/* ── RESULT PAGE ── */
+.result { padding-top: 24px; }
+.result-hero {
+  text-align: center;
+  padding: 32px 0 48px;
+  position: relative;
+}
+.result-hero .archetype-eyebrow {
+  font-size: 12px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--gnr-gold); margin-bottom: 18px;
+  animation: fadeUp .5s var(--4dp-ease) both;
+}
+.result-hero h1 {
+  font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+  font-size: clamp(56px, 10vw, 124px);
+  letter-spacing: -3px; line-height: .95;
+  color: var(--4dp-text);
+  text-shadow: 0 0 80px rgba(245,158,11,.4);
+  animation: fadeUp .7s var(--4dp-ease) .15s both;
+  margin-bottom: 12px;
+}
+.result-hero .style-badge {
+  display: inline-block;
+  padding: 8px 22px; border-radius: var(--4dp-r-pill);
+  background: rgba(43,139,252,.14);
+  border: 1px solid var(--4dp-dink);
+  color: var(--4dp-dink);
+  font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  animation: fadeUp .7s var(--4dp-ease) .35s both;
+  margin-bottom: 28px;
+}
+.result-hero .tagline {
+  font-family: var(--4dp-font-display); font-style: italic;
+  font-size: clamp(20px, 2.6vw, 28px);
+  color: var(--4dp-text-dim);
+  max-width: 580px; margin: 0 auto;
+  animation: fadeUp .7s var(--4dp-ease) .55s both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.archetype-icon {
+  display: block; margin: 0 auto 32px; width: 140px; height: 140px;
+  filter: drop-shadow(0 0 32px rgba(245,158,11,.35));
+  animation: iconIn .9s var(--4dp-ease) both;
+}
+@keyframes iconIn {
+  from { opacity: 0; transform: scale(.6) rotate(-12deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+/* Result sections */
+.result-section {
+  margin: 56px 0;
+  padding-top: 32px;
+  border-top: 1px solid var(--4dp-hairline);
+}
+.result-section .h-eyebrow {
+  font-size: 11px; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--4dp-text-mute); margin-bottom: 8px;
+}
+.result-section h3 {
+  font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+  font-size: clamp(28px, 4vw, 40px);
+  letter-spacing: -.6px; line-height: 1.1;
+  color: var(--4dp-text);
+  margin-bottom: 22px;
+}
+.result-section .sub {
+  font-size: 15px; color: var(--4dp-text-dim);
+  margin-bottom: 24px; line-height: 1.55;
+}
+
+/* Dimension bars */
+.dim-bars { display: flex; flex-direction: column; gap: 22px; }
+.dim-bar { }
+.dim-bar .bar-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 8px;
+}
+.dim-bar .bar-name { font-family: var(--4dp-font-body); font-weight: 700; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--4dp-text-mute); }
+.dim-bar .bar-value { font-family: var(--4dp-font-display); font-style: italic; font-size: 22px; color: var(--4dp-text); }
+.dim-bar .track {
+  position: relative;
+  height: 10px;
+  background: var(--4dp-hairline);
+  border-radius: 5px;
+  overflow: visible;
+}
+.dim-bar .track::before {
+  content: ''; position: absolute; left: 50%; top: -3px; bottom: -3px;
+  width: 1px; background: var(--4dp-text-faint);
+}
+.dim-bar .marker {
+  position: absolute;
+  top: 50%; transform: translate(-50%, -50%);
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--gnr-gold);
+  box-shadow: var(--4dp-glow-gold);
+  animation: markerSlide 1s var(--4dp-ease) .3s both;
+  transition: left 1s var(--4dp-ease);
+}
+@keyframes markerSlide { from { left: 50% !important; opacity: 0; } to { opacity: 1; } }
+.dim-bar .ends {
+  display: flex; justify-content: space-between;
+  margin-top: 6px;
+  font-size: 11px; color: var(--4dp-text-faint);
+  letter-spacing: 1px; text-transform: uppercase;
+}
+
+/* Archetype grid */
+.arch-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+  margin-top: 18px;
+}
+@media (max-width: 720px) { .arch-grid { grid-template-columns: repeat(2, 1fr); } }
+.arch-cell {
+  aspect-ratio: 1;
+  background: var(--4dp-surface);
+  border: 1px solid var(--4dp-hairline);
+  border-radius: var(--4dp-r-md);
+  padding: 14px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  position: relative;
+  transition: all var(--4dp-dur) var(--4dp-ease);
+  text-align: left;
+}
+.arch-cell .row { display: flex; align-items: center; gap: 6px; }
+.arch-cell .axis-tag { font-size: 9px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--4dp-text-faint); }
+.arch-cell .name { font-family: var(--4dp-font-display); font-style: italic; font-size: 22px; line-height: 1.05; color: var(--4dp-text); margin-top: auto; }
+.arch-cell.you {
+  border-color: var(--gnr-gold);
+  background: rgba(245,158,11,.10);
+  box-shadow: 0 0 32px rgba(245,158,11,.28);
+  transform: scale(1.04);
+  z-index: 2;
+}
+.arch-cell.you .axis-tag { color: var(--gnr-gold); }
+.arch-cell.vibes-with {
+  border-color: rgba(43,139,252,.45);
+  background: rgba(43,139,252,.06);
+}
+.arch-cell.vibes-with::after {
+  content: '✓ vibes'; position: absolute; top: 10px; right: 10px;
+  font-size: 9px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--4dp-dink);
+}
+.arch-cell.clash {
+  border-color: rgba(248,113,113,.45);
+  background: rgba(248,113,113,.04);
+  opacity: .7;
+}
+.arch-cell.clash::after {
+  content: '✕ clash'; position: absolute; top: 10px; right: 10px;
+  font-size: 9px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--4dp-error);
+}
+
+/* Triggers list */
+.triggers-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.trig-pill {
+  padding: 8px 14px; border-radius: var(--4dp-r-pill);
+  background: rgba(248,113,113,.10);
+  border: 1px solid rgba(248,113,113,.35);
+  color: var(--4dp-error);
+  font-size: 12px; font-weight: 700; letter-spacing: .5px;
+}
+.trig-pill.none {
+  background: rgba(52,211,153,.10);
+  border-color: rgba(52,211,153,.35);
+  color: var(--4dp-drop);
+}
+
+/* Insight callout */
+.insight {
+  margin-top: 28px;
+  padding: 28px;
+  background: linear-gradient(135deg, rgba(245,158,11,.10), rgba(43,139,252,.06));
+  border: 1px solid rgba(245,158,11,.30);
+  border-radius: var(--4dp-r-lg);
+  position: relative;
+}
+.insight .quote {
+  font-family: var(--4dp-font-display); font-style: italic;
+  font-size: clamp(20px, 2.6vw, 28px);
+  line-height: 1.25;
+  color: var(--4dp-text);
+  margin-bottom: 12px;
+}
+.insight .quote .em { color: var(--gnr-gold); }
+.insight .by {
+  font-size: 11px; color: var(--4dp-text-mute);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* Share/CTA row */
+.actions-row {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  margin: 32px 0 12px;
+}
+
+/* ── FOOTER LOCKUP ── */
+.footer {
+  margin-top: 64px;
+  padding: 32px 22px;
+  border-top: 1px solid var(--4dp-hairline);
+  text-align: center;
+  font-size: 13px; color: var(--4dp-text-faint);
+}
+.footer .ecosystem { color: var(--gnr-gold); font-weight: 600; font-style: italic; font-family: var(--4dp-font-display); font-size: 16px; }
+.footer .links { margin-top: 8px; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+.footer .links a { color: var(--4dp-text-mute); text-decoration: none; margin: 0 8px; }
+.footer .links a:hover { color: var(--4dp-text); }
+
+/* ── UTIL ── */
+.center { text-align: center; }
+.muted { color: var(--4dp-text-mute); }
+.tiny { font-size: 11px; letter-spacing: 1px; }
+
+/* Mobile tighten */
+@media (max-width: 540px) {
+  .hero { padding: 36px 0 24px; }
+  .hero .meta { gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .preamble { padding: 18px 20px; }
+  .opt { padding: 14px 16px; font-size: 15px; }
+}
+</style>
+</head>
+<body class="tokens-base">
+
+<!-- ── TOPBAR ── -->
+<nav class="topbar">
+  <a href="https://4dpickleball.com/" class="brand">
+    <div class="brand-mark">4D</div>
+    <div class="brand-text">4D Pickleball<span>Personality Quiz · Beta</span></div>
+  </a>
+  <a href="https://4dpickleball.com/" class="home-link">← Home</a>
+</nav>
+
+<div class="app">
+
+  <!-- ── PAGE 1: INTRO ── -->
+  <section class="page active" id="page-intro">
+    <div class="hero">
+      <div class="eyebrow"><span class="dot"></span>From inside community pickleball at NEPC</div>
+      <h1>What does your <span class="accent">game</span> look like?</h1>
+      <div class="ball-stage">
+        <div class="ball-shadow"></div>
+        <div class="ball"></div>
+      </div>
+      <div class="meta">
+        <span>11 questions</span><span class="dot"></span><span>~4 minutes</span><span class="dot"></span><span>Honest answers only</span>
+      </div>
+      <div>
+        <button class="btn" onclick="goPage('quiz')">Take the Quiz</button>
+      </div>
+      <div class="preamble">
+        <div class="eyebrow-sm">Why we built this</div>
+        <p>DUPR rates how well you hit the ball. CourtReserve books the courts. Neither one knows whether you're someone people want to play with again.</p>
+        <p>That's the part nobody measures — and it's the part players actually care about. A 3.5 with great energy beats a 4.5 with dead energy every single time. The 4.5 might win the match. Nobody invites them back.</p>
+        <p>This quiz is the start of measuring it. Eleven behavior questions plus an event-fit pass — what kind of games light you up, what kills your fun, who you click with on a court. We use it to put you on courts with the people who lift you up.</p>
+        <p class="tiny muted">Built for the 4D Pickleball community. <em>Give freely, get back naturally.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PAGE 2: QUIZ ── -->
+  <section class="page" id="page-quiz">
+    <div class="progress">
+      <div class="label" id="progLabel">Question</div>
+      <div class="track"><div class="fill" id="progFill"></div></div>
+      <div class="num" id="progNum">1 / 11</div>
+    </div>
+    <div id="qContainer"></div>
+  </section>
+
+  <!-- ── PAGE 2.5: EVENT-TYPE ENJOYMENT ── -->
+  <section class="page" id="page-events">
+    <div class="progress">
+      <div class="label">Event fit</div>
+      <div class="track"><div class="fill" style="width:92%"></div></div>
+      <div class="num">Almost done</div>
+    </div>
+    <div class="events-intro">
+      <h2>What kind of <em>games</em> light you up?</h2>
+      <p>For each event type at NEPC, mark how much you enjoy (or would enjoy) playing in it. This is the missing signal — not what you're rated, but what kind of nights you actually want.</p>
+    </div>
+    <div id="eventsContainer"></div>
+    <div class="q-actions" style="margin-top:24px;">
+      <button class="btn btn-ghost" onclick="goPage('quiz', true)">← Back</button>
+      <button class="btn" onclick="goPage('capture')">Continue →</button>
+    </div>
+  </section>
+
+  <!-- ── PAGE 3: CAPTURE ── -->
+  <section class="page" id="page-capture">
+    <div class="progress">
+      <div class="label">Almost done</div>
+      <div class="track"><div class="fill" style="width:100%"></div></div>
+      <div class="num">10 / 10</div>
+    </div>
+    <div class="capture">
+      <h2>One last step before the reveal.</h2>
+      <p class="lede">We use your name and email so we can put you on courts with the people who lift you up. Your answers join the community ledger — the data layer that makes good matches possible. We never share your email. We never spam.</p>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="capName">Your name</label>
+          <input type="text" id="capName" autocomplete="name" placeholder="First and last">
+        </div>
+        <div class="field">
+          <label for="capEmail">Email</label>
+          <input type="email" id="capEmail" autocomplete="email" placeholder="you@example.com">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Are you a member at one of our clubs?</label>
+        <div class="toggle-row" id="memberToggles">
+          <button class="toggle" data-val="rye">Rye Beach (NEPC)</button>
+          <button class="toggle" data-val="middleton">Middleton (NEPC)</button>
+          <button class="toggle" data-val="other">Different club</button>
+          <button class="toggle" data-val="none">Not yet</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="capSkill">Your self-rated skill level <span class="muted tiny" style="text-transform:none;letter-spacing:0;">(roughly)</span></label>
+        <input type="range" id="capSkill" class="skill-slider" min="20" max="55" value="35" step="1">
+        <div class="skill-display" id="skillDisplay">3.5</div>
+        <div class="skill-scale"><span>2.0 · just started</span><span>3.5 · solid</span><span>5.0+ · pro</span></div>
+      </div>
+
+      <div class="field">
+        <label for="capWhy">In one sentence: why do you play pickleball? <span class="muted tiny" style="text-transform:none;letter-spacing:0;">(optional)</span></label>
+        <textarea id="capWhy" class="field-textarea" placeholder="Be honest. We're trying to understand what brings people back."></textarea>
+      </div>
+
+      <div class="actions-row">
+        <button class="btn" onclick="finishQuiz()">Reveal My Archetype →</button>
+        <button class="btn btn-ghost" onclick="goPage('events')">← Back</button>
+      </div>
+      <div class="capture-disclaimer">By submitting, you agree to receive your archetype results and occasional 4D Pickleball updates. We never share your email.</div>
+    </div>
+  </section>
+
+  <!-- ── PAGE 4: REVEAL LOADING ── -->
+  <section class="page" id="page-loading">
+    <div class="reveal-loading">
+      <div class="pulse-court"></div>
+      <div class="text">Analyzing your court DNA<span class="dots"><span>.</span><span>.</span><span>.</span></span></div>
+    </div>
+  </section>
+
+  <!-- ── PAGE 5: RESULT ── -->
+  <section class="page page-wide" id="page-result">
+    <div class="result">
+      <div class="result-hero">
+        <svg id="archIcon" class="archetype-icon" viewBox="0 0 100 100"></svg>
+        <div class="archetype-eyebrow">Your court archetype is</div>
+        <h1 id="archName">The Archetype</h1>
+        <div class="style-badge" id="archStyle">+ Style Flavor</div>
+        <div class="tagline" id="archTagline">A one-line description of you on a pickleball court.</div>
+      </div>
+
+      <div class="result-section">
+        <div class="h-eyebrow">Your court DNA</div>
+        <h3>How you read on a court</h3>
+        <p class="sub">Three independent dimensions. Each one is its own scale — none of these axes is "better" than another.</p>
+        <div class="dim-bars" id="dimBars"></div>
+      </div>
+
+      <div class="result-section">
+        <div class="h-eyebrow">The grid</div>
+        <h3>The 8 archetypes — and where you sit</h3>
+        <p class="sub">Vibes (how much energy you bring) × Mode (do you play to compete or to vibe). Cells with <span style="color:var(--4dp-dink);font-weight:700">✓ vibes</span> are partners you'll likely click with. Cells marked <span style="color:var(--4dp-error);font-weight:700">✕ clash</span> may friction with you given your triggers.</p>
+        <div class="arch-grid" id="archGrid"></div>
+      </div>
+
+      <div class="result-section" id="triggerSection">
+        <div class="h-eyebrow">Your court triggers</div>
+        <h3 id="triggerHeadline">What ruins your fun</h3>
+        <p class="sub" id="triggerSub">These are the player behaviors that drop your enjoyment. We use this signal — not your archetype alone — to predict who you'll vibe with.</p>
+        <div class="triggers-list" id="triggersList"></div>
+      </div>
+
+      <div class="result-section" id="eventPrefsSection">
+        <div class="h-eyebrow">Event fit</div>
+        <h3>The games that light you up</h3>
+        <p class="sub">Your stated preference across the NEPC event taxonomy. We rank you into the events you'll actually want, not just the ones your skill says you "should" play.</p>
+        <div class="event-prefs-list" id="eventPrefsList"></div>
+      </div>
+
+      <div class="result-section">
+        <div class="h-eyebrow">Why we ask</div>
+        <h3>The dimension nobody else measures</h3>
+        <div class="insight">
+          <div class="quote">Skill rating tells you who's good. <span class="em">The invitation graph tells you who makes the night.</span> Nobody else measures the second one. We're the first.</div>
+          <div class="by">— The thesis behind 4D Pickleball + Give 'n Receive</div>
+        </div>
+        <p class="sub" style="margin-top:24px">Compatibility on a court is mostly about what you can't stand — not what you prefer. Two players with the same archetype still won't enjoy each other if their triggers cross. That's why this quiz captures both your shape <em>and</em> the things that ruin your fun.</p>
+      </div>
+
+      <div class="result-section">
+        <div class="h-eyebrow">Share & save</div>
+        <h3>Share your archetype</h3>
+        <p class="sub">Send it to your regular group. See if your read matches theirs.</p>
+        <div class="actions-row">
+          <button class="btn" onclick="shareTwitter()">Share on X</button>
+          <button class="btn btn-blue" onclick="copyShareLink()">Copy share link</button>
+          <button class="btn btn-ghost" onclick="downloadCSV()">Download my data (CSV)</button>
+        </div>
+        <div id="shareStatus" class="tiny muted" style="margin-top:8px;height:14px;"></div>
+      </div>
+
+      <div class="result-section">
+        <div class="h-eyebrow">What's next</div>
+        <h3>Get into great games with people who lift you up</h3>
+        <p class="sub">This is the first quiz of its kind because nobody else is building this. DUPR rates how well you hit the ball. CourtReserve books courts. Give 'n Receive runs the community layer — putting players on courts with the people who actually make the night. Your answers feed the engine. Join the list and we'll match you in when your local club goes live.</p>
+        <div class="actions-row">
+          <a class="btn" href="mailto:hello@4dpickleball.com?subject=Add%20me%20to%20the%20community%20list">Join the community list</a>
+          <button class="btn btn-ghost" onclick="restart()">Retake the quiz</button>
+        </div>
+        <p class="tiny muted" style="margin-top:14px"><em>Give freely, get back naturally.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div>Part of the <span class="ecosystem">Give 'n Receive</span> ecosystem</div>
+    <div class="links">
+      <a href="https://4dpickleball.com/">4D Pickleball Home</a> ·
+      <a href="https://4dpickleball.com/pressure-dinking/">Pressure Dinking Module</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+'use strict';
+
+/* ════════════════════════════════════════════════════════════
+   CONFIG
+   ════════════════════════════════════════════════════════════ */
+
+// Google Apps Script Web App URL — replace once you deploy the backend.
+// While this is null/placeholder, submissions fall back to localStorage + CSV download.
+const SUBMIT_URL = ''; // e.g. 'https://script.google.com/macros/s/AKf.../exec'
+
+/* ════════════════════════════════════════════════════════════
+   QUIZ DATA
+   Each question scores one or more dimensions:
+     vibes:  -2 (Quiet) ↔ 0 (Steady) ↔ +2 (Bringer)
+     style:  -2 (Power) ↔ 0 (Mixer)  ↔ +2 (Touch)
+     mode:   -2 (Competitor) ↔ 0 ↔ +2 (Festival/Social)
+   Triggers (Q5) is multi-select.
+   ════════════════════════════════════════════════════════════ */
+
+const QUESTIONS = [
+  {
+    id: 'q1',
+    text: "Tied at 9-9. What's actually going through your head?",
+    hint: "First instinct. Not the polished answer.",
+    type: 'single',
+    options: [
+      { emoji: '🔥', text: '"TIME TO COOK."', score: { vibes: +2, mode: -1 } },
+      { emoji: '🎯', text: '"OK. Lock in. Smart shots only."', score: { vibes: 0, mode: -2 } },
+      { emoji: '😌', text: '"Just keep the ball in."', score: { vibes: -1, mode: 0 } },
+      { emoji: '🎉', text: '"Whatever happens, this was fun."', score: { vibes: +1, mode: +2 } },
+    ],
+  },
+  {
+    id: 'q2',
+    text: "Your weapon under pressure?",
+    hint: "What you reach for when the rally heats up.",
+    type: 'single',
+    options: [
+      { emoji: '💥', text: 'Drive it — hit through them.', score: { style: -2 } },
+      { emoji: '🪶', text: 'Drop it — soft hands, take their pace away.', score: { style: +2 } },
+      { emoji: '🎯', text: 'Place it — find the gap, make them move.', score: { style: 0, mode: -1 } },
+      { emoji: '🎲', text: 'Read the moment — whatever the shot calls for.', score: { style: 0 } },
+    ],
+  },
+  {
+    id: 'q3',
+    text: "Your ideal partner is...",
+    hint: "Pick one.",
+    type: 'single',
+    options: [
+      { emoji: '📣', text: 'Talks the whole game. Hypes every shot.', score: { vibes: +2 } },
+      { emoji: '👍', text: 'Quietly handles their side of the court.', score: { vibes: 0 } },
+      { emoji: '🤐', text: 'Just plays. Words later.', score: { vibes: -2 } },
+      { emoji: '🧠', text: 'Calls plays. Reads the other team.', score: { vibes: 0, mode: -1 } },
+    ],
+  },
+  {
+    id: 'q4',
+    text: "A 7-year-old beats you in a friendly game. You...",
+    hint: "Be honest.",
+    type: 'single',
+    options: [
+      { emoji: '😂', text: 'Laugh, hug them, post about it.', score: { vibes: +2, mode: +2 } },
+      { emoji: '🙌', text: 'Respectful nod. Quiet acknowledgment.', score: { vibes: 0 } },
+      { emoji: '😤', text: 'Demand a rematch.', score: { mode: -2 } },
+      { emoji: '🤔', text: 'Quietly file what went wrong. Adjust.', score: { vibes: -1, mode: -1 } },
+    ],
+  },
+  {
+    id: 'q5',
+    text: "On the court, your face usually...",
+    hint: "What people actually see, not what you think you project.",
+    type: 'single',
+    options: [
+      { emoji: '😄', text: 'Smiling. Laughing. Visibly enjoying being there.', score: { warmth: +2 } },
+      { emoji: '🙂', text: 'Light. Pleasant. Easy to read.', score: { warmth: +1 } },
+      { emoji: '😐', text: 'Mostly neutral. I focus.', score: { warmth: -1 } },
+      { emoji: '🗿', text: 'Stone-faced. I am here to play, not to perform.', score: { warmth: -2 } },
+    ],
+  },
+  {
+    id: 'q6',
+    text: "You're playing with someone clearly below your level. You...",
+    hint: "Be honest. This is the question nobody answers honestly.",
+    type: 'single',
+    options: [
+      { emoji: '🤝', text: 'Dial it WAY down. Their fun is the point.', score: { dialdown: +2, mode: +1 } },
+      { emoji: '🎯', text: 'Mostly placement, some pace. They get to play a real game.', score: { dialdown: +1 } },
+      { emoji: '⚖️', text: 'Play normal. They need to learn what better looks like.', score: { dialdown: -1, mode: -1 } },
+      { emoji: '💥', text: "Honestly? I crush. They knew what they signed up for.", score: { dialdown: -2, mode: -2 } },
+    ],
+  },
+  {
+    id: 'q7',
+    text: "What kills your fun on a court?",
+    hint: "Multi-select. Pick everything that genuinely makes you not want to play.",
+    type: 'multi',
+    options: [
+      { id: 'hard_hitters',     emoji: '💢', text: 'Hard hitters / bangers' },
+      { id: 'lobbers',          emoji: '🎈', text: 'Lobbers (especially over and over)' },
+      { id: 'no_dial_down',     emoji: '⚔️', text: "Players who don't dial it down vs lower-level partners" },
+      { id: 'never_smiles',     emoji: '🗿', text: "Players who never smile / take it way too seriously" },
+      { id: 'mid_game_coaches', emoji: '🎤', text: 'Mid-game coaches (telling you what to do)' },
+      { id: 'sandbaggers',      emoji: '🪓', text: 'Sandbaggers (playing down their level)' },
+      { id: 'line_disputes',    emoji: '👁️', text: 'Line-call disputes / arguing every close call' },
+      { id: 'silent_partners',  emoji: '🥶', text: 'Silent partners (zero energy)' },
+      { id: 'hot_heads',        emoji: '😡', text: 'Hot-heads (visible frustration / paddle slams)' },
+      { id: 'trash_talkers',    emoji: '🗯️', text: 'Trash talkers' },
+      { id: 'slow_players',     emoji: '🐢', text: 'Players who slow the whole game down' },
+      { id: 'none',             emoji: '☀️', text: "Honestly? None of these. I just love being on a court." },
+    ],
+    minSelect: 0, maxSelect: 5,
+  },
+  {
+    id: 'q8',
+    text: "Mid-rally, you make a terrible shot. You...",
+    hint: "What actually comes out of your mouth.",
+    type: 'single',
+    options: [
+      { emoji: '📢', text: '"THAT WAS TERRIBLE." (with a grin)', score: { vibes: +2, warmth: +1 } },
+      { emoji: '🪨', text: 'Tap your paddle. Move on. Say nothing.', score: { vibes: -1 } },
+      { emoji: '🧠', text: 'Quietly internalize. Adjust the next ball.', score: { vibes: -2, warmth: -1 } },
+      { emoji: '🙏', text: 'Apologize to your partner. Reassure them.', score: { vibes: 0, mode: +1, warmth: +1 } },
+    ],
+  },
+  {
+    id: 'q9',
+    text: "Last point of the day. You're up 10-7. You...",
+    hint: "What's your closing move?",
+    type: 'single',
+    options: [
+      { emoji: '💥', text: 'End it with a winner.', score: { style: -2, mode: -1 } },
+      { emoji: '🪶', text: 'Dink them to death one more time.', score: { style: +2, mode: 0 } },
+      { emoji: '🎯', text: 'Whatever the spot calls for.', score: { style: 0 } },
+      { emoji: '🕷️', text: 'Wait for them to make the mistake.', score: { style: +1, mode: -2 } },
+    ],
+  },
+  {
+    id: 'q10',
+    text: "Why you play.",
+    hint: "The real why, not the polished answer.",
+    type: 'single',
+    options: [
+      { emoji: '👥', text: 'Friends, hangs, vibes.', score: { mode: +2, vibes: +1 } },
+      { emoji: '📈', text: 'Improvement. I want to get better.', score: { mode: -1 } },
+      { emoji: '🏆', text: 'Competition. I want to win.', score: { mode: -2 } },
+      { emoji: '🌊', text: 'The flow of a long, beautiful rally.', score: { mode: +1, style: +1 } },
+    ],
+  },
+  {
+    id: 'q11',
+    text: "Your dream pickleball afternoon.",
+    hint: "What's the version that makes you happiest?",
+    type: 'single',
+    options: [
+      { emoji: '🏆', text: '4 hours of competitive games — same level, full sends.', score: { mode: -2 } },
+      { emoji: '🍻', text: '2 hours of mixed levels with friends, then food and drinks.', score: { mode: +2, vibes: +1, warmth: +1 } },
+      { emoji: '🎓', text: '1-on-1 with a coach you respect.', score: { mode: -1, vibes: -1 } },
+      { emoji: '🤝', text: 'Open play with strangers who turn into friends.', score: { mode: +1, vibes: +1, warmth: +1 } },
+    ],
+  },
+];
+
+/* ════════════════════════════════════════════════════════════
+   EVENT TYPES — pulled from NEPC's actual taxonomy
+   Players self-report enjoyment level for each.
+   Scale: -2 (dislike) ↔ -1 (meh) ↔ 0 (no opinion / never tried)
+        ↔ +1 (like) ↔ +2 (love)
+   ════════════════════════════════════════════════════════════ */
+
+const EVENT_TYPES = [
+  { id: 'give_n_take',   name: "Give 'n Take",       blurb: "Invitation-based, mixed-skill, personality-matched.", emoji: '🤝' },
+  { id: 'adult_social',  name: 'Adult Social',       blurb: "Big mixed-level events. Wide skill range, lots of people.", emoji: '🎉' },
+  { id: 'blue_square',   name: 'Blue Square',        blurb: "Intermediate-to-advanced competitive doubles. Skill-matched.", emoji: '🟦' },
+  { id: 'green_circle',  name: 'Green Circle',       blurb: "Beginner-to-intermediate. Lower-pressure, learning-friendly.", emoji: '🟢' },
+  { id: 'round_robin',   name: 'Round Robin',        blurb: "Rotating partners through fixed brackets. Structure + variety.", emoji: '🔁' },
+  { id: 'doubles_open',  name: 'Doubles Open Play',  blurb: "Show up, scramble partners, play whoever's there.", emoji: '🎲' },
+  { id: 'clinic',        name: 'Adult Clinic',       blurb: "Group instruction. Drills, structure, pro-led.", emoji: '🎓' },
+  { id: 'pro_plus_3',    name: 'Pro + 3',            blurb: "You and three friends with a pro. Personalized teaching.", emoji: '🧑‍🏫' },
+  { id: 'tournament',    name: 'Tournament / Ladder', blurb: "Ranked competition. Stakes, brackets, results that count.", emoji: '🏆' },
+];
+
+/* ════════════════════════════════════════════════════════════
+   ARCHETYPES — 8-cell grid: vibes (4 rows) × mode (2 cols)
+   ════════════════════════════════════════════════════════════ */
+
+const ARCHETYPES = [
+  // tier mapping (internal, not shown to player):
+  // - "energizer"  : 1-in-50 group-levelers who lift every court they touch
+  // - "amplifier"  : reliably positive contributors
+  // - "player"     : show up, play, leave — pleasant default
+  // The same archetype can land in different tiers based on warmth/dial-down/triggers.
+
+  // Bringer + Competitor
+  { code: 'HC', name: 'The Hype Cannon',    vibesRange: [+1, +2], modeRange: [-2, 0],
+    tagline: "Loud, lethal, loving every minute. You play to win — but the noise is the point.",
+    vibesWith: ['CT', 'FE', 'AN'], clashWith: ['MK', 'AS'],
+    color: '#FBBF24', icon: 'hype', defaultTier: 'amplifier' },
+  { code: 'CT', name: 'The Captain',        vibesRange: [+1, +2], modeRange: [-2, 0],
+    tagline: "Calls the plays. Keeps the team loose. Refuses to let anyone tilt.",
+    vibesWith: ['HC', 'AN', 'HM'], clashWith: ['AS', 'MK'],
+    color: '#F472B6', icon: 'captain', defaultTier: 'amplifier' },
+  // Steady + Competitor
+  { code: 'HM', name: 'The Hammer',         vibesRange: [-1, +1], modeRange: [-2, 0],
+    tagline: "Quiet executioner. Says 'good shot' once a game. Beats you twice.",
+    vibesWith: ['CT', 'AS', 'CR'], clashWith: ['FE'],
+    color: '#F87171', icon: 'hammer', defaultTier: 'player' },
+  { code: 'AS', name: 'The Assassin',       vibesRange: [-2, 0], modeRange: [-2, 0],
+    tagline: "Doesn't talk. Wins. You forget they're on the court — until you've lost.",
+    vibesWith: ['HM', 'MK', 'CR'], clashWith: ['HC', 'FE'],
+    color: '#60A5FA', icon: 'assassin', defaultTier: 'player' },
+  // Bringer + Social
+  { code: 'FE', name: 'The Festival',       vibesRange: [+1, +2], modeRange: [+1, +2],
+    tagline: "Soft game, bigger smile. The reason this group still plays together.",
+    vibesWith: ['AN', 'CT', 'HC'], clashWith: ['HM', 'AS'],
+    color: '#34D399', icon: 'festival', defaultTier: 'energizer' },
+  { code: 'AN', name: 'The Anchor',         vibesRange: [+1, +2], modeRange: [+1, +2],
+    tagline: "Steady warmth. Plays anyone, with anyone — and everyone leaves better off.",
+    vibesWith: ['FE', 'CR', 'HC'], clashWith: [],
+    color: '#F59E0B', icon: 'anchor', defaultTier: 'energizer' },
+  // Steady + Social
+  { code: 'CR', name: 'The Craftsman',      vibesRange: [-1, +1], modeRange: [+1, +2],
+    tagline: "Plays for the rally. A 47-shot kitchen exchange is your love language.",
+    vibesWith: ['MK', 'AN', 'HM'], clashWith: ['HC'],
+    color: '#2B8BFC', icon: 'craftsman', defaultTier: 'amplifier' },
+  { code: 'MK', name: 'The Monk',           vibesRange: [-2, 0], modeRange: [+1, +2],
+    tagline: "Zen kitchen rallies. No drama. No ego. Just dinks. Forever.",
+    vibesWith: ['CR', 'AS'], clashWith: ['HC', 'FE'],
+    color: '#9B5DE5', icon: 'monk', defaultTier: 'player' },
+];
+
+/* Compute the operator-side tier (Energizer / Amplifier / Player) from the full vector.
+   - High warmth + high vibes + can dial down → Energizer
+   - Low warmth or can't dial down → bumped down a tier
+   - Player tier is the floor. We never label anyone "Energy Drain" externally. */
+function computeTier(arch, scores) {
+  let tier = arch.defaultTier;
+  const warmth   = scores.warmth   || 0;
+  const dialdown = scores.dialdown || 0;
+  const lift = (warmth >= 1 ? 1 : 0) + (dialdown >= 1 ? 1 : 0);
+  const drop = (warmth <= -1 ? 1 : 0) + (dialdown <= -1 ? 1 : 0);
+  const tiers = ['player', 'amplifier', 'energizer'];
+  let i = tiers.indexOf(tier);
+  i = Math.max(0, Math.min(2, i + lift - drop));
+  return tiers[i];
+}
+
+/* Map of trigger → archetypes that *embody* this trigger (so they clash for you).
+   These are intentional — surfaces the "compatibility is exclusionary" insight. */
+const TRIGGER_TO_CLASH_ARCHETYPES = {
+  hard_hitters:     ['HC', 'HM', 'AS'],
+  lobbers:          [],
+  no_dial_down:     ['HC', 'HM', 'AS'],
+  never_smiles:     ['AS', 'MK', 'HM'],
+  mid_game_coaches: ['CT'],
+  sandbaggers:      [],
+  line_disputes:    [],
+  silent_partners:  ['AS', 'MK'],
+  hot_heads:        ['HC'],
+  trash_talkers:    ['HC'],
+  slow_players:     ['MK', 'CR'],
+  none:             [],
+};
+
+/* SVG icon library — minimal abstract shapes per archetype.
+   Drawn in current --gnr-gold by default; cell variant uses archetype color. */
+function archetypeIcon(kind, color) {
+  color = color || 'currentColor';
+  const map = {
+    hype:    `<g fill="${color}"><path d="M50 10L30 55h15l-5 35 25-45H50z"/></g>`,
+    captain: `<g fill="none" stroke="${color}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 70l30-50 30 50"/><path d="M30 60l20-30 20 30"/></g>`,
+    hammer:  `<g fill="${color}"><rect x="15" y="35" width="50" height="30" rx="4"/><rect x="60" y="42" width="28" height="16" rx="3"/></g>`,
+    assassin:`<g fill="${color}"><path d="M50 10L20 80h60z"/><circle cx="50" cy="60" r="6" fill="#0E1F38"/></g>`,
+    festival:`<g fill="${color}"><circle cx="30" cy="30" r="8"/><circle cx="70" cy="35" r="6"/><circle cx="40" cy="60" r="10"/><circle cx="75" cy="65" r="7"/><circle cx="55" cy="80" r="5"/><circle cx="20" cy="65" r="5"/></g>`,
+    anchor:  `<g fill="none" stroke="${color}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><circle cx="50" cy="22" r="8" fill="${color}"/><line x1="50" y1="30" x2="50" y2="78"/><path d="M22 60c5 14 25 22 28 22s23-8 28-22"/></g>`,
+    craftsman: `<g fill="none" stroke="${color}" stroke-width="6" stroke-linecap="round"><circle cx="50" cy="50" r="34"/><circle cx="50" cy="50" r="16"/><circle cx="50" cy="50" r="4" fill="${color}"/></g>`,
+    monk:    `<g fill="none" stroke="${color}" stroke-width="5"><circle cx="50" cy="50" r="36"/></g><circle cx="50" cy="50" r="6" fill="${color}"/>`,
+  };
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">${map[kind] || ''}</svg>`;
+}
+
+/* ════════════════════════════════════════════════════════════
+   STATE
+   ════════════════════════════════════════════════════════════ */
+
+const state = {
+  qIdx: 0,
+  answers: {},
+  events:  {},     // { give_n_take: +2, blue_square: -1, ... }
+  capture: { name: '', email: '', member: '', skill: 3.5, why: '' },
+  scores: { vibes: 0, style: 0, mode: 0, warmth: 0, dialdown: 0 },
+  triggers: [],
+  archetype: null,
+  tier: null,
+  startedAt: null,
+};
+
+/* ════════════════════════════════════════════════════════════
+   PAGE NAVIGATION
+   ════════════════════════════════════════════════════════════ */
+
+function goPage(name, retain) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (name === 'quiz' && !retain) {
+    state.qIdx = 0;
+    state.answers = {};
+    state.events = {};
+    state.startedAt = Date.now();
+    renderQuestion();
+  }
+  if (name === 'quiz' && retain) {
+    state.qIdx = QUESTIONS.length - 1;
+    renderQuestion();
+  }
+  if (name === 'events') renderEvents();
+}
+
+function renderEvents() {
+  const c = document.getElementById('eventsContainer');
+  if (!c) return;
+  const scale = [
+    { val: +2, key: 'love',    label: 'Love' },
+    { val: +1, key: 'like',    label: 'Like' },
+    { val:  0, key: 'meh',     label: 'Meh' },
+    { val: -1, key: 'dislike', label: "Don't enjoy" },
+    { val: null, key: 'never', label: 'Never tried' },
+  ];
+  c.innerHTML = EVENT_TYPES.map(ev => `
+    <div class="event-row" data-event-id="${ev.id}">
+      <div class="ev-emoji">${ev.emoji}</div>
+      <div class="ev-body">
+        <div class="ev-name">${ev.name}</div>
+        <div class="ev-blurb">${ev.blurb}</div>
+        <div class="ev-scale">
+          ${scale.map(s => `<button type="button" class="ev-pill ${s.key} ${state.events[ev.id] === s.val ? 'selected' : ''}" data-val="${s.val === null ? 'null' : s.val}" data-key="${s.key}">${s.label}</button>`).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+  c.querySelectorAll('.event-row').forEach(row => {
+    const id = row.dataset.eventId;
+    row.querySelectorAll('.ev-pill').forEach(p => {
+      p.addEventListener('click', () => {
+        const raw = p.dataset.val;
+        state.events[id] = raw === 'null' ? null : Number(raw);
+        row.querySelectorAll('.ev-pill').forEach(x => x.classList.remove('selected'));
+        p.classList.add('selected');
+      });
+    });
+  });
+}
+
+/* ════════════════════════════════════════════════════════════
+   QUIZ RENDERING
+   ════════════════════════════════════════════════════════════ */
+
+function renderQuestion() {
+  const q = QUESTIONS[state.qIdx];
+  const total = QUESTIONS.length;
+
+  // Progress
+  document.getElementById('progFill').style.width = (((state.qIdx) / total) * 100) + '%';
+  document.getElementById('progNum').textContent = `${state.qIdx + 1} / ${total}`;
+
+  const container = document.getElementById('qContainer');
+  const isMulti = q.type === 'multi';
+  const selected = state.answers[q.id];
+
+  let html = `<div class="q">
+    <div class="qnum">Question ${state.qIdx + 1}</div>
+    <div class="qtext">${q.text}</div>
+    <div class="qhint">${q.hint || ''}</div>
+    <div class="opts ${isMulti ? 'multi' : ''}">`;
+
+  q.options.forEach((opt, i) => {
+    const optId = isMulti ? opt.id : i;
+    const isSelected = isMulti
+      ? Array.isArray(selected) && selected.includes(optId)
+      : selected === i;
+    html += `<button class="opt ${isSelected ? 'selected' : ''}" data-idx="${i}" data-id="${opt.id || ''}">
+      ${isMulti ? '<span class="check"></span>' : `<span class="emoji">${opt.emoji || ''}</span>`}
+      ${!isMulti ? '' : `<span class="emoji">${opt.emoji || ''}</span>`}
+      <span class="text">${opt.text}</span>
+    </button>`;
+  });
+
+  html += `</div>
+    <div class="q-actions">
+      ${state.qIdx > 0 ? `<button class="btn btn-ghost" onclick="prevQ()">← Back</button>` : '<span></span>'}
+      ${isMulti ? `<button class="btn" onclick="nextQ()">Continue →</button>` : '<span></span>'}
+    </div>
+  </div>`;
+
+  container.innerHTML = html;
+
+  // Attach option handlers
+  container.querySelectorAll('.opt').forEach(el => {
+    el.addEventListener('click', () => onOptClick(el, q));
+  });
+}
+
+function onOptClick(el, q) {
+  const idx = +el.dataset.idx;
+  const isMulti = q.type === 'multi';
+
+  if (isMulti) {
+    // Toggle
+    state.answers[q.id] = state.answers[q.id] || [];
+    const id = el.dataset.id;
+    const arr = state.answers[q.id];
+    // "none" is exclusive
+    if (id === 'none') {
+      state.answers[q.id] = arr.includes('none') ? [] : ['none'];
+    } else {
+      const i = arr.indexOf(id);
+      if (i >= 0) arr.splice(i, 1);
+      else {
+        // remove "none" if present, then add
+        const noneIdx = arr.indexOf('none');
+        if (noneIdx >= 0) arr.splice(noneIdx, 1);
+        if (arr.length < (q.maxSelect || 99)) arr.push(id);
+      }
+    }
+    renderQuestion();
+  } else {
+    state.answers[q.id] = idx;
+    setTimeout(nextQ, 220); // brief delay so selection is felt
+  }
+}
+
+function nextQ() {
+  if (state.qIdx < QUESTIONS.length - 1) {
+    state.qIdx++;
+    renderQuestion();
+  } else {
+    goPage('events');
+  }
+}
+
+function prevQ() {
+  if (state.qIdx > 0) { state.qIdx--; renderQuestion(); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   CAPTURE FORM
+   ════════════════════════════════════════════════════════════ */
+
+document.getElementById('memberToggles').addEventListener('click', (e) => {
+  const t = e.target.closest('.toggle');
+  if (!t) return;
+  document.querySelectorAll('#memberToggles .toggle').forEach(x => x.classList.remove('selected'));
+  t.classList.add('selected');
+  state.capture.member = t.dataset.val;
+});
+
+document.getElementById('capSkill').addEventListener('input', (e) => {
+  const v = (+e.target.value) / 10;
+  document.getElementById('skillDisplay').textContent = v.toFixed(1);
+  state.capture.skill = v;
+});
+
+/* ════════════════════════════════════════════════════════════
+   SCORING
+   ════════════════════════════════════════════════════════════ */
+
+function computeScores() {
+  const sc = { vibes: 0, style: 0, mode: 0, warmth: 0, dialdown: 0 };
+  const counts = { vibes: 0, style: 0, mode: 0, warmth: 0, dialdown: 0 };
+
+  QUESTIONS.forEach(q => {
+    if (q.type !== 'single') return;
+    const ans = state.answers[q.id];
+    if (typeof ans !== 'number') return;
+    const opt = q.options[ans];
+    if (!opt.score) return;
+    Object.entries(opt.score).forEach(([k, v]) => {
+      if (!(k in sc)) return;
+      sc[k] += v; counts[k]++;
+    });
+  });
+
+  // Average per axis so each lands roughly in -2..+2
+  Object.keys(sc).forEach(k => {
+    if (counts[k] > 0) sc[k] = sc[k] / counts[k];
+    sc[k] = Math.max(-2, Math.min(2, sc[k]));
+  });
+
+  state.scores = sc;
+  state.triggers = (state.answers.q7 || []).filter(t => t !== 'none');
+  return sc;
+}
+
+function pickArchetype() {
+  const { vibes, mode } = state.scores;
+  // Score each archetype by distance to its center
+  let best = ARCHETYPES[0], bestDist = Infinity;
+  ARCHETYPES.forEach(a => {
+    const cVibes = (a.vibesRange[0] + a.vibesRange[1]) / 2;
+    const cMode  = (a.modeRange[0]  + a.modeRange[1])  / 2;
+    const d = Math.pow(vibes - cVibes, 2) + Math.pow(mode - cMode, 2);
+    if (d < bestDist) { bestDist = d; best = a; }
+  });
+  state.archetype = best;
+  return best;
+}
+
+function styleFlavor() {
+  const s = state.scores.style;
+  if (s <= -1)   return 'Power';
+  if (s >= +1)   return 'Touch';
+  return 'Mixer';
+}
+
+/* ════════════════════════════════════════════════════════════
+   RESULT RENDERING
+   ════════════════════════════════════════════════════════════ */
+
+function finishQuiz() {
+  // Validate capture form
+  state.capture.name  = document.getElementById('capName').value.trim();
+  state.capture.email = document.getElementById('capEmail').value.trim();
+  state.capture.why   = document.getElementById('capWhy').value.trim();
+
+  if (!state.capture.name)  { alert('Please enter your name.'); return; }
+  if (!isValidEmail(state.capture.email)) { alert('Please enter a valid email.'); return; }
+
+  computeScores();
+  pickArchetype();
+  state.tier = computeTier(state.archetype, state.scores);
+
+  goPage('loading');
+
+  // Submit + show result
+  submitData().finally(() => {
+    setTimeout(() => {
+      renderResult();
+      goPage('result');
+    }, 1600);
+  });
+}
+
+function isValidEmail(e) { return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e); }
+
+function renderResult() {
+  const a = state.archetype;
+  const flavor = styleFlavor();
+
+  // Hero
+  document.getElementById('archName').textContent = a.name;
+  document.getElementById('archStyle').textContent = `+ ${flavor}`;
+  document.getElementById('archTagline').textContent = a.tagline;
+  document.getElementById('archIcon').outerHTML = archetypeIcon(a.icon, a.color)
+    .replace('<svg ', '<svg id="archIcon" class="archetype-icon" ');
+
+  // Dimension bars — five axes, each independent of skill rating
+  const bars = [
+    { name: 'Vibes',     value: state.scores.vibes,    left: 'Quiet',          right: 'Bringer' },
+    { name: 'Style',     value: state.scores.style,    left: 'Power',          right: 'Touch' },
+    { name: 'Mode',      value: state.scores.mode,     left: 'Competitor',     right: 'Festival-Goer' },
+    { name: 'Warmth',    value: state.scores.warmth,   left: 'Stone-faced',    right: 'Visibly warm' },
+    { name: 'Dial-Down', value: state.scores.dialdown, left: "Doesn't dial it down", right: 'Tunes to partner' },
+  ];
+  document.getElementById('dimBars').innerHTML = bars.map(b => {
+    const pct = ((b.value + 2) / 4) * 100;
+    const word = pickWord(b);
+    return `<div class="dim-bar">
+      <div class="bar-head">
+        <span class="bar-name">${b.name}</span>
+        <span class="bar-value">${word}</span>
+      </div>
+      <div class="track"><div class="marker" style="left:${pct}%"></div></div>
+      <div class="ends"><span>${b.left}</span><span>${b.right}</span></div>
+    </div>`;
+  }).join('');
+
+  // Archetype grid
+  const triggerClashCodes = new Set();
+  state.triggers.forEach(t => {
+    (TRIGGER_TO_CLASH_ARCHETYPES[t] || []).forEach(c => triggerClashCodes.add(c));
+  });
+  triggerClashCodes.delete(a.code); // can't clash with yourself
+
+  const grid = ARCHETYPES.map(arch => {
+    let cls = '';
+    let badge = '';
+    if (arch.code === a.code) { cls = 'you'; badge = 'You'; }
+    else if (a.vibesWith.includes(arch.code) && !triggerClashCodes.has(arch.code)) { cls = 'vibes-with'; }
+    else if (a.clashWith.includes(arch.code) || triggerClashCodes.has(arch.code)) { cls = 'clash'; }
+    return `<div class="arch-cell ${cls}">
+      <div class="row">
+        <span class="axis-tag">${arch.code}</span>
+      </div>
+      <div class="name">${arch.name.replace('The ', '')}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('archGrid').innerHTML = grid;
+
+  // Triggers
+  const triggerLabels = {
+    hard_hitters:'Hard hitters',
+    lobbers:'Lobbers',
+    no_dial_down:"Players who don't dial it down",
+    never_smiles:'Stone-faced players',
+    mid_game_coaches:'Mid-game coaches',
+    sandbaggers:'Sandbaggers',
+    line_disputes:'Line-call disputes',
+    silent_partners:'Silent partners',
+    hot_heads:'Hot-heads',
+    trash_talkers:'Trash talkers',
+    slow_players:'Slow players',
+  };
+  const triggerList = document.getElementById('triggersList');
+  if (state.triggers.length === 0) {
+    document.getElementById('triggerHeadline').textContent = 'You have no court triggers';
+    document.getElementById('triggerSub').textContent = "Rare. You're a pure 'love-the-game' player who can adapt to almost anyone. The community engine reads this as maximum compatibility breadth.";
+    triggerList.innerHTML = `<span class="trig-pill none">☀️ Just here for the game</span>`;
+  } else {
+    document.getElementById('triggerHeadline').textContent = `${state.triggers.length} thing${state.triggers.length > 1 ? 's' : ''} that ruin your fun`;
+    triggerList.innerHTML = state.triggers
+      .map(t => `<span class="trig-pill">✕ ${triggerLabels[t] || t}</span>`).join('');
+  }
+
+  // Event preferences
+  const evPrefList = document.getElementById('eventPrefsList');
+  const evScale = {
+    '2':  { key: 'love',    label: 'Love it' },
+    '1':  { key: 'like',    label: 'Like it' },
+    '0':  { key: 'meh',     label: 'Meh' },
+    '-1': { key: 'dislike', label: "Don't enjoy" },
+    'null': { key: 'never', label: 'Never tried' },
+  };
+  const ranked = EVENT_TYPES.map(ev => {
+    const v = state.events[ev.id];
+    return { ev, v, sortKey: v === null || v === undefined ? -3 : v };
+  }).sort((a, b) => b.sortKey - a.sortKey);
+  evPrefList.innerHTML = ranked.map(({ ev, v }) => {
+    const meta = evScale[v === null || v === undefined ? 'null' : String(v)] || evScale['null'];
+    return `<div class="event-pref-row">
+      <span class="name">${ev.emoji} ${ev.name}</span>
+      <span class="val ${meta.key}">${meta.label}</span>
+    </div>`;
+  }).join('');
+}
+
+function pickWord(bar) {
+  const v = bar.value;
+  if (bar.name === 'Vibes')     return v >= 1.2 ? 'Bringer'    : v >= -.4 ? 'Steady'   : v >= -1.2 ? 'Quiet'        : 'Watcher';
+  if (bar.name === 'Style')     return v >= 1.2 ? 'Touch'      : v >= -.4 ? 'Mixer'    : v >= -1.2 ? 'Power'        : 'Pure Power';
+  if (bar.name === 'Mode')      return v >= 1.2 ? 'Festival'   : v >= -.4 ? 'Balanced' : v >= -1.2 ? 'Competitor'   : 'Lethal';
+  if (bar.name === 'Warmth')    return v >= 1.2 ? 'Beaming'    : v >= -.4 ? 'Light'    : v >= -1.2 ? 'Focused'      : 'Stone-faced';
+  if (bar.name === 'Dial-Down') return v >= 1.2 ? 'Reads room' : v >= -.4 ? 'Adaptive' : v >= -1.2 ? 'One gear'     : 'No mercy';
+  return '—';
+}
+
+/* ════════════════════════════════════════════════════════════
+   DATA SUBMISSION
+   ════════════════════════════════════════════════════════════ */
+
+function buildSubmissionPayload() {
+  const evGet = (id) => (id in state.events ? state.events[id] : null);
+  return {
+    timestamp: new Date().toISOString(),
+    source: 'web_quiz',
+    data_source: 'quiz',
+    name:  state.capture.name,
+    email: state.capture.email,
+    member: state.capture.member,
+    self_rating: state.capture.skill,
+
+    /* archetype + tier */
+    archetype_code: state.archetype.code,
+    archetype_name: state.archetype.name,
+    style_flavor:  styleFlavor(),
+    tier_internal: state.tier,           /* energizer | amplifier | player */
+
+    /* 5-axis personality vector */
+    vibes_score:   round2(state.scores.vibes),
+    style_score:   round2(state.scores.style),
+    mode_score:    round2(state.scores.mode),
+    warmth_score:  round2(state.scores.warmth),
+    dialdown_score:round2(state.scores.dialdown),
+
+    /* triggers (1=picked, 0=not) */
+    trig_hard_hitters:     state.triggers.includes('hard_hitters')     ? 1 : 0,
+    trig_lobbers:          state.triggers.includes('lobbers')          ? 1 : 0,
+    trig_no_dial_down:     state.triggers.includes('no_dial_down')     ? 1 : 0,
+    trig_never_smiles:     state.triggers.includes('never_smiles')     ? 1 : 0,
+    trig_mid_game_coaches: state.triggers.includes('mid_game_coaches') ? 1 : 0,
+    trig_sandbaggers:      state.triggers.includes('sandbaggers')      ? 1 : 0,
+    trig_line_disputes:    state.triggers.includes('line_disputes')    ? 1 : 0,
+    trig_silent_partners:  state.triggers.includes('silent_partners')  ? 1 : 0,
+    trig_hot_heads:        state.triggers.includes('hot_heads')        ? 1 : 0,
+    trig_trash_talkers:    state.triggers.includes('trash_talkers')    ? 1 : 0,
+    trig_slow_players:     state.triggers.includes('slow_players')     ? 1 : 0,
+
+    /* event-type enjoyment: -2..+2, or null if never tried / no opinion */
+    event_pref_give_n_take:   evGet('give_n_take'),
+    event_pref_adult_social:  evGet('adult_social'),
+    event_pref_blue_square:   evGet('blue_square'),
+    event_pref_green_circle:  evGet('green_circle'),
+    event_pref_round_robin:   evGet('round_robin'),
+    event_pref_doubles_open:  evGet('doubles_open'),
+    event_pref_clinic:        evGet('clinic'),
+    event_pref_pro_plus_3:    evGet('pro_plus_3'),
+    event_pref_tournament:    evGet('tournament'),
+
+    why_text: state.capture.why,
+    duration_sec: state.startedAt ? Math.round((Date.now() - state.startedAt) / 1000) : null,
+    operator_notes: '',
+    raw_answers: JSON.stringify(state.answers),
+    raw_events:  JSON.stringify(state.events),
+  };
+}
+function round2(n) { return Math.round(n * 100) / 100; }
+
+async function submitData() {
+  const payload = buildSubmissionPayload();
+  // Always save locally first as a safety net
+  saveLocal(payload);
+  if (!SUBMIT_URL) {
+    console.info('[personality-quiz] No SUBMIT_URL configured — saved to localStorage only.');
+    return;
+  }
+  try {
+    await fetch(SUBMIT_URL, {
+      method: 'POST',
+      mode: 'no-cors', // Apps Script web apps require this from a custom domain
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch (err) {
+    console.warn('[personality-quiz] Submit failed; data saved locally.', err);
+  }
+}
+
+function saveLocal(p) {
+  try {
+    const arr = JSON.parse(localStorage.getItem('pq_responses') || '[]');
+    arr.push(p);
+    localStorage.setItem('pq_responses', JSON.stringify(arr));
+  } catch (e) { /* private mode etc. */ }
+}
+
+/* ════════════════════════════════════════════════════════════
+   SHARE / EXPORT
+   ════════════════════════════════════════════════════════════ */
+
+function shareTwitter() {
+  const a = state.archetype;
+  const txt = `I'm "${a.name}" on a pickleball court. (+ ${styleFlavor()})\n\nWhat are you? →`;
+  const url = 'https://4dpickleball.com/personality';
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(txt)}&url=${encodeURIComponent(url)}`, '_blank');
+}
+
+function copyShareLink() {
+  const a = state.archetype;
+  const text = `I'm "${a.name}" on a pickleball court. (+ ${styleFlavor()})\n\nTake the quiz: https://4dpickleball.com/personality`;
+  navigator.clipboard.writeText(text).then(() => {
+    const s = document.getElementById('shareStatus');
+    s.textContent = '✓ Copied to clipboard';
+    setTimeout(() => s.textContent = '', 2400);
+  });
+}
+
+function downloadCSV() {
+  const arr = JSON.parse(localStorage.getItem('pq_responses') || '[]');
+  if (arr.length === 0) { alert('No data to download yet.'); return; }
+  const cols = Object.keys(arr[0]);
+  const csv  = [cols.join(',')]
+    .concat(arr.map(r => cols.map(c => csvField(r[c])).join(',')))
+    .join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `pickleball_personality_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function csvField(v) {
+  if (v === null || v === undefined) return '';
+  const s = String(v).replace(/"/g, '""');
+  return /[",\n]/.test(s) ? `"${s}"` : s;
+}
+
+function restart() { goPage('intro'); window.scrollTo(0,0); }
+
+/* ════════════════════════════════════════════════════════════
+   BOOT
+   ════════════════════════════════════════════════════════════ */
+window.addEventListener('keydown', (e) => {
+  // Allow Enter to advance from intro
+  if (e.key === 'Enter' && document.getElementById('page-intro').classList.contains('active')) {
+    goPage('quiz');
+  }
+});
+</script>
+
+</body>
+</html>
