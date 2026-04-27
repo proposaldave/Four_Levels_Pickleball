@@ -145,10 +145,10 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
    text rendered wider than 7ch and overflowed both sides into the arrow zones. */
 .fd-row{
   display:flex;
-  flex-wrap:wrap;
+  flex-wrap:nowrap;
   justify-content:center;
   align-items:center;
-  gap:clamp(14px,2.4vw,32px);
+  gap:clamp(10px,1.8vw,28px);
   width:100%;max-width:1080px;
   margin:18px auto 4px;
   padding:0 20px;
@@ -156,9 +156,9 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
 }
 .fd-pair{display:contents}
 .fd-row .fd-word, .fd-row .fd-arrow{margin:0}
-.fd-row .fd-word{display:inline-block;text-align:center}
+.fd-row .fd-word{display:inline-block;text-align:center;white-space:nowrap}
 @media (max-width:620px){
-  .fd-row{gap:14px;padding:0 12px}
+  .fd-row{flex-wrap:wrap;gap:14px;padding:0 12px}
   .fd-pair{display:inline-flex;align-items:center;gap:14px;flex-wrap:nowrap;flex-basis:100%;justify-content:center}
   .fd-row .fd-arrow.fa-2{display:none}
   .fd-row .fd-word, .fd-row .fd-arrow{animation:none;opacity:1;transform:none}
@@ -1294,7 +1294,7 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
         </div>
         <iframe
           id="dim-iframe"
-          src="../4dp/3d_module_template.html?embedded=1&v=1776726173"
+          src="4dp/3d_module_template.html?embedded=1&v=1776726174"
           title="4D Pickleball cinematic 3D module"
           loading="eager"
           fetchpriority="low"
