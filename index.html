@@ -1060,15 +1060,20 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
 .zero-d-bedrock .zd-headline em{
   font-style:italic;color:var(--warm);font-size:1.15em;margin-right:6px;
 }
+/* 3-column grid for chips AND CTAs so each CTA aligns vertically under its
+   corresponding concept chip: Positioning → Scoring CTA, Anticipation → Outballs CTA.
+   Third column (Ready Position) has no CTA — cell stays empty. */
 .zero-d-bedrock .zd-pillars{
-  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:14px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+  margin-bottom:18px;align-items:center;
 }
 .zero-d-bedrock .zd-chip{
   background:rgba(245,243,238,.06);
   border:1px solid rgba(245,243,238,.14);
-  border-radius:100px;padding:7px 16px;
-  font-family:var(--font-display);font-style:italic;font-size:15px;
+  border-radius:100px;padding:8px 18px;
+  font-family:var(--font-body);font-weight:600;font-size:13px;letter-spacing:.4px;
   color:var(--warm);
+  text-align:center;justify-self:center;
 }
 .zero-d-bedrock .zd-chip-link{
   background:rgba(52,211,153,.14);
@@ -1076,16 +1081,18 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
   color:#34D399;
 }
 .zero-d-bedrock .zd-ctas{
-  display:inline-flex;flex-wrap:wrap;gap:14px;justify-content:center;
-  margin-top:4px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  margin-top:4px;align-items:center;
 }
 .zero-d-bedrock .zd-cta{
-  display:inline-block;background:#2B8BFC;color:#fff;
-  padding:11px 26px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  background:#2B8BFC;color:#fff;
+  padding:11px 20px;border-radius:999px;
   font-family:var(--font-body);font-weight:700;font-size:13px;
   letter-spacing:1.2px;text-transform:uppercase;
   text-decoration:none;box-shadow:0 6px 18px rgba(43,139,252,.32);
   transition:transform .2s;
+  /* CTA 1 → column 1 (under Positioning); CTA 2 → column 2 (under Anticipation) */
 }
 .zero-d-bedrock .zd-cta:hover{transform:translateY(-1px)}
 @media(max-width:900px){
@@ -1096,7 +1103,9 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
   .zero-d-bedrock .zd-headline{font-size:15px;line-height:1.35}
 }
 @media(max-width:680px){
-  .zero-d-bedrock .zd-ctas{flex-direction:column;gap:10px;width:100%;align-items:stretch}
+  /* On phone, drop the column alignment — stack CTAs full-width */
+  .zero-d-bedrock .zd-pillars{grid-template-columns:1fr;gap:8px}
+  .zero-d-bedrock .zd-ctas{grid-template-columns:1fr;gap:10px}
   .zero-d-bedrock .zd-cta{text-align:center;padding:14px 28px}
 }
 </style>
@@ -1182,7 +1191,7 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
           <text class="hc-num l1" x="80" y="202" text-anchor="middle">5</text>
           <text class="hc-num l2" x="293" y="166" text-anchor="middle">8</text>
           <text class="hc-num l3" x="507" y="118" text-anchor="middle">12</text>
-          <text class="hc-num l4 hc-num-big" x="700" y="32" text-anchor="end">20+</text>
+          <text class="hc-num l4 hc-num-big" x="678" y="36" text-anchor="end">20+</text>
         </g>
         <!-- Dimension labels (below baseline) -->
         <g class="hc-labels-bot">
@@ -1224,7 +1233,7 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
       </div>
     </div>
 
-    <button class="scroll-cue" type="button" data-scroll-target=".philosophy" aria-label="Continue to: Two kinds of pickleball">
+    <button class="scroll-cue" type="button" data-scroll-target="#four-d-journey" aria-label="Continue to: Let's travel this 4D journey together">
       <span class="scroll-cue-label">Continue</span>
       <svg class="scroll-cue-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M7 7l5 5 5-5M7 13l5 5 5-5"/>
@@ -1233,57 +1242,11 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
 
   </div>
 
-  <!-- ── SECTION 2 — THE WHY: Two kinds of pickleball (thesis unpacked).
-       Moved here from the bottom of the page so the visitor learns WHY 4D matters
-       (85% social pickleball, long rallies = more fun) BEFORE exploring the dimensions. -->
-  <section class="philosophy reveal-section section-full">
-    <h2 class="phil-header">Two kinds of pickleball.</h2>
-    <p class="phil-lede">Both are amazing. They're not the same.</p>
-
-    <div class="phil-grid">
-      <div class="phil-col phil-comp">
-        <div class="phil-tag">Competitive</div>
-        <div class="phil-stat">
-          <span class="phil-stat-num">15%</span>
-          <span class="phil-stat-label">of all pickleball</span>
-        </div>
-        <ul>
-          <li>Tournaments, DUPR, leagues, written scores.</li>
-          <li>Win and get rewarded. Lose and you're punished.</li>
-          <li>Ice out the weaker player.</li>
-          <li>Easiest path for most amateurs to win is short-rally-style.</li>
-        </ul>
-      </div>
-      <div class="phil-col phil-social">
-        <div class="phil-tag">Social</div>
-        <div class="phil-stat">
-          <span class="phil-stat-num">85%</span>
-          <span class="phil-stat-label">of all pickleball</span>
-        </div>
-        <ul>
-          <li>Scores aren't written down.</li>
-          <li>The experience is in the rally and how you and your foursome <em>feel</em>.</li>
-        </ul>
-        <div class="phil-callout">
-          <strong>4D Pickleball is for the 85%.</strong>
-          4D pickleball turns short-rally-play into long-rally-play — the tension and fun builds with every ball over the net, until it ends with an incredible winner or a funny error. Not caring so much about the W or the L. Social pickleball is like any social situation: creating the best possible experience for each other.
-        </div>
-      </div>
-    </div>
-
-    <button class="scroll-cue scroll-cue-2" type="button" data-scroll-target="#four-d-journey" aria-label="Continue to: Our 4D journey">
-      <span class="scroll-cue-label">Continue</span>
-      <svg class="scroll-cue-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M7 7l5 5 5-5M7 13l5 5 5-5"/>
-      </svg>
-    </button>
-  </section>
-
-  <!-- ── SECTION 3 — THE HOW: Embedded cinematic 3D module (canonical at 06_ACADEMY/4dp/3d_module_template.html per R21)
+  <!-- ── SECTION 2: Embedded cinematic 3D module (canonical at 06_ACADEMY/4dp/3d_module_template.html per R21)
        + side info panel (parent-rendered, synced via postMessage from the iframe).
-       Page now ENDS with the journey + 0D modules so visitors close on action paths. -->
+       The journey through the four dimensions, with the 0D modules to act on. -->
   <section id="four-d-journey" class="reveal-section section-full">
-    <h2 class="anim-header">Let's go on this 4D journey together</h2>
+    <h2 class="anim-header">Let's travel this 4D journey together</h2>
     <div class="dim-layout">
       <div class="dim-frame">
         <div class="touch-ctrls" aria-label="Touch controls">
@@ -1332,15 +1295,12 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
               <span class="zd-chip zd-chip-link">Anticipation&nbsp;↓</span>
               <span class="zd-chip">Ready Position</span>
             </div>
-            <div class="zd-ctas-label">Open a module ↓</div>
             <div class="zd-ctas">
               <a href="/scoring/" class="zd-cta">
-                <span class="zd-cta-tag">Module · 0D</span>
                 <span class="zd-cta-name">Beginner Scoring &amp; Positioning</span>
                 <span class="zd-cta-arrow">→</span>
               </a>
               <a href="/outballs/" class="zd-cta">
-                <span class="zd-cta-tag">Module · 0D</span>
                 <span class="zd-cta-name">Train Out Balls</span>
                 <span class="zd-cta-arrow">→</span>
               </a>
@@ -1355,6 +1315,52 @@ body{font-family:var(--font-body);background:var(--ink);color:var(--warm);line-h
         <div class="di-traj" id="di-traj">In 1D pickleball, the points don't last very long, and they are, well, one dimensional. This is how many of us started.</div>
         <div class="di-hint">Tap a dimension · Pinch to zoom · Drag to orbit · Space (or ⏸) to pause</div>
       </aside>
+    </div>
+
+    <button class="scroll-cue scroll-cue-2" type="button" data-scroll-target=".philosophy" aria-label="Continue to: Two kinds of pickleball">
+      <span class="scroll-cue-label">Continue</span>
+      <svg class="scroll-cue-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M7 7l5 5 5-5M7 13l5 5 5-5"/>
+      </svg>
+    </button>
+  </section>
+
+  <!-- ── SECTION 3 — THE WHY (page closer): Two kinds of pickleball.
+       After the visitor has seen the journey through the dimensions, this section
+       explains WHY long rallies matter — 85% social pickleball is what 4D is built for. -->
+  <section class="philosophy reveal-section section-full">
+    <h2 class="phil-header">Two kinds of pickleball.</h2>
+    <p class="phil-lede">Both are amazing. They're not the same.</p>
+
+    <div class="phil-grid">
+      <div class="phil-col phil-comp">
+        <div class="phil-tag">Competitive</div>
+        <div class="phil-stat">
+          <span class="phil-stat-num">15%</span>
+          <span class="phil-stat-label">of all pickleball</span>
+        </div>
+        <ul>
+          <li>Tournaments, DUPR, leagues, written scores.</li>
+          <li>Win and get rewarded. Lose and you're punished.</li>
+          <li>Ice out the weaker player.</li>
+          <li>Easiest path for most amateurs to win is short-rally-style.</li>
+        </ul>
+      </div>
+      <div class="phil-col phil-social">
+        <div class="phil-tag">Social</div>
+        <div class="phil-stat">
+          <span class="phil-stat-num">85%</span>
+          <span class="phil-stat-label">of all pickleball</span>
+        </div>
+        <ul>
+          <li>Scores aren't written down.</li>
+          <li>The experience is in the rally and how you and your foursome <em>feel</em>.</li>
+        </ul>
+        <div class="phil-callout">
+          <strong>4D Pickleball is for the 85%.</strong>
+          4D pickleball turns short-rally-play into long-rally-play — the tension and fun builds with every ball over the net, until it ends with an incredible winner or a funny error. Not caring so much about the W or the L. Social pickleball is like any social situation: creating the best possible experience for each other.
+        </div>
+      </div>
     </div>
   </section>
 
