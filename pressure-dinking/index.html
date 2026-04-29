@@ -566,9 +566,138 @@
   }
   #loading.gone { opacity: 0; pointer-events: none; }
 
+  /* ── CINEMATIC INTRO OVERLAY — first-impression splash ──
+     Fades in immediately, reads like a film title card. Auto-dismisses on tap or
+     after a short window so the drill auto-plays. */
+  .intro-overlay {
+    position: fixed; inset: 0; z-index: 90;
+    display: flex; align-items: center; justify-content: center;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(168,85,247,.10), transparent 60%),
+      linear-gradient(135deg, rgba(10,22,40,.96), rgba(10,22,40,.92));
+    backdrop-filter: blur(20px);
+    cursor: pointer;
+    animation: introFadeIn .9s var(--4dp-ease) both;
+    padding: 20px;
+    overflow: auto;
+  }
+  .intro-overlay.dismissed {
+    animation: introFadeOut .55s var(--4dp-ease) forwards;
+    pointer-events: none;
+  }
+  @keyframes introFadeIn  { from { opacity: 0; }                          to { opacity: 1; } }
+  @keyframes introFadeOut { to   { opacity: 0; transform: translateY(-12px); } }
+  .intro-card {
+    max-width: 760px; text-align: center; padding: 32px 28px 40px;
+    width: 100%;
+  }
+  .intro-eyebrow {
+    font-family: var(--4dp-font-body); font-size: 11px; font-weight: 800;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: var(--4dp-text-faint);
+    margin-bottom: 18px;
+    animation: introSlideUp .9s var(--4dp-ease) .2s both;
+  }
+  .intro-title {
+    font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+    font-size: clamp(48px, 9vw, 104px);
+    letter-spacing: -2.5px; line-height: 1.0;
+    color: var(--4dp-text); margin: 0 0 16px;
+    text-shadow: 0 2px 32px rgba(0,0,0,.7);
+    animation: introSlideUp 1.0s var(--4dp-ease) .35s both;
+  }
+  .intro-title .accent { color: #A855F7; font-style: italic; }
+  .intro-tagline {
+    font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+    font-size: clamp(17px, 2.5vw, 26px);
+    color: var(--4dp-text-dim); margin-bottom: 32px;
+    animation: introSlideUp 1.0s var(--4dp-ease) .55s both;
+  }
+  .intro-tagline strong { color: var(--4dp-text); font-style: normal; font-weight: 700; }
+  .intro-drills {
+    display: grid; gap: 10px;
+    grid-template-columns: 1fr 1fr;
+    max-width: 540px; margin: 0 auto 32px;
+    animation: introSlideUp 1.0s var(--4dp-ease) .75s both;
+  }
+  .intro-drill {
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(245,243,238,.04);
+    border: 1px solid var(--4dp-hairline-s);
+    border-radius: 12px; padding: 12px 16px;
+    text-align: left;
+  }
+  .intro-drill .d-color {
+    width: 18px; height: 18px; border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 16px currentColor;
+  }
+  .intro-drill .d-num {
+    font-family: var(--4dp-font-data); font-weight: 800; font-size: 11px;
+    letter-spacing: 2px; color: var(--4dp-text-faint);
+  }
+  .intro-drill .d-name {
+    font-family: var(--4dp-font-display); font-style: italic;
+    font-size: 17px; color: var(--4dp-text); line-height: 1.1;
+  }
+  .intro-drill > div { display: flex; flex-direction: column; gap: 2px; }
+  .intro-begin {
+    background: linear-gradient(135deg, #A855F7, #7C3AED);
+    color: white; border: none;
+    font-family: var(--4dp-font-body);
+    padding: 14px 36px; font-size: 13px; font-weight: 800;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    border-radius: 100px; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(168,85,247,.45), 0 0 32px rgba(168,85,247,.3);
+    transition: transform .2s var(--4dp-ease), box-shadow .25s var(--4dp-ease);
+    animation: introSlideUp 1.0s var(--4dp-ease) .95s both;
+  }
+  .intro-begin:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 32px rgba(168,85,247,.6), 0 0 48px rgba(168,85,247,.45); }
+  .intro-begin:active { transform: translateY(0) scale(.98); }
+  .intro-skip {
+    margin-top: 18px;
+    font-size: 10.5px; letter-spacing: 1.8px; text-transform: uppercase;
+    color: var(--4dp-text-faint);
+    animation: introSlideUp 1.0s var(--4dp-ease) 1.15s both;
+  }
+  @keyframes introSlideUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 600px) {
+    .intro-drills { grid-template-columns: 1fr; max-width: 360px; }
+    .intro-card { padding: 28px 18px; }
+    .intro-eyebrow { font-size: 10px; letter-spacing: 2.2px; }
+  }
+
+  /* ── REP STRIP — live drill progress (Rep X of Y) above the shot bar ──
+     Tells the viewer "this is rep 2 of 3" so the structure of the drill is legible. */
+  .rep-strip {
+    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+    z-index: 9; pointer-events: none;
+    background: rgba(10,22,40,.78); backdrop-filter: blur(14px);
+    border: 1px solid var(--4dp-hairline-s);
+    border-radius: 100px;
+    padding: 7px 18px;
+    font-family: var(--4dp-font-data);
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 2.2px; text-transform: uppercase;
+    color: var(--4dp-text-dim);
+    display: flex; gap: 10px; align-items: center;
+    opacity: 0; transition: opacity .4s ease, transform .4s ease, color .4s ease;
+  }
+  .rep-strip.visible { opacity: 1; }
+  .rep-strip .rep-current { color: var(--dim, var(--4dp-text)); font-weight: 800; }
+  .rep-strip .rep-divider { color: var(--4dp-text-faint); opacity: .6; }
+  html.embedded .rep-strip { display: none; }
+  body.hud-hidden .rep-strip { display: none; }
+  @media (max-width: 620px) {
+    .rep-strip { bottom: auto; top: 64px; padding: 5px 14px; font-size: 10px; letter-spacing: 1.6px; }
+  }
+
   /* Reduced motion — honor OS preference */
   @media (prefers-reduced-motion: reduce) {
     .moment-label, .story-splash, .hud-stats, .ctrl-btn { transition: none !important; animation: none !important; }
+    .intro-overlay, .intro-eyebrow, .intro-title, .intro-tagline, .intro-drills, .intro-begin, .intro-skip {
+      animation: none !important; opacity: 1 !important; transform: none !important;
+    }
   }
 </style>
 </head>
@@ -586,7 +715,60 @@
 })();
 </script>
 
+<!-- Intro overlay dismiss — runs before the heavy module so the splash is interactive
+     immediately, even while Three.js is still loading. Auto-dismisses after 6 seconds
+     OR on click/tap/keypress, whichever happens first. Skipped in embedded/showcase mode. -->
+<script>
+(function(){
+  var overlay = document.getElementById('intro-overlay');
+  if (!overlay) return;
+  // In embedded or showcase mode, hide immediately — parent owns the intro UX.
+  if (document.documentElement.classList.contains('embedded') ||
+      document.documentElement.classList.contains('showcase')) {
+    overlay.style.display = 'none'; return;
+  }
+  var dismissed = false;
+  function dismiss() {
+    if (dismissed) return;
+    dismissed = true;
+    overlay.classList.add('dismissed');
+    setTimeout(function(){ overlay.style.display = 'none'; }, 600);
+    document.removeEventListener('keydown', onKey, true);
+  }
+  function onKey(e){ if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dismiss(); } }
+  overlay.addEventListener('click', dismiss);
+  document.addEventListener('keydown', onKey, true);
+  // Auto-dismiss after 6s so the drill takes the stage on its own.
+  setTimeout(dismiss, 6000);
+})();
+</script>
+
 <div id="loading">Loading the court…</div>
+
+<!-- Cinematic intro overlay — first impression. Auto-dismisses after a few seconds
+     or on click. Skipped automatically in embedded/showcase mode. -->
+<div class="intro-overlay" id="intro-overlay">
+  <div class="intro-card">
+    <div class="intro-eyebrow">◆ 4D Pickleball · Skill 4 · Generating Kitchen Offense</div>
+    <h1 class="intro-title">Pressure <span class="accent">Dinking</span>.</h1>
+    <div class="intro-tagline">From <strong>55%</strong> kitchen wins to <strong>85%</strong>. Four drills.</div>
+    <div class="intro-drills">
+      <div class="intro-drill"><span class="d-color" style="background:#EF4444;color:#EF4444"></span><div><span class="d-num">DRILL 1</span><span class="d-name">Red cone · cross-court</span></div></div>
+      <div class="intro-drill"><span class="d-color" style="background:#FBBF24;color:#FBBF24"></span><div><span class="d-num">DRILL 2</span><span class="d-name">Yellow cone · middle deep</span></div></div>
+      <div class="intro-drill"><span class="d-color" style="background:linear-gradient(90deg,#EF4444,#FBBF24);color:#F97316"></span><div><span class="d-num">DRILL 3</span><span class="d-name">Red + yellow · alternate</span></div></div>
+      <div class="intro-drill"><span class="d-color" style="background:#A855F7;color:#A855F7"></span><div><span class="d-num">DRILL 4</span><span class="d-name">Volley dink · low &amp; soft</span></div></div>
+    </div>
+    <button class="intro-begin" id="intro-begin">Begin →</button>
+    <div class="intro-skip">Tap anywhere · auto-starts in a few seconds</div>
+  </div>
+</div>
+
+<!-- Live rep counter — appears above the shot bar showing "Rep X of Y" -->
+<div class="rep-strip" id="rep-strip">
+  <span class="rep-current" id="rep-current">Rep 1</span>
+  <span class="rep-divider">·</span>
+  <span class="rep-total" id="rep-total">of 3</span>
+</div>
 <script>
 // FAILSAFE loading timer — if something in the module setup errors, we STILL hide the
 // loading screen after 4s so the user isn't stuck on "Loading the court..." forever.
@@ -779,6 +961,7 @@ const SHOTS = {
     dim: 'drive',
     color: 0xEF4444,
     role: 'Cross-court depth',
+    cycleSegments: 4,  // 3 reps × 4 segs (feed, bounce-up, dink, cone-bounce)
     mantra: 'Hit the red cone. 100 balls, backhand first — then forehand. Blue friend feeds all kinds: forehand, backhand, out of air, bounce. Green hits low pressure dinks that stay tight to the net.',
     traj: 'Blue drilling friend stands 5 ft behind the red cone — off the court, out of bounds. Friend feeds high-arc defensive drops (forehand / backhand / out of air). Green returns every feed with a low pressure dink on the red cone.',
     cam: { pos: [32, 10, 0], look: [0, 2, 0] },
@@ -865,6 +1048,7 @@ const SHOTS = {
     dim: 'defend',
     color: 0xFBBF24,
     role: 'Middle deep',
+    cycleSegments: 4,  // 3 reps × 4 segs
     mantra: 'Hit the yellow cone. Blue friend stands in line directly behind the cone and feeds with high-arc drops. Green hits low pressure dinks — shoulder, not wrist, under the ball.',
     traj: 'Feeder stands on the centerline 5 ft behind the yellow cone. Feeds are higher and softer — reset-style drops. Green returns each one as a tight pressure dink onto the yellow cone, deep past the kitchen line.',
     cam: { pos: [32, 10, 0], look: [0, 2, 0] },
@@ -937,6 +1121,7 @@ const SHOTS = {
     dim: 'drop',
     color: 0xF97316,
     role: 'Combined · alternate targets',
+    cycleSegments: 4,  // 4 reps × 4 segs (R, Y, R, Y)
     mantra: 'Green alternates cones — red, yellow, red, yellow. The blue feeder jogs between the two feeding positions so green hits a different target every rep. Make them MOVE.',
     traj: 'Strict alternation: red, yellow, red, yellow. Feeder smoothly jogs between the two positions during each green-dink + cone-bounce window (~1.4s for ~14 ft of walk = realistic jog). Ball is always sourced from where the feeder is.',
     cam: { pos: [32, 10, 0], look: [0, 2, 0] },
@@ -1049,6 +1234,8 @@ const SHOTS = {
     dim: 'dink',
     color: 0xA855F7,
     role: 'Low & soft · kitchen line',
+    cycleSegments: 1,  // each segment = 1 hit (no cycle structure for paddle-to-paddle volleys)
+    repLabel: 'Hit',   // override "Rep X of Y" → "Hit X of Y" for this drill
     // lowStance: triggers crouched ready-position for both players (compressed Y scale)
     lowStance: true,
     mantra: 'Both bent into the LOW pressure-dink ready stance. Knees deep, paddle at the ground, weight forward. Arc the ball softly — contacts at the knees or ankles. Nobody hits above the waist.',
@@ -2309,6 +2496,38 @@ function updateStatsHUD(key) {
   document.getElementById('stat-shot').textContent = `—/${segs}`;
   document.getElementById('stat-time').textContent = '0.0s';
   document.getElementById('hud-stats').classList.add('visible');
+  // Initialize the rep strip for this drill — color it with the dim, set the totals.
+  initRepStrip(key);
+}
+
+// ═════ REP STRIP — live "Rep X of Y" indicator ═════
+// Computes which rep we're on from segment progress, where "rep" = one cycle of the
+// drill (cycleSegments per rep). Falls back to one-rep-per-segment if not specified.
+let _repStripState = { totalReps: 0, lastRep: -1 };
+function initRepStrip(key) {
+  const s = SHOTS[key];
+  const cycleLen = s.cycleSegments || 1;
+  const totalReps = Math.max(1, Math.ceil((s.shot.segments?.length || 1) / cycleLen));
+  const repLabel = s.repLabel || 'Rep';
+  const hex = '#' + s.color.toString(16).padStart(6, '0');
+  const strip = document.getElementById('rep-strip');
+  if (!strip) return;
+  strip.style.setProperty('--dim', hex);
+  document.getElementById('rep-current').textContent = `${repLabel} 1`;
+  document.getElementById('rep-total').textContent = `of ${totalReps}`;
+  strip.classList.add('visible');
+  _repStripState = { totalReps, lastRep: 1, repLabel };
+}
+function updateRepStrip(key, t) {
+  const s = SHOTS[key];
+  const cycleLen = s.cycleSegments || 1;
+  const info = getSegmentInfo(s.shot, t);
+  if (!info) return;
+  const rep = Math.min(_repStripState.totalReps, Math.floor(info.idx / cycleLen) + 1);
+  if (rep !== _repStripState.lastRep) {
+    document.getElementById('rep-current').textContent = `${_repStripState.repLabel} ${rep}`;
+    _repStripState.lastRep = rep;
+  }
 }
 
 // ═════ KEY-MOMENT ANNOTATIONS — world-space pinned label ═════
@@ -2813,6 +3032,7 @@ function animate() {
     updatePlayerPositions(activeShotKey, shotT);
     updateSwingAnimation(activeShotKey, shotT);
     updateHeadTracking();
+    updateRepStrip(activeShotKey, shotT);
 
     trailPoints.push(p.clone());
     if (trailPoints.length > TRAIL_MAX) trailPoints.shift();
