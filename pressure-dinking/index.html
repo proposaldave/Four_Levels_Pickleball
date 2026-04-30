@@ -679,30 +679,13 @@
     .intro-eyebrow { font-size: 10px; letter-spacing: 2.2px; }
   }
 
-  /* ── REP STRIP — live drill progress (Rep X of Y) above the shot bar ──
-     Tells the viewer "this is rep 2 of 3" so the structure of the drill is legible. */
-  .rep-strip {
-    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
-    z-index: 9; pointer-events: none;
-    background: rgba(10,22,40,.78); backdrop-filter: blur(14px);
-    border: 1px solid var(--4dp-hairline-s);
-    border-radius: 100px;
-    padding: 7px 18px;
-    font-family: var(--4dp-font-data);
-    font-size: 11px; font-weight: 700;
-    letter-spacing: 2.2px; text-transform: uppercase;
-    color: var(--4dp-text-dim);
-    display: flex; gap: 10px; align-items: center;
-    opacity: 0; transition: opacity .4s ease, transform .4s ease, color .4s ease;
-  }
-  .rep-strip.visible { opacity: 1; }
-  .rep-strip .rep-current { color: var(--dim, var(--4dp-text)); font-weight: 800; }
-  .rep-strip .rep-divider { color: var(--4dp-text-faint); opacity: .6; }
-  html.embedded .rep-strip { display: none; }
-  body.hud-hidden .rep-strip { display: none; }
-  @media (max-width: 620px) {
-    .rep-strip { bottom: auto; top: 64px; padding: 5px 14px; font-size: 10px; letter-spacing: 1.6px; }
-  }
+  /* Rep strip removed 2026-04-30 — collided visually with the timeline labels and the
+     shot chip bar. The timeline already exposes Seg/Moments and the moment labels
+     telegraph the drill structure, so the rep counter was redundant. The
+     cycleSegments + repLabel fields in SHOTS remain for any future use. */
+
+  /* Push the timeline higher so it doesn't overlap with the shot-chip bar.
+     Was bottom: 94px (sat right on top of the chips); now ~140px for clean separation. */
 
   /* Reduced motion — honor OS preference */
   @media (prefers-reduced-motion: reduce) {
@@ -754,8 +737,7 @@ function setupIntroOverlay(){
     beginBtn.addEventListener('click', function(e){ e.stopPropagation(); dismiss(); });
   }
   document.addEventListener('keydown', onKey, true);
-  // Auto-dismiss after 6s so the drill takes the stage on its own.
-  setTimeout(dismiss, 6000);
+  // No auto-dismiss — landing page waits for an explicit click / Enter / Space / Esc.
 }
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', setupIntroOverlay);
@@ -770,9 +752,9 @@ if (document.readyState === 'loading') {
      or on click. Skipped automatically in embedded/showcase mode. -->
 <div class="intro-overlay" id="intro-overlay">
   <div class="intro-card">
-    <div class="intro-eyebrow">◆ 4D Pickleball · Skill 4 · Generating Kitchen Offense</div>
+    <div class="intro-eyebrow">◆ 4D Pickleball · Generating Kitchen Offense</div>
     <h1 class="intro-title">Pressure <span class="accent">Dinking</span>.</h1>
-    <div class="intro-tagline">From <strong>55%</strong> kitchen wins to <strong>85%</strong>. Four drills.</div>
+    <div class="intro-tagline">Pressure dinking is the foundation of generating offense in the kitchen.</div>
     <div class="intro-drills">
       <div class="intro-drill"><span class="d-color" style="background:#EF4444;color:#EF4444"></span><div><span class="d-num">DRILL 1</span><span class="d-name">Red cone · cross-court</span></div></div>
       <div class="intro-drill"><span class="d-color" style="background:#FBBF24;color:#FBBF24"></span><div><span class="d-num">DRILL 2</span><span class="d-name">Yellow cone · middle deep</span></div></div>
@@ -780,16 +762,11 @@ if (document.readyState === 'loading') {
       <div class="intro-drill"><span class="d-color" style="background:#2B8BFC;color:#2B8BFC"></span><div><span class="d-num">DRILL 4</span><span class="d-name">Volley dink · low &amp; soft</span></div></div>
     </div>
     <button class="intro-begin" id="intro-begin">Begin →</button>
-    <div class="intro-skip">Tap anywhere · auto-starts in a few seconds</div>
+    <div class="intro-skip">Tap anywhere or press Enter to begin</div>
   </div>
 </div>
 
-<!-- Live rep counter — appears above the shot bar showing "Rep X of Y" -->
-<div class="rep-strip" id="rep-strip">
-  <span class="rep-current" id="rep-current">Rep 1</span>
-  <span class="rep-divider">·</span>
-  <span class="rep-total" id="rep-total">of 3</span>
-</div>
+<!-- Rep strip removed 2026-04-30 — visually collided with timeline labels + chip bar. -->
 <script>
 // FAILSAFE loading timer — if something in the module setup errors, we STILL hide the
 // loading screen after 4s so the user isn't stuck on "Loading the court..." forever.
@@ -2517,38 +2494,6 @@ function updateStatsHUD(key) {
   document.getElementById('stat-shot').textContent = `—/${segs}`;
   document.getElementById('stat-time').textContent = '0.0s';
   document.getElementById('hud-stats').classList.add('visible');
-  // Initialize the rep strip for this drill — color it with the dim, set the totals.
-  initRepStrip(key);
-}
-
-// ═════ REP STRIP — live "Rep X of Y" indicator ═════
-// Computes which rep we're on from segment progress, where "rep" = one cycle of the
-// drill (cycleSegments per rep). Falls back to one-rep-per-segment if not specified.
-let _repStripState = { totalReps: 0, lastRep: -1 };
-function initRepStrip(key) {
-  const s = SHOTS[key];
-  const cycleLen = s.cycleSegments || 1;
-  const totalReps = Math.max(1, Math.ceil((s.shot.segments?.length || 1) / cycleLen));
-  const repLabel = s.repLabel || 'Rep';
-  const hex = '#' + s.color.toString(16).padStart(6, '0');
-  const strip = document.getElementById('rep-strip');
-  if (!strip) return;
-  strip.style.setProperty('--dim', hex);
-  document.getElementById('rep-current').textContent = `${repLabel} 1`;
-  document.getElementById('rep-total').textContent = `of ${totalReps}`;
-  strip.classList.add('visible');
-  _repStripState = { totalReps, lastRep: 1, repLabel };
-}
-function updateRepStrip(key, t) {
-  const s = SHOTS[key];
-  const cycleLen = s.cycleSegments || 1;
-  const info = getSegmentInfo(s.shot, t);
-  if (!info) return;
-  const rep = Math.min(_repStripState.totalReps, Math.floor(info.idx / cycleLen) + 1);
-  if (rep !== _repStripState.lastRep) {
-    document.getElementById('rep-current').textContent = `${_repStripState.repLabel} ${rep}`;
-    _repStripState.lastRep = rep;
-  }
 }
 
 // ═════ KEY-MOMENT ANNOTATIONS — world-space pinned label ═════
@@ -3053,7 +2998,6 @@ function animate() {
     updatePlayerPositions(activeShotKey, shotT);
     updateSwingAnimation(activeShotKey, shotT);
     updateHeadTracking();
-    updateRepStrip(activeShotKey, shotT);
 
     trailPoints.push(p.clone());
     if (trailPoints.length > TRAIL_MAX) trailPoints.shift();
