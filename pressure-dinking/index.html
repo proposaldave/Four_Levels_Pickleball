@@ -1242,20 +1242,21 @@ const SHOTS = {
     story: 'Drill #4 — Low & soft volley dinks from the proper ready stance. Knees bent, paddle down. Contact at the knees.',
     shot: {
       segments: [
-        // Every contact 1.0–1.5 ft off the ground (ankle → knee).
-        // Slower dur (0.95) + higher arc (3.9–4.1 apex) = the gentle, soft volley dink rhythm.
-        // 1 — Green soft volley dink to blue (knee level → knee level), gentle high arc
-        { from: [-5, 1.5, 7.8], to: [-5, 1.4, -7.8], apex: 4.0, dur: 0.95 },
-        // 2 — Blue returns, mirror arc
-        { from: [-5, 1.4, -7.8], to: [-5, 1.5, 7.8], apex: 4.0, dur: 0.95 },
-        // 3 — Green dips lower, contact at mid-shin
-        { from: [-5, 1.5, 7.8], to: [-5, 1.2, -7.8], apex: 3.9, dur: 0.95, cinematic: true },
-        // 4 — Blue takes ankle-low, paddle on the ground
-        { from: [-5, 1.2, -7.8], to: [-5, 1.0, 7.8], apex: 3.8, dur: 0.95 },
-        // 5 — Green low and soft, ankle to knee
-        { from: [-5, 1.0, 7.8], to: [-5, 1.3, -7.8], apex: 3.9, dur: 0.95 },
-        // 6 — Blue closes, rhythm locked under the waist
-        { from: [-5, 1.3, -7.8], to: [-5, 1.5, 7.8], apex: 4.0, dur: 0.95 }
+        // Every contact 0.3–0.6 ft off the ground = ANKLE LEVEL. The paddle is on
+        // the ground; the ball lands on the blue ankle-target disc between the
+        // partner's feet. Apex 4.0+ so the arc still clears the 3 ft net cleanly.
+        // 1 — Green soft volley dink to blue's ankles
+        { from: [-5, 0.5, 7.8], to: [-5, 0.4, -7.8], apex: 4.2, dur: 0.95 },
+        // 2 — Blue returns to green's ankles, mirror arc
+        { from: [-5, 0.4, -7.8], to: [-5, 0.5, 7.8], apex: 4.2, dur: 0.95 },
+        // 3 — Green even lower, contact at the laces
+        { from: [-5, 0.5, 7.8], to: [-5, 0.3, -7.8], apex: 4.1, dur: 0.95, cinematic: true },
+        // 4 — Blue scoops the lowest one, paddle scraping the ground
+        { from: [-5, 0.3, -7.8], to: [-5, 0.5, 7.8], apex: 4.1, dur: 0.95 },
+        // 5 — Green ankle-low and soft
+        { from: [-5, 0.5, 7.8], to: [-5, 0.4, -7.8], apex: 4.1, dur: 0.95 },
+        // 6 — Blue closes — rhythm locked at the ankles
+        { from: [-5, 0.4, -7.8], to: [-5, 0.5, 7.8], apex: 4.2, dur: 0.95 }
       ]
     },
     playerFrames: [
@@ -1520,6 +1521,14 @@ DRILL_SPOTS.forEach(spot => {
 });
 scene.add(coneGroup);
 
+// ── Drill 4 ankle targets: blue discs between each player's feet, only visible
+// in Drill 4 (low volley dinking). Tells the viewer "aim for the partner's ankles".
+const drill4Targets = new THREE.Group();
+drill4Targets.add(makeFlatTarget(-5,  7.8, 0x2B8BFC));  // green's feet (near-left kitchen line)
+drill4Targets.add(makeFlatTarget(-5, -7.8, 0x2B8BFC));  // blue's feet  (far-left kitchen line)
+drill4Targets.visible = false;
+scene.add(drill4Targets);
+
 // ═════ CROWD SILHOUETTES — stadium ambience beyond each baseline ═════
 // Instanced for cheap draw. Dark capsules, no shadows, just silhouettes in the fog.
 const crowdMat = new THREE.MeshBasicMaterial({ color: 0x050B15, fog: true });
@@ -1766,10 +1775,15 @@ const READY_POSE = {
   kitchen:    { arm: { x: -0.55, y: 0, z: -0.30 }, paddle: { x: -0.05, z: -0.35 } }   // backhand ready — paddle up at chest
 };
 
+// Deep-crouch pressure-dinking ready pose: paddle hanging LOW at the ground, arm
+// reaching forward-down. Used for any drill flagged with `lowStance: true`.
+const LOW_DINK_READY = { arm: { x: 0.55, y: 0, z: -0.20 }, paddle: { x: -1.30, z: 0.10 } };
+
 function applyReadyPose(k) {
   const p = players[k];
   if (!p || !p.userData.rightArm || !p.userData.paddle) return;
-  const ready = READY_POSE[getPlayerZone(p)];
+  const useLow = !!(SHOTS[activeShotKey] && SHOTS[activeShotKey].lowStance);
+  const ready = useLow ? LOW_DINK_READY : READY_POSE[getPlayerZone(p)];
   p.userData.rightArm.rotation.set(ready.arm.x, ready.arm.y, ready.arm.z);
   p.userData.paddle.rotation.x = ready.paddle.x;
   p.userData.paddle.rotation.z = ready.paddle.z;
@@ -2437,15 +2451,20 @@ function startShot(key, resetCamera = true) {
 // volley dinking). Otherwise restored to standing height.
 function applyPlayerStance(key) {
   const lowStance = !!SHOTS[key].lowStance;
-  // Compress Y so the player visually reads as "crouched" — knees deep, paddle low.
-  // Combined with the LOW ball trajectory in this drill, viewers read this as the
-  // proper pressure-dink ready stance from Dave's reference image.
-  const yScale = lowStance ? 0.78 : 1.0;
+  // Aggressive Y-compression so the player reads as DEEPLY crouched — knees bent,
+  // body close to the ground. Paired with applyReadyPose() which drops the paddle
+  // to ground level via LOW_DINK_READY when lowStance is true.
+  const yScale = lowStance ? 0.62 : 1.0;
   for (const k of PLAYER_KEYS) {
     const p = players[k];
     if (!p) continue;
     p.scale.set(1, yScale, 1);
+    // Refresh the ready pose so the paddle position updates immediately
+    // (otherwise it only updates between segments).
+    if (p.userData && p.userData.paddle) applyReadyPose(k);
   }
+  // Toggle the ankle-target discs that sit between each player's feet for Drill 4
+  if (typeof drill4Targets !== 'undefined') drill4Targets.visible = lowStance;
 }
 
 function updateSideCard(key) {
