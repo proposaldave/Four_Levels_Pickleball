@@ -16,7 +16,7 @@
 <meta name="description" content="Pressure dinking — the foundation of creating offense in the kitchen. Four cinematic 3D rallies teach depth, precision, deception, and volley dinking. Go from winning 55% of kitchen points to 85%.">
 <meta property="og:title" content="Pressure Dinking · 4D Pickleball">
 <meta property="og:description" content="Four rallies. One skill. Depth is the key. Under the ball. Move them first. Speed up last.">
-<link rel="stylesheet" href="/4dp/tokens.css">
+<link rel="stylesheet" href="../4dp/tokens.css">
 <style>
   html, body { margin: 0; height: 100%; overflow: hidden; background: var(--4dp-ink); }
   body {
@@ -207,8 +207,10 @@
     -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
     color: transparent;
   }
-  /* Drill 4 = volley dinking. Distinct purple — no cone tied to it (target = partner's paddle). */
-  .shot-chip[data-shot="dink"]   { --dim: #A855F7; --dim-glow: 0 0 24px rgba(168,85,247,.40); }
+  /* Drill 4 = volley dinking. Brand blue (#2B8BFC) — same blue as 4D · Dink dimension
+     on 4dpickleball.com and as the drilling friend's shirt. No cone tied to this drill —
+     the target is the partner's paddle, and the partner wears blue. */
+  .shot-chip[data-shot="dink"]   { --dim: #2B8BFC; --dim-glow: 0 0 24px rgba(43,139,252,.40); }
   @media (max-width: 760px) {
     .shot-bar { flex-wrap: wrap; gap: 8px;
       padding: 16px max(12px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
@@ -572,14 +574,20 @@
   .intro-overlay {
     position: fixed; inset: 0; z-index: 90;
     display: flex; align-items: center; justify-content: center;
+    /* Background: deep navy with a subtle BLUE glow (matches 4dpickleball.com brand —
+       primary blue #2B8BFC). */
     background:
-      radial-gradient(ellipse at 50% 30%, rgba(168,85,247,.10), transparent 60%),
-      linear-gradient(135deg, rgba(10,22,40,.96), rgba(10,22,40,.92));
+      radial-gradient(ellipse at 50% 30%, rgba(43,139,252,.14), transparent 60%),
+      linear-gradient(135deg, #0a1628 0%, #08111f 100%);
     backdrop-filter: blur(20px);
     cursor: pointer;
-    animation: introFadeIn .9s var(--4dp-ease) both;
+    animation: introFadeIn .9s cubic-bezier(.16,1,.3,1) both;
     padding: 20px;
     overflow: auto;
+    /* Hard fallbacks so the overlay reads even if tokens.css fails to load.
+       (Locks in cream text + Instrument-Serif/DM-Sans family expectations.) */
+    color: #F5F3EE;
+    font-family: 'DM Sans', -apple-system, system-ui, sans-serif;
   }
   .intro-overlay.dismissed {
     animation: introFadeOut .55s var(--4dp-ease) forwards;
@@ -592,38 +600,42 @@
     width: 100%;
   }
   .intro-eyebrow {
-    font-family: var(--4dp-font-body); font-size: 11px; font-weight: 800;
+    font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 800;
     letter-spacing: 3px; text-transform: uppercase;
-    color: var(--4dp-text-faint);
+    color: #2B8BFC;  /* brand blue eyebrow (matches 4dpickleball.com hero) */
     margin-bottom: 18px;
-    animation: introSlideUp .9s var(--4dp-ease) .2s both;
+    animation: introSlideUp .9s cubic-bezier(.16,1,.3,1) .2s both;
   }
   .intro-title {
-    font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic; font-weight: 400;
     font-size: clamp(48px, 9vw, 104px);
     letter-spacing: -2.5px; line-height: 1.0;
-    color: var(--4dp-text); margin: 0 0 16px;
+    color: #F5F3EE;  /* warm cream — matches 4dpickleball.com body color */
+    margin: 0 0 16px;
     text-shadow: 0 2px 32px rgba(0,0,0,.7);
-    animation: introSlideUp 1.0s var(--4dp-ease) .35s both;
+    animation: introSlideUp 1.0s cubic-bezier(.16,1,.3,1) .35s both;
   }
-  .intro-title .accent { color: #A855F7; font-style: italic; }
+  .intro-title .accent { color: #2B8BFC; font-style: italic; }  /* brand blue accent */
   .intro-tagline {
-    font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic; font-weight: 400;
     font-size: clamp(17px, 2.5vw, 26px);
-    color: var(--4dp-text-dim); margin-bottom: 32px;
-    animation: introSlideUp 1.0s var(--4dp-ease) .55s both;
+    color: rgba(245,243,238,.75);
+    margin-bottom: 32px;
+    animation: introSlideUp 1.0s cubic-bezier(.16,1,.3,1) .55s both;
   }
-  .intro-tagline strong { color: var(--4dp-text); font-style: normal; font-weight: 700; }
+  .intro-tagline strong { color: #F5F3EE; font-style: normal; font-weight: 700; }
   .intro-drills {
     display: grid; gap: 10px;
     grid-template-columns: 1fr 1fr;
     max-width: 540px; margin: 0 auto 32px;
-    animation: introSlideUp 1.0s var(--4dp-ease) .75s both;
+    animation: introSlideUp 1.0s cubic-bezier(.16,1,.3,1) .75s both;
   }
   .intro-drill {
     display: flex; align-items: center; gap: 14px;
     background: rgba(245,243,238,.04);
-    border: 1px solid var(--4dp-hairline-s);
+    border: 1px solid rgba(245,243,238,.10);
     border-radius: 12px; padding: 12px 16px;
     text-align: left;
   }
@@ -633,32 +645,32 @@
     box-shadow: 0 0 16px currentColor;
   }
   .intro-drill .d-num {
-    font-family: var(--4dp-font-data); font-weight: 800; font-size: 11px;
-    letter-spacing: 2px; color: var(--4dp-text-faint);
+    font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 11px;
+    letter-spacing: 2px; color: rgba(245,243,238,.45);
   }
   .intro-drill .d-name {
-    font-family: var(--4dp-font-display); font-style: italic;
-    font-size: 17px; color: var(--4dp-text); line-height: 1.1;
+    font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
+    font-size: 17px; color: #F5F3EE; line-height: 1.1;
   }
   .intro-drill > div { display: flex; flex-direction: column; gap: 2px; }
   .intro-begin {
-    background: linear-gradient(135deg, #A855F7, #7C3AED);
-    color: white; border: none;
-    font-family: var(--4dp-font-body);
+    background: linear-gradient(135deg, #2B8BFC, #1E6FD9);  /* brand blue gradient */
+    color: #fff; border: none;
+    font-family: 'DM Sans', sans-serif;
     padding: 14px 36px; font-size: 13px; font-weight: 800;
     letter-spacing: 2.5px; text-transform: uppercase;
     border-radius: 100px; cursor: pointer;
-    box-shadow: 0 4px 20px rgba(168,85,247,.45), 0 0 32px rgba(168,85,247,.3);
-    transition: transform .2s var(--4dp-ease), box-shadow .25s var(--4dp-ease);
-    animation: introSlideUp 1.0s var(--4dp-ease) .95s both;
+    box-shadow: 0 4px 20px rgba(43,139,252,.45), 0 0 32px rgba(43,139,252,.3);
+    transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .25s cubic-bezier(.16,1,.3,1);
+    animation: introSlideUp 1.0s cubic-bezier(.16,1,.3,1) .95s both;
   }
-  .intro-begin:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 32px rgba(168,85,247,.6), 0 0 48px rgba(168,85,247,.45); }
+  .intro-begin:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 32px rgba(43,139,252,.6), 0 0 48px rgba(43,139,252,.45); }
   .intro-begin:active { transform: translateY(0) scale(.98); }
   .intro-skip {
     margin-top: 18px;
     font-size: 10.5px; letter-spacing: 1.8px; text-transform: uppercase;
-    color: var(--4dp-text-faint);
-    animation: introSlideUp 1.0s var(--4dp-ease) 1.15s both;
+    color: rgba(245,243,238,.40);
+    animation: introSlideUp 1.0s cubic-bezier(.16,1,.3,1) 1.15s both;
   }
   @keyframes introSlideUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
   @media (max-width: 600px) {
@@ -715,14 +727,14 @@
 })();
 </script>
 
-<!-- Intro overlay dismiss — runs before the heavy module so the splash is interactive
-     immediately, even while Three.js is still loading. Auto-dismisses after 6 seconds
-     OR on click/tap/keypress, whichever happens first. Skipped in embedded/showcase mode. -->
+<!-- Intro overlay dismiss — wired up via DOMContentLoaded so it runs AFTER the overlay
+     element exists in the DOM (previous version ran the script before the overlay HTML
+     was parsed, so getElementById returned null and the BEGIN button did nothing).
+     Auto-dismisses after 6s OR on click/Enter/Space/Esc. Skipped in embedded/showcase. -->
 <script>
-(function(){
+function setupIntroOverlay(){
   var overlay = document.getElementById('intro-overlay');
   if (!overlay) return;
-  // In embedded or showcase mode, hide immediately — parent owns the intro UX.
   if (document.documentElement.classList.contains('embedded') ||
       document.documentElement.classList.contains('showcase')) {
     overlay.style.display = 'none'; return;
@@ -737,10 +749,19 @@
   }
   function onKey(e){ if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dismiss(); } }
   overlay.addEventListener('click', dismiss);
+  var beginBtn = document.getElementById('intro-begin');
+  if (beginBtn) {
+    beginBtn.addEventListener('click', function(e){ e.stopPropagation(); dismiss(); });
+  }
   document.addEventListener('keydown', onKey, true);
   // Auto-dismiss after 6s so the drill takes the stage on its own.
   setTimeout(dismiss, 6000);
-})();
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupIntroOverlay);
+} else {
+  setupIntroOverlay();
+}
 </script>
 
 <div id="loading">Loading the court…</div>
@@ -756,7 +777,7 @@
       <div class="intro-drill"><span class="d-color" style="background:#EF4444;color:#EF4444"></span><div><span class="d-num">DRILL 1</span><span class="d-name">Red cone · cross-court</span></div></div>
       <div class="intro-drill"><span class="d-color" style="background:#FBBF24;color:#FBBF24"></span><div><span class="d-num">DRILL 2</span><span class="d-name">Yellow cone · middle deep</span></div></div>
       <div class="intro-drill"><span class="d-color" style="background:linear-gradient(90deg,#EF4444,#FBBF24);color:#F97316"></span><div><span class="d-num">DRILL 3</span><span class="d-name">Red + yellow · alternate</span></div></div>
-      <div class="intro-drill"><span class="d-color" style="background:#A855F7;color:#A855F7"></span><div><span class="d-num">DRILL 4</span><span class="d-name">Volley dink · low &amp; soft</span></div></div>
+      <div class="intro-drill"><span class="d-color" style="background:#2B8BFC;color:#2B8BFC"></span><div><span class="d-num">DRILL 4</span><span class="d-name">Volley dink · low &amp; soft</span></div></div>
     </div>
     <button class="intro-begin" id="intro-begin">Begin →</button>
     <div class="intro-skip">Tap anywhere · auto-starts in a few seconds</div>
@@ -1232,7 +1253,7 @@ const SHOTS = {
   dink: {
     label: 'Drill 4 · Volley Dink',
     dim: 'dink',
-    color: 0xA855F7,
+    color: 0x2B8BFC,
     role: 'Low & soft · kitchen line',
     cycleSegments: 1,  // each segment = 1 hit (no cycle structure for paddle-to-paddle volleys)
     repLabel: 'Hit',   // override "Rep X of Y" → "Hit X of Y" for this drill
