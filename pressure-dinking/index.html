@@ -298,7 +298,7 @@
      Segment ticks + dimension-colored moment markers + draggable playhead.
      Toggle with B, hidden in embedded mode + when HUD is hidden. */
   .timeline {
-    position: fixed; bottom: 94px; left: 28px; right: 28px; z-index: 9;
+    position: fixed; bottom: 140px; left: 28px; right: 28px; z-index: 9;
     display: flex; flex-direction: column; gap: 6px;
     pointer-events: none;
     opacity: 0; transform: translateY(6px);
@@ -694,6 +694,140 @@
       animation: none !important; opacity: 1 !important; transform: none !important;
     }
   }
+
+  /* ── FEEDBACK FAB + MODAL ─────────────────────────────────────────────
+     Three lightweight engagement paths in one floating overlay:
+       1. Rate it (stars + comment) → emails Dave
+       2. Ask a pro a question      → mailto with prefilled subject
+       3. Schedule a class at NEPC  → mailto with prefilled subject
+     All actions use mailto: so there's no backend needed. Each email
+     includes the page URL so Dave knows which module sent the feedback.
+     Hidden in embedded/showcase modes (parent page owns the UX). */
+  .fab-feedback {
+    position: fixed; right: 24px; bottom: 24px; z-index: 50;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, #2B8BFC, #1E6FD9);
+    color: #fff; border: none;
+    padding: 10px 18px 10px 14px;
+    border-radius: 100px;
+    font-family: 'DM Sans', -apple-system, system-ui, sans-serif;
+    font-weight: 700; font-size: 11.5px;
+    letter-spacing: 1.6px; text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(43,139,252,.42), 0 0 24px rgba(43,139,252,.25);
+    transition: transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s cubic-bezier(.16,1,.3,1);
+  }
+  .fab-feedback:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(43,139,252,.6), 0 0 36px rgba(43,139,252,.36); }
+  .fab-feedback:active { transform: translateY(0) scale(.98); }
+  .fab-feedback .fab-dot { width: 8px; height: 8px; border-radius: 50%; background: #fff; box-shadow: 0 0 8px rgba(255,255,255,.7); }
+  html.embedded .fab-feedback,
+  html.showcase .fab-feedback { display: none !important; }
+  body.hud-hidden .fab-feedback { display: none !important; }
+  @media (max-width: 620px) {
+    .fab-feedback { right: 14px; bottom: 14px; padding: 8px 14px 8px 12px; font-size: 10.5px; letter-spacing: 1.3px; }
+  }
+
+  .fb-modal {
+    position: fixed; inset: 0; z-index: 95;
+    display: none; align-items: center; justify-content: center;
+    padding: 20px; overflow: auto;
+  }
+  .fb-modal[data-on="1"] { display: flex; }
+  .fb-modal::before {
+    content: ""; position: absolute; inset: 0;
+    background: rgba(8,17,31,.92); backdrop-filter: blur(14px);
+  }
+  .fb-card {
+    position: relative; z-index: 1;
+    background: #0E1F38;
+    border: 1px solid rgba(245,243,238,.10);
+    border-radius: 22px;
+    padding: 32px 28px 24px;
+    max-width: 480px; width: 100%;
+    box-shadow: 0 32px 96px rgba(0,0,0,.72);
+    color: #F5F3EE;
+    font-family: 'DM Sans', -apple-system, system-ui, sans-serif;
+    animation: fbCardIn .38s cubic-bezier(.16,1,.3,1);
+  }
+  @keyframes fbCardIn { from { opacity: 0; transform: translateY(18px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  .fb-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic; font-weight: 400;
+    font-size: 34px; letter-spacing: -1px; line-height: 1.05;
+    margin: 0 0 8px;
+  }
+  .fb-sub { font-size: 13.5px; color: rgba(245,243,238,.62); line-height: 1.55; margin-bottom: 22px; }
+  .fb-close {
+    position: absolute; top: 14px; right: 16px;
+    background: none; border: none;
+    color: rgba(245,243,238,.45); font-size: 26px; line-height: 1;
+    cursor: pointer; padding: 4px 10px;
+    transition: color .2s;
+  }
+  .fb-close:hover { color: #F5F3EE; }
+  .fb-stars { display: flex; gap: 4px; margin-bottom: 14px; }
+  .fb-star {
+    background: none; border: none;
+    font-size: 30px; line-height: 1;
+    color: rgba(245,243,238,.22);
+    cursor: pointer; padding: 2px 4px;
+    transition: color .15s, transform .15s;
+  }
+  .fb-star:hover { color: #FBBF24; transform: scale(1.12); }
+  .fb-star.lit { color: #FBBF24; }
+  .fb-comment {
+    width: 100%;
+    background: rgba(245,243,238,.04);
+    border: 1px solid rgba(245,243,238,.10);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: inherit; font-size: 14px; color: #F5F3EE;
+    resize: vertical; min-height: 80px;
+    margin-bottom: 14px;
+    box-sizing: border-box;
+  }
+  .fb-comment:focus { outline: none; border-color: #2B8BFC; background: rgba(43,139,252,.06); }
+  .fb-comment::placeholder { color: rgba(245,243,238,.32); }
+  .fb-send {
+    background: #2B8BFC; color: #fff; border: none;
+    padding: 12px 24px; border-radius: 100px;
+    font-family: inherit; font-weight: 700;
+    font-size: 12px; letter-spacing: 1.6px; text-transform: uppercase;
+    cursor: pointer; width: 100%;
+    transition: background .2s, transform .15s;
+  }
+  .fb-send:hover { background: #1E6FD9; transform: translateY(-1px); }
+  .fb-divider { height: 1px; background: rgba(245,243,238,.08); margin: 22px -8px; }
+  .fb-actions-label {
+    font-size: 10.5px; font-weight: 800; letter-spacing: 2.4px;
+    text-transform: uppercase; color: rgba(245,243,238,.45);
+    margin-bottom: 12px;
+  }
+  .fb-actions { display: flex; flex-direction: column; gap: 8px; }
+  .fb-action {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 14px;
+    background: rgba(245,243,238,.03);
+    border: 1px solid rgba(245,243,238,.08);
+    border-radius: 12px;
+    text-decoration: none; color: #F5F3EE; font-size: 14px;
+    transition: background .2s, border-color .2s, transform .15s;
+    cursor: pointer;
+  }
+  .fb-action:hover { background: rgba(245,243,238,.06); border-color: #2B8BFC; transform: translateX(2px); }
+  .fb-action-icon {
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(43,139,252,.16);
+    border-radius: 50%;
+    color: #2B8BFC; font-weight: 800; font-size: 13px;
+    flex-shrink: 0;
+  }
+  .fb-thanks {
+    text-align: center; padding: 18px;
+    color: #34D399; font-weight: 700; font-size: 14px;
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
 </style>
 </head>
 <body>
@@ -767,6 +901,122 @@ if (document.readyState === 'loading') {
 </div>
 
 <!-- Rep strip removed 2026-04-30 — visually collided with timeline labels + chip bar. -->
+
+<!-- Feedback FAB — bottom-right, opens a modal with stars + comment + 2 quick actions -->
+<button class="fab-feedback" id="fab-feedback" aria-label="Send feedback or ask a question">
+  <span class="fab-dot"></span>
+  Feedback &amp; Questions
+</button>
+
+<!-- Feedback modal — three engagement paths, all powered by mailto so no backend needed -->
+<div class="fb-modal" id="fb-modal" role="dialog" aria-modal="true" aria-labelledby="fb-title">
+  <div class="fb-card">
+    <button class="fb-close" id="fb-close" aria-label="Close feedback dialog">×</button>
+    <h2 class="fb-title" id="fb-title">How are we doing?</h2>
+    <p class="fb-sub">Tell Dave (the founder) what you think — your feedback shapes the next version of this drill.</p>
+
+    <!-- Star rating -->
+    <div class="fb-stars" role="radiogroup" aria-label="Rate this drill 1 to 5 stars">
+      <button type="button" class="fb-star" data-star="1" aria-label="1 star">★</button>
+      <button type="button" class="fb-star" data-star="2" aria-label="2 stars">★</button>
+      <button type="button" class="fb-star" data-star="3" aria-label="3 stars">★</button>
+      <button type="button" class="fb-star" data-star="4" aria-label="4 stars">★</button>
+      <button type="button" class="fb-star" data-star="5" aria-label="5 stars">★</button>
+    </div>
+
+    <textarea class="fb-comment" id="fb-comment" placeholder="What did you like? What's missing? What should we build next? (optional)"></textarea>
+
+    <button class="fb-send" id="fb-send">Send feedback →</button>
+
+    <div class="fb-divider"></div>
+
+    <div class="fb-actions-label">Or take it further</div>
+    <div class="fb-actions">
+      <a class="fb-action" href="#" data-action="ask">
+        <span class="fb-action-icon">?</span>
+        <span>Ask a pro a question</span>
+      </a>
+      <a class="fb-action" href="#" data-action="book">
+        <span class="fb-action-icon">📅</span>
+        <span>Schedule a class with NEPC</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+// Wire the feedback widget — all three paths funnel into Dave's inbox via mailto
+// so the user's email client opens with subject + body prefilled. No backend.
+function setupFeedbackWidget() {
+  const fab = document.getElementById('fab-feedback');
+  const modal = document.getElementById('fb-modal');
+  if (!fab || !modal) return;
+  const close = document.getElementById('fb-close');
+  const stars = modal.querySelectorAll('.fb-star');
+  const comment = document.getElementById('fb-comment');
+  const send = document.getElementById('fb-send');
+  const actions = modal.querySelectorAll('.fb-action');
+
+  // Hide in embedded/showcase mode (parent owns the UX)
+  if (document.documentElement.classList.contains('embedded') ||
+      document.documentElement.classList.contains('showcase')) {
+    fab.style.display = 'none';
+    return;
+  }
+
+  let rating = 0;
+  const open  = () => { modal.dataset.on = '1'; setTimeout(() => stars[0]?.focus(), 60); };
+  const shut  = () => { modal.dataset.on = '0'; };
+
+  fab.addEventListener('click', open);
+  close.addEventListener('click', shut);
+  modal.addEventListener('click', (e) => { if (e.target === modal) shut(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.dataset.on === '1') shut(); });
+
+  stars.forEach(s => {
+    s.addEventListener('click', () => {
+      rating = parseInt(s.dataset.star, 10);
+      stars.forEach(x => x.classList.toggle('lit', parseInt(x.dataset.star, 10) <= rating));
+    });
+  });
+
+  function mailto(subject, body) {
+    window.location.href = 'mailto:dave@gnt.ai?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
+
+  send.addEventListener('click', () => {
+    const subject = '4D Pickleball · Pressure Dinking · Feedback';
+    const body =
+      'Rating: ' + (rating ? rating + '/5 stars' : 'no rating') + '\n\n' +
+      'Comment:\n' + (comment.value.trim() || '(none)') + '\n\n' +
+      '——\nFrom: ' + location.href;
+    mailto(subject, body);
+  });
+
+  actions.forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const type = a.dataset.action;
+      if (type === 'ask') {
+        mailto(
+          '4D Pickleball · Pressure Dinking · Question for the pros',
+          'Hi Dave,\n\nI watched the Pressure Dinking module and have a question:\n\n[your question here]\n\n——\nFrom: ' + location.href
+        );
+      } else if (type === 'book') {
+        mailto(
+          '4D Pickleball · Pressure Dinking · Schedule a class',
+          'Hi Dave,\n\nI watched the Pressure Dinking module and would like to schedule a class.\n\n• Skill level: \n• Availability: \n• Where (NEPC Rye / Middleton / online): \n\n——\nFrom: ' + location.href
+        );
+      }
+    });
+  });
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupFeedbackWidget);
+} else {
+  setupFeedbackWidget();
+}
+</script>
 <script>
 // FAILSAFE loading timer — if something in the module setup errors, we STILL hide the
 // loading screen after 4s so the user isn't stuck on "Loading the court..." forever.
@@ -1775,15 +2025,25 @@ const READY_POSE = {
   kitchen:    { arm: { x: -0.55, y: 0, z: -0.30 }, paddle: { x: -0.05, z: -0.35 } }   // backhand ready — paddle up at chest
 };
 
-// Deep-crouch pressure-dinking ready pose: paddle hanging LOW at the ground, arm
-// reaching forward-down. Used for any drill flagged with `lowStance: true`.
+// Standard pressure-dinking ready pose: paddle held in FRONT of the body at
+// waist height, face vertical (slightly forward) — the universal pickleball
+// dink-ready stance. Used for both players in every drill in this module
+// (replaces the legacy "kitchen" ready that had the paddle cocked up at chest
+// like a tennis backhand prep).
+const DINK_READY = { arm: { x: 0.30, y: 0, z: -0.10 }, paddle: { x: -0.50, z: 0.05 } };
+
+// Deep-crouch pressure-dinking ready pose: paddle hanging LOW at the ground,
+// arm reaching forward-down. Used for any drill flagged with `lowStance: true`.
 const LOW_DINK_READY = { arm: { x: 0.55, y: 0, z: -0.20 }, paddle: { x: -1.30, z: 0.10 } };
 
 function applyReadyPose(k) {
   const p = players[k];
   if (!p || !p.userData.rightArm || !p.userData.paddle) return;
   const useLow = !!(SHOTS[activeShotKey] && SHOTS[activeShotKey].lowStance);
-  const ready = useLow ? LOW_DINK_READY : READY_POSE[getPlayerZone(p)];
+  // Pressure-dinking module: every player is dinking. Use DINK_READY for both
+  // dinker and feeder (Dave: same ready pose for both players). Drill 4 swaps
+  // to the deeper LOW_DINK_READY crouch.
+  const ready = useLow ? LOW_DINK_READY : DINK_READY;
   p.userData.rightArm.rotation.set(ready.arm.x, ready.arm.y, ready.arm.z);
   p.userData.paddle.rotation.x = ready.paddle.x;
   p.userData.paddle.rotation.z = ready.paddle.z;
@@ -2451,16 +2711,16 @@ function startShot(key, resetCamera = true) {
 // volley dinking). Otherwise restored to standing height.
 function applyPlayerStance(key) {
   const lowStance = !!SHOTS[key].lowStance;
-  // Aggressive Y-compression so the player reads as DEEPLY crouched — knees bent,
-  // body close to the ground. Paired with applyReadyPose() which drops the paddle
-  // to ground level via LOW_DINK_READY when lowStance is true.
-  const yScale = lowStance ? 0.62 : 1.0;
+  // DO NOT change player height. Dave: 'this is an error because now the players
+  // are very short.' The "low" feel of Drill 4 comes from (a) the paddle hanging
+  // at ground level via LOW_DINK_READY, (b) ball contacts at ankle height, and
+  // (c) the blue ankle-target discs between each player's feet — not from
+  // shrinking the player models.
   for (const k of PLAYER_KEYS) {
     const p = players[k];
     if (!p) continue;
-    p.scale.set(1, yScale, 1);
-    // Refresh the ready pose so the paddle position updates immediately
-    // (otherwise it only updates between segments).
+    p.scale.set(1, 1, 1);  // always full height
+    // Refresh the ready pose so the paddle drops the moment Drill 4 is selected.
     if (p.userData && p.userData.paddle) applyReadyPose(k);
   }
   // Toggle the ankle-target discs that sit between each player's feet for Drill 4
