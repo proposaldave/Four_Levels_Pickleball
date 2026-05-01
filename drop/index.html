@@ -1,0 +1,2699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#0E1F38">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>The Drop · 4D Pickleball — Under the Ball</title>
+<meta name="description" content="The third dimension of pickleball. The shot that buys you the kitchen line. A soft arc that lands in the kitchen — neutralizes the banger, forces an up-hit, transforms the rally. Coach Dave's nine-screen masterclass.">
+<meta property="og:title" content="The Drop · 4D Pickleball — Under the Ball">
+<meta property="og:description" content="The shot that buys you the kitchen line. Soft arc. Lands in the kitchen. Forces them to hit up.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://4dpickleball.com/drop/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2334D399'/%3E%3Ctext x='50' y='68' font-family='Inter,Arial,sans-serif' font-size='56' font-weight='900' fill='%230E1F38' text-anchor='middle'%3E3D%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../4dp/tokens.css">
+
+<style>
+  /* ═══════════════════════════════════════════════════════════
+     /drop/  — The 3D · Under-the-Ball masterclass.
+     Dimension color = green (#34D399).  Always import tokens.css.
+     Architecture:
+       1. Trailer (the landing) — single hero, single CTA.
+       2. The movie — 9-screen click-through interactive module.
+       Per Dave's "click-through, not a wall" rule (2026-04-23).
+     ═══════════════════════════════════════════════════════════ */
+
+  /* The dimension cascade (every drop-styled element gets these) */
+  :root {
+    --dim:        var(--4dp-drop);          /* #34D399 */
+    --dim-soft:   var(--4dp-drop-soft);
+    --dim-glow:   var(--4dp-glow-drop);
+    --dim-deeper: #1FB07F;
+    --dim-fade:   rgba(52,211,153,.18);
+    --dim-faint:  rgba(52,211,153,.08);
+    --shadow-drop: 0 30px 90px rgba(52,211,153,.18);
+  }
+  *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+  html, body { background: var(--4dp-ink); color: var(--4dp-text); }
+  body {
+    font-family: var(--4dp-font-body);
+    font-size: var(--4dp-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+    background-color: var(--4dp-ink);
+    background-image:
+      radial-gradient(ellipse 70% 50% at 50% -10%, rgba(52,211,153,.10) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 110%, rgba(52,211,153,.06) 0%, transparent 60%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  ::selection { background: var(--dim); color: var(--4dp-ink); }
+
+  /* ── TOP NAV ── */
+  .topnav {
+    position: fixed; inset: 0 0 auto 0; height: 64px; z-index: 100;
+    display: flex; align-items: center; gap: 18px;
+    padding: 0 28px;
+    background: rgba(10,18,37,.86);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--4dp-hairline);
+  }
+  .topnav a.brand {
+    display: inline-flex; align-items: center; gap: 12px; flex-shrink: 0;
+  }
+  .brand-mark {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--dim), var(--dim-deeper));
+    display: grid; place-items: center;
+    font-family: var(--4dp-font-body); font-weight: 900; font-size: 12px; color: var(--4dp-ink);
+    letter-spacing: 0.5px; box-shadow: 0 2px 12px rgba(52,211,153,.3);
+  }
+  .brand-text {
+    font-weight: 700; font-size: 14px; color: var(--4dp-text);
+    line-height: 1.15;
+  }
+  .brand-text small {
+    display: block; font-weight: 500; font-size: 10px;
+    color: var(--4dp-text-mute); letter-spacing: 1.5px; text-transform: uppercase;
+    margin-top: 1px;
+  }
+  .topnav .spacer { flex: 1; }
+  .topnav .nav-back {
+    font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;
+    color: var(--4dp-text-dim); padding: 8px 14px; border-radius: 999px;
+    border: 1px solid var(--4dp-hairline); transition: all .25s var(--4dp-ease);
+  }
+  .topnav .nav-back:hover { color: var(--4dp-text); border-color: var(--4dp-hairline-s); background: rgba(255,255,255,.04); }
+  .topnav .nav-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase;
+    color: var(--dim); padding: 6px 14px; border-radius: 999px;
+    background: var(--dim-soft); border: 1px solid color-mix(in srgb, var(--dim) 30%, transparent);
+  }
+  .topnav .nav-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--dim); box-shadow: 0 0 10px var(--dim); }
+  @media (max-width: 620px) {
+    .topnav { padding: 0 14px; gap: 10px; }
+    .topnav .brand-text { display: none; }
+    .topnav .nav-pill { font-size: 10px; padding: 5px 11px; letter-spacing: 1.2px; }
+    .topnav .nav-back { font-size: 11px; padding: 7px 11px; }
+  }
+
+  /* ── MAIN ── */
+  main { padding-top: 64px; }
+
+  /* ═══════════════════════════════════════════════════════════
+     SECTION 1 · TRAILER (the landing)
+     One question. One hero. One CTA. Nothing more.
+     ═══════════════════════════════════════════════════════════ */
+  .trailer {
+    position: relative;
+    min-height: calc(100vh - 64px);
+    min-height: calc(100dvh - 64px);
+    padding: clamp(24px, 4vw, 56px) clamp(20px, 3vw, 40px) 80px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .trailer-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 18px; border-radius: 999px;
+    background: var(--dim-soft);
+    border: 1px solid color-mix(in srgb, var(--dim) 35%, transparent);
+    font-size: var(--4dp-micro); font-weight: 800; letter-spacing: 2.4px; text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: clamp(16px, 2.5vw, 24px);
+    animation: fadeUp .9s var(--4dp-ease) .1s both;
+  }
+  .trailer-eyebrow .num {
+    display: inline-block; min-width: 18px; height: 18px; padding: 0 6px;
+    border-radius: 4px; background: var(--dim); color: var(--4dp-ink);
+    font-family: var(--4dp-font-data); font-weight: 800; font-size: 10px; letter-spacing: 0.5px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+
+  .trailer h1 {
+    font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+    font-size: clamp(48px, 9vw, 124px);
+    line-height: 0.96; letter-spacing: -2px;
+    text-align: center; max-width: 18ch;
+    margin: 0 auto;
+    color: var(--4dp-text);
+    animation: fadeUp 1s var(--4dp-ease) .25s both;
+  }
+  .trailer h1 .accent { color: var(--dim); position: relative; }
+  .trailer h1 .accent::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -6px;
+    height: 3px; background: linear-gradient(90deg, transparent, var(--dim), transparent);
+    border-radius: 2px;
+    animation: drawLine 1.4s var(--4dp-ease) 1.1s both;
+    transform-origin: left;
+  }
+  .trailer .subhead {
+    margin: clamp(20px, 3vw, 28px) auto 0;
+    max-width: 600px;
+    font-size: clamp(15px, 1.6vw, 18px);
+    line-height: 1.55; color: var(--4dp-text-dim);
+    text-align: center;
+    animation: fadeUp 1s var(--4dp-ease) .55s both;
+  }
+
+  /* The trailer animation — a soft arc drops into the kitchen.
+     Looped, looping ball. Plays beneath the hero text. */
+  .trailer-stage {
+    width: min(880px, 96%); margin: clamp(28px, 4vw, 40px) auto 0;
+    aspect-ratio: 16/7;
+    position: relative;
+    border-radius: var(--4dp-r-lg);
+    background: linear-gradient(180deg, rgba(8,18,37,0.0) 0%, rgba(8,18,37,0.7) 100%);
+    animation: fadeUp 1.1s var(--4dp-ease) .8s both;
+  }
+  .trailer-stage svg { width: 100%; height: 100%; display: block; overflow: visible; }
+
+  .start-row {
+    margin: clamp(28px, 3.5vw, 40px) auto 0;
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    animation: fadeUp 1s var(--4dp-ease) 1.0s both;
+  }
+  .start-btn {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 18px 36px; border-radius: 999px;
+    background: var(--dim); color: var(--4dp-ink);
+    font-family: var(--4dp-font-body); font-weight: 800; font-size: 14px;
+    letter-spacing: 1.8px; text-transform: uppercase;
+    box-shadow: 0 12px 36px rgba(52,211,153,.36), 0 0 0 0 rgba(52,211,153,0);
+    transition: transform .25s var(--4dp-ease), box-shadow .35s var(--4dp-ease);
+    position: relative;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 20px 60px rgba(52,211,153,.44); }
+  .start-btn:active { transform: translateY(0); }
+  .start-btn .arrow {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--4dp-ink); color: var(--dim);
+    display: grid; place-items: center; font-size: 12px;
+    transition: transform .25s var(--4dp-ease);
+  }
+  .start-btn:hover .arrow { transform: translateX(2px); }
+  .start-meta {
+    font-size: 11px; color: var(--4dp-text-mute);
+    letter-spacing: 1.6px; text-transform: uppercase; font-weight: 600;
+  }
+  .start-meta .pip { display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--dim); margin: 0 8px; vertical-align: middle; opacity: .8; }
+
+  /* Three trailer cards — *very* tight, just enough to set up the click-through */
+  .trailer-cards {
+    margin: clamp(36px, 5vw, 56px) auto 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    width: min(880px, 96%);
+    animation: fadeUp 1s var(--4dp-ease) 1.2s both;
+  }
+  .trailer-card {
+    padding: 18px 18px 18px;
+    background: rgba(245,243,238,.03);
+    border: 1px solid var(--4dp-hairline);
+    border-radius: var(--4dp-r-md);
+    text-align: left;
+    transition: border-color .25s var(--4dp-ease), background .25s var(--4dp-ease), transform .25s var(--4dp-ease);
+  }
+  .trailer-card:hover {
+    border-color: color-mix(in srgb, var(--dim) 35%, transparent);
+    background: rgba(52,211,153,.04);
+    transform: translateY(-2px);
+  }
+  .trailer-card .num {
+    display: inline-block; font-family: var(--4dp-font-data); font-weight: 700;
+    font-size: 11px; color: var(--dim); letter-spacing: 1.6px;
+    margin-bottom: 6px;
+  }
+  .trailer-card h4 {
+    font-family: var(--4dp-font-body); font-weight: 700; font-size: 15px;
+    color: var(--4dp-text); margin-bottom: 4px; letter-spacing: -0.2px;
+  }
+  .trailer-card p {
+    font-size: 13px; color: var(--4dp-text-dim); line-height: 1.5;
+  }
+  @media (max-width: 720px) {
+    .trailer-cards { grid-template-columns: 1fr; gap: 10px; }
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SECTION 2 · THE MODULE (click-through interactive)
+     Full-screen overlay. Horizontal-snap screens. Each one its own world.
+     ═══════════════════════════════════════════════════════════ */
+  .module-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: var(--4dp-ink);
+    background-image:
+      radial-gradient(ellipse 70% 50% at 50% 10%, rgba(52,211,153,.10) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 50% 100%, rgba(8,18,37,.95) 0%, transparent 60%);
+    display: none;
+    flex-direction: column;
+  }
+  .module-overlay.open { display: flex; animation: overlayFade .55s var(--4dp-ease); }
+
+  /* Module top bar — kept minimal */
+  .mod-top {
+    position: relative; z-index: 5; flex-shrink: 0;
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px clamp(16px, 3vw, 28px);
+    border-bottom: 1px solid var(--4dp-hairline);
+    background: rgba(10,18,37,.86);
+    backdrop-filter: blur(20px);
+  }
+  .mod-top .pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 6px 14px; border-radius: 999px;
+    background: var(--dim-soft);
+    border: 1px solid color-mix(in srgb, var(--dim) 30%, transparent);
+    font-size: 10px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase;
+    color: var(--dim);
+  }
+  .mod-top .pill .d { width: 6px; height: 6px; border-radius: 50%; background: var(--dim); box-shadow: 0 0 10px var(--dim); }
+  .mod-top .progress-track {
+    flex: 1; height: 4px; border-radius: 2px;
+    background: var(--4dp-hairline); position: relative; overflow: hidden;
+  }
+  .mod-top .progress-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: linear-gradient(90deg, var(--dim-deeper), var(--dim));
+    box-shadow: 0 0 12px var(--dim);
+    border-radius: 2px;
+    width: 0%;
+    transition: width .55s var(--4dp-ease);
+  }
+  .mod-top .step-label {
+    font-family: var(--4dp-font-data); font-size: 11px; font-weight: 700;
+    color: var(--4dp-text-dim); letter-spacing: 0.5px;
+    min-width: 70px; text-align: right;
+  }
+  .mod-top .step-label .total { color: var(--4dp-text-faint); }
+  .mod-top .close-btn {
+    width: 36px; height: 36px; border-radius: 10px;
+    border: 1px solid var(--4dp-hairline);
+    color: var(--4dp-text-dim);
+    display: grid; place-items: center;
+    transition: all .2s var(--4dp-ease);
+  }
+  .mod-top .close-btn:hover { color: var(--4dp-text); border-color: var(--4dp-hairline-s); background: rgba(255,255,255,.04); }
+  @media (max-width: 620px) {
+    .mod-top { padding: 12px 14px; gap: 10px; }
+    .mod-top .pill { font-size: 9px; padding: 5px 11px; letter-spacing: 1.4px; }
+    .mod-top .step-label { min-width: 50px; font-size: 10px; }
+    .mod-top .close-btn { width: 32px; height: 32px; }
+  }
+
+  /* The screens viewport — full bleed */
+  .mod-viewport {
+    flex: 1;
+    position: relative; overflow: hidden;
+    display: flex;
+  }
+  .mod-rail {
+    display: flex; flex-direction: row; height: 100%; width: 100%;
+    transition: transform .7s var(--4dp-ease);
+    will-change: transform;
+  }
+  .screen {
+    flex: 0 0 100%;
+    height: 100%;
+    overflow-y: auto; overflow-x: hidden;
+    padding: clamp(28px, 4vw, 56px) clamp(20px, 4vw, 56px) 96px;
+    display: flex; flex-direction: column; align-items: center;
+    -webkit-overflow-scrolling: touch;
+  }
+  .screen-inner {
+    width: 100%; max-width: 1080px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  .screen-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: var(--4dp-micro); font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 14px;
+  }
+  .screen-eyebrow .num {
+    font-family: var(--4dp-font-data); font-weight: 800; font-size: 11px;
+    padding: 2px 8px; border-radius: 5px; background: var(--dim-soft); color: var(--dim);
+  }
+  .screen h2 {
+    font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+    font-size: clamp(36px, 5.6vw, 64px);
+    line-height: 1.05; letter-spacing: -1.4px;
+    text-align: center; max-width: 22ch; color: var(--4dp-text);
+    margin-bottom: 16px;
+  }
+  .screen h2 .em { color: var(--dim); }
+  .screen .lede {
+    text-align: center; max-width: 640px; font-size: 17px;
+    color: var(--4dp-text-dim); margin: 0 auto 28px; line-height: 1.55;
+  }
+
+  /* Screen-specific stage — generous, full-bleed feel */
+  .stage {
+    width: 100%; max-width: 980px;
+    aspect-ratio: 16/9;
+    border-radius: var(--4dp-r-lg);
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 50%, rgba(52,211,153,0.04) 0%, transparent 70%),
+      linear-gradient(180deg, rgba(245,243,238,.02) 0%, rgba(245,243,238,.0) 100%);
+    border: 1px solid var(--4dp-hairline);
+    position: relative; overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.02), 0 30px 80px rgba(0,0,0,.42);
+  }
+  .stage svg { width: 100%; height: 100%; display: block; overflow: visible; }
+
+  /* ── SVG style primitives ── */
+  .court-surface { fill: url(#courtBlue); }
+  .deck { fill: url(#deckSlate); }
+  .kitchen { fill: url(#kitchenBurg); }
+  .net { stroke: rgba(255,255,255,.95); stroke-width: 2.4; fill: none; }
+  .net-tape { stroke: rgba(255,255,255,1); stroke-width: 3.2; fill: none; }
+  .court-line { stroke: rgba(255,255,255,.85); stroke-width: 1.7; fill: none; vector-effect: non-scaling-stroke; }
+  .ball { fill: #F5F3EE; stroke: rgba(0,0,0,.18); stroke-width: 0.5; }
+  .ball-shadow { fill: rgba(0,0,0,.45); }
+  .trail { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .trail-good { stroke: var(--dim); }
+  .trail-bad { stroke: #F87171; }
+  .trail-warn { stroke: #FBBF24; }
+
+  /* Screen 2 — answer */
+  .screen-row {
+    width: 100%; display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(16px, 3vw, 36px);
+    align-items: center; max-width: 1080px;
+  }
+  .screen-row .copy { display: flex; flex-direction: column; gap: 14px; }
+  .screen-row .copy .pull {
+    font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+    font-size: clamp(22px, 2.6vw, 30px); line-height: 1.25; color: var(--4dp-text); letter-spacing: -0.4px;
+  }
+  .screen-row .copy .pull .em { color: var(--dim); }
+  .screen-row .copy p { font-size: 16px; line-height: 1.6; color: var(--4dp-text-dim); }
+  .key-stat {
+    display: flex; flex-wrap: wrap; gap: 14px; margin-top: 12px;
+  }
+  .key-stat .item {
+    flex: 1; min-width: 120px;
+    padding: 12px 14px;
+    background: rgba(245,243,238,.03); border: 1px solid var(--4dp-hairline);
+    border-radius: var(--4dp-r-md);
+  }
+  .key-stat .v { font-family: var(--4dp-font-data); font-weight: 700; font-size: 22px; color: var(--dim); letter-spacing: -0.4px; }
+  .key-stat .l { font-size: 11px; color: var(--4dp-text-mute); letter-spacing: 1.4px; text-transform: uppercase; font-weight: 700; margin-top: 4px; }
+  @media (max-width: 760px) {
+    .screen-row { grid-template-columns: 1fr; }
+  }
+
+  /* Screen 3 — Goldilocks zones */
+  .zone-grid {
+    width: 100%; max-width: 980px;
+    display: grid; grid-template-columns: 2fr 1fr; gap: clamp(16px, 3vw, 32px);
+  }
+  .zone-grid .legend { display: flex; flex-direction: column; gap: 10px; }
+  .legend-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px; border-radius: var(--4dp-r-md);
+    border: 1px solid var(--4dp-hairline);
+    background: rgba(245,243,238,.02);
+  }
+  .legend-item .swatch {
+    width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; margin-top: 2px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.18);
+  }
+  .legend-item.good { border-color: color-mix(in srgb, var(--dim) 40%, transparent); background: rgba(52,211,153,.06); }
+  .legend-item.good .swatch { background: var(--dim); box-shadow: 0 0 12px var(--dim); }
+  .legend-item.bad .swatch { background: #F87171; }
+  .legend-item.warn .swatch { background: #FBBF24; }
+  .legend-item h5 { font-family: var(--4dp-font-body); font-weight: 700; font-size: 13px; letter-spacing: -0.1px; }
+  .legend-item p { font-size: 12px; color: var(--4dp-text-dim); margin-top: 2px; line-height: 1.5; }
+  @media (max-width: 800px) {
+    .zone-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Screen 4 — three keys (sub-tabs) */
+  .keys-tabs {
+    display: inline-flex; padding: 4px; border-radius: 999px;
+    background: rgba(10,18,37,.75); border: 1px solid var(--4dp-hairline);
+    margin-bottom: 18px; gap: 4px; flex-wrap: wrap; justify-content: center;
+  }
+  .keys-tab {
+    padding: 8px 18px; border-radius: 999px;
+    font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;
+    color: var(--4dp-text-dim);
+    transition: all .25s var(--4dp-ease);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .keys-tab .num {
+    font-family: var(--4dp-font-data); font-size: 10px;
+    width: 18px; height: 18px; border-radius: 4px;
+    background: rgba(245,243,238,.08); display: grid; place-items: center; font-weight: 800;
+  }
+  .keys-tab.active { background: var(--dim); color: var(--4dp-ink); box-shadow: 0 4px 18px rgba(52,211,153,.35); }
+  .keys-tab.active .num { background: rgba(14,31,56,.25); color: var(--4dp-ink); }
+  .keys-tab:hover:not(.active) { background: rgba(245,243,238,.05); color: var(--4dp-text); }
+
+  .keys-pane { width: 100%; display: none; animation: paneIn .5s var(--4dp-ease); }
+  .keys-pane.active { display: block; }
+  @keyframes paneIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .keys-row {
+    width: 100%; max-width: 980px;
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(16px, 3vw, 36px);
+    align-items: center;
+  }
+  .keys-row .copy h3 {
+    font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+    font-size: clamp(28px, 3.2vw, 40px); line-height: 1.05; letter-spacing: -0.6px;
+    color: var(--4dp-text); margin-bottom: 8px;
+  }
+  .keys-row .copy h3 .em { color: var(--dim); }
+  .keys-row .copy p { font-size: 16px; color: var(--4dp-text-dim); line-height: 1.6; }
+  .keys-row .copy .cue {
+    margin-top: 14px; padding: 12px 16px;
+    background: var(--dim-soft); border: 1px solid color-mix(in srgb, var(--dim) 30%, transparent);
+    border-left: 3px solid var(--dim); border-radius: 8px;
+    font-size: 14px; color: var(--4dp-text); font-weight: 600;
+  }
+  .keys-row .copy .cue::before { content: '“'; color: var(--dim); font-family: var(--4dp-font-display); font-style: italic; font-size: 28px; line-height: 0; vertical-align: -10px; margin-right: 4px; }
+  .keys-row .copy .cue::after { content: '”'; color: var(--dim); font-family: var(--4dp-font-display); font-style: italic; font-size: 28px; line-height: 0; vertical-align: -10px; margin-left: 4px; }
+
+  .grip-pressure { padding: 24px; border: 1px solid var(--4dp-hairline); border-radius: var(--4dp-r-lg); background: rgba(245,243,238,.02); }
+  .grip-pressure .pressure-meter { width: 100%; height: 14px; background: rgba(245,243,238,.08); border-radius: 999px; overflow: hidden; position: relative; }
+  .grip-pressure .pressure-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 30%; background: linear-gradient(90deg, var(--dim), var(--dim-deeper)); border-radius: 999px; transition: width .4s var(--4dp-ease), background .4s var(--4dp-ease); }
+  .grip-pressure .pressure-fill.bad { background: linear-gradient(90deg, #FBBF24, #F87171); }
+  .grip-pressure .scale { display: flex; justify-content: space-between; margin-top: 8px; font-family: var(--4dp-font-data); font-size: 10px; color: var(--4dp-text-mute); letter-spacing: 1px; }
+  .grip-pressure .control { display: flex; align-items: center; gap: 14px; margin-top: 16px; }
+  .grip-pressure .control input[type="range"] {
+    flex: 1; -webkit-appearance: none; appearance: none;
+    height: 4px; background: var(--4dp-hairline); border-radius: 2px;
+  }
+  .grip-pressure .control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--dim); box-shadow: 0 0 0 4px rgba(52,211,153,.2), 0 0 14px var(--dim);
+    cursor: grab; border: 0;
+  }
+  .grip-pressure .control input[type="range"]::-moz-range-thumb {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--dim); box-shadow: 0 0 0 4px rgba(52,211,153,.2), 0 0 14px var(--dim);
+    cursor: grab; border: 0;
+  }
+  .grip-pressure .read {
+    font-family: var(--4dp-font-data); font-size: 22px; font-weight: 800; color: var(--dim);
+    min-width: 60px; text-align: right;
+  }
+  .grip-pressure .read.bad { color: #F87171; }
+  .grip-pressure .verdict {
+    margin-top: 14px;
+    padding: 12px 14px; border-radius: 10px;
+    background: rgba(52,211,153,.08); border: 1px solid color-mix(in srgb, var(--dim) 30%, transparent);
+    font-size: 13px; color: var(--4dp-text); transition: all .35s var(--4dp-ease);
+  }
+  .grip-pressure .verdict.bad {
+    background: rgba(248,113,113,.08);
+    border-color: rgba(248,113,113,.4);
+  }
+
+  /* Paddle face angle slider stage */
+  .paddle-angle-stage { padding: 0; }
+  .paddle-angle-stage .controls {
+    display: flex; flex-direction: column; gap: 16px; padding: 18px; border-top: 1px solid var(--4dp-hairline); background: rgba(245,243,238,.02);
+  }
+  .paddle-angle-stage .row { display: flex; align-items: center; gap: 14px; }
+  .paddle-angle-stage .lbl { font-size: 11px; font-weight: 800; color: var(--4dp-text-dim); letter-spacing: 1.4px; text-transform: uppercase; min-width: 90px; }
+  .paddle-angle-stage input[type="range"] {
+    flex: 1; -webkit-appearance: none; appearance: none;
+    height: 4px; background: var(--4dp-hairline); border-radius: 2px;
+  }
+  .paddle-angle-stage input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--dim); box-shadow: 0 0 0 4px rgba(52,211,153,.2), 0 0 12px var(--dim);
+    cursor: grab; border: 0;
+  }
+  .paddle-angle-stage input[type="range"]::-moz-range-thumb {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--dim); box-shadow: 0 0 0 4px rgba(52,211,153,.2), 0 0 12px var(--dim);
+    cursor: grab; border: 0;
+  }
+  .paddle-angle-stage .val { font-family: var(--4dp-font-data); font-size: 16px; font-weight: 800; color: var(--dim); min-width: 70px; text-align: right; }
+  .paddle-angle-stage .verdict-row { display: flex; align-items: center; gap: 12px; }
+  .paddle-angle-stage .v-pill {
+    padding: 6px 12px; border-radius: 999px; font-size: 11px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase;
+  }
+  .paddle-angle-stage .v-pill.good { background: var(--dim-soft); color: var(--dim); border: 1px solid color-mix(in srgb, var(--dim) 40%, transparent); }
+  .paddle-angle-stage .v-pill.warn { background: rgba(251,191,36,.12); color: #FBBF24; border: 1px solid rgba(251,191,36,.4); }
+  .paddle-angle-stage .v-pill.bad { background: rgba(248,113,113,.12); color: #F87171; border: 1px solid rgba(248,113,113,.4); }
+  .paddle-angle-stage .v-text { font-size: 13px; color: var(--4dp-text-dim); flex: 1; }
+
+  @media (max-width: 760px) {
+    .keys-row { grid-template-columns: 1fr; }
+  }
+
+  /* Screen 5 — Drop or Drive */
+  .decision-stage {
+    width: 100%; max-width: 980px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: clamp(14px, 2vw, 24px);
+  }
+  .branch {
+    padding: 22px;
+    border-radius: var(--4dp-r-lg);
+    background: rgba(245,243,238,.03);
+    border: 1px solid var(--4dp-hairline);
+    transition: all .3s var(--4dp-ease);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .branch:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(0,0,0,.32); }
+  .branch.drop { border-color: color-mix(in srgb, var(--dim) 35%, transparent); background: rgba(52,211,153,.05); }
+  .branch.drop:hover { box-shadow: 0 18px 40px rgba(52,211,153,.22); border-color: color-mix(in srgb, var(--dim) 60%, transparent); }
+  .branch.drive { border-color: rgba(244,114,182,.32); background: rgba(244,114,182,.04); }
+  .branch.drive:hover { box-shadow: 0 18px 40px rgba(244,114,182,.18); border-color: rgba(244,114,182,.55); }
+  .branch .label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--4dp-font-data); font-size: 11px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .branch.drop .label { color: var(--dim); }
+  .branch.drive .label { color: #F472B6; }
+  .branch h4 {
+    font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+    font-size: clamp(24px, 3vw, 32px); line-height: 1.05; letter-spacing: -0.5px;
+    color: var(--4dp-text);
+    margin-bottom: 6px;
+  }
+  .branch .conditions {
+    margin-top: 12px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .branch .cond {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px; border-radius: 10px;
+    background: rgba(0,0,0,.18);
+    font-size: 13px; color: var(--4dp-text); line-height: 1.45;
+  }
+  .branch .cond .check {
+    flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%;
+    display: grid; place-items: center; font-size: 10px; font-weight: 900;
+    margin-top: 1px;
+  }
+  .branch.drop .cond .check { background: var(--dim); color: var(--4dp-ink); }
+  .branch.drive .cond .check { background: #F472B6; color: var(--4dp-ink); }
+  .branch .mini-stage {
+    margin-top: 14px; aspect-ratio: 16/8;
+    border-radius: var(--4dp-r-md); overflow: hidden;
+    border: 1px solid var(--4dp-hairline);
+    background: linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.06));
+  }
+  .branch .mini-stage svg { width: 100%; height: 100%; display: block; }
+
+  .decision-question {
+    width: 100%; max-width: 980px;
+    text-align: center; margin-bottom: 14px;
+    padding: 14px 18px;
+    background: rgba(245,243,238,.03);
+    border: 1px dashed var(--4dp-hairline-s); border-radius: 14px;
+  }
+  .decision-question .q {
+    font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+    font-size: 22px; color: var(--4dp-text); letter-spacing: -0.4px;
+  }
+  .decision-question .q small {
+    font-family: var(--4dp-font-body); font-style: normal; font-weight: 700;
+    font-size: 11px; color: var(--4dp-text-mute); letter-spacing: 1.6px;
+    display: block; text-transform: uppercase; margin-bottom: 4px;
+  }
+  @media (max-width: 760px) {
+    .decision-stage { grid-template-columns: 1fr; }
+  }
+
+  /* Screen 6 — reset */
+  .reset-pull {
+    text-align: center; max-width: 700px; margin-bottom: 22px;
+    font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+    font-size: clamp(22px, 2.4vw, 28px); line-height: 1.3; letter-spacing: -0.4px;
+    color: var(--4dp-text-dim);
+  }
+  .reset-pull .em { color: var(--dim); }
+  .reset-cues {
+    width: 100%; max-width: 980px;
+    margin-top: 24px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  }
+  .reset-cue {
+    padding: 16px;
+    background: rgba(245,243,238,.02); border: 1px solid var(--4dp-hairline);
+    border-radius: var(--4dp-r-md);
+    transition: all .25s var(--4dp-ease);
+  }
+  .reset-cue:hover { border-color: color-mix(in srgb, var(--dim) 30%, transparent); background: rgba(52,211,153,.04); }
+  .reset-cue .num {
+    font-family: var(--4dp-font-data); font-size: 11px; font-weight: 800; color: var(--dim); letter-spacing: 1.6px;
+    margin-bottom: 6px;
+  }
+  .reset-cue h5 {
+    font-family: var(--4dp-font-body); font-weight: 700; font-size: 14px; color: var(--4dp-text);
+    margin-bottom: 4px; letter-spacing: -0.1px;
+  }
+  .reset-cue p {
+    font-size: 12px; color: var(--4dp-text-dim); line-height: 1.5;
+  }
+  @media (max-width: 760px) {
+    .reset-cues { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .reset-cues { grid-template-columns: 1fr; }
+  }
+
+  /* Screen 7 — mistakes gallery */
+  .mistake-grid {
+    width: 100%; max-width: 1080px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  .mistake-card {
+    padding: 18px;
+    background: rgba(245,243,238,.025); border: 1px solid var(--4dp-hairline);
+    border-radius: var(--4dp-r-lg);
+    display: flex; flex-direction: column; gap: 12px;
+    transition: transform .3s var(--4dp-ease), border-color .3s var(--4dp-ease);
+  }
+  .mistake-card:hover { transform: translateY(-3px); border-color: rgba(248,113,113,.4); }
+  .mistake-card .stage {
+    aspect-ratio: 16/9; max-width: 100%;
+    background: linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.06));
+    border-radius: var(--4dp-r-md);
+    border: 1px solid var(--4dp-hairline);
+    overflow: hidden;
+  }
+  .mistake-card .tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase;
+    color: #F87171;
+    padding: 4px 10px; border-radius: 999px;
+    background: rgba(248,113,113,.1); border: 1px solid rgba(248,113,113,.32);
+    width: fit-content;
+  }
+  .mistake-card h5 {
+    font-family: var(--4dp-font-body); font-weight: 700; font-size: 16px;
+    color: var(--4dp-text); letter-spacing: -0.2px;
+  }
+  .mistake-card p { font-size: 13px; color: var(--4dp-text-dim); line-height: 1.5; }
+  .mistake-card .fix {
+    padding: 10px 12px; border-radius: 8px;
+    background: var(--dim-soft); border: 1px solid color-mix(in srgb, var(--dim) 30%, transparent);
+    border-left: 3px solid var(--dim);
+    font-size: 12px; color: var(--4dp-text);
+    margin-top: 4px;
+  }
+  .mistake-card .fix .lbl {
+    font-family: var(--4dp-font-data); font-size: 10px; font-weight: 800; color: var(--dim); letter-spacing: 1.6px;
+    text-transform: uppercase; display: block; margin-bottom: 2px;
+  }
+  @media (max-width: 880px) {
+    .mistake-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .mistake-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Screen 8 — drill */
+  .drill-stage {
+    width: 100%; max-width: 980px;
+    display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(16px, 3vw, 28px);
+    align-items: stretch;
+  }
+  .drill-court {
+    aspect-ratio: 16/10;
+    border-radius: var(--4dp-r-lg); overflow: hidden;
+    border: 1px solid var(--4dp-hairline);
+    background: linear-gradient(180deg, rgba(0,0,0,.2), rgba(0,0,0,.04));
+    position: relative;
+  }
+  .drill-court svg { width: 100%; height: 100%; display: block; }
+  .drill-panel {
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 22px;
+    background: rgba(245,243,238,.025); border: 1px solid var(--4dp-hairline);
+    border-radius: var(--4dp-r-lg);
+    gap: 16px;
+  }
+  .drill-counter {
+    text-align: center; padding: 8px 0 16px; border-bottom: 1px dashed var(--4dp-hairline);
+  }
+  .drill-counter .big {
+    font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+    font-size: clamp(60px, 9vw, 120px);
+    line-height: 1; color: var(--dim); letter-spacing: -3px;
+    transition: transform .12s ease;
+  }
+  .drill-counter .big.bump { transform: scale(1.06); }
+  .drill-counter .of { font-size: 12px; color: var(--4dp-text-mute); letter-spacing: 1.8px; text-transform: uppercase; font-weight: 700; margin-top: -2px; }
+  .drill-counter .label { font-family: var(--4dp-font-data); font-size: 12px; color: var(--4dp-text-dim); letter-spacing: 1px; margin-top: 6px; font-weight: 600; }
+
+  .drill-levels { display: flex; flex-direction: column; gap: 8px; }
+  .drill-level {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    background: rgba(0,0,0,.16); border-radius: 10px;
+    border: 1px solid var(--4dp-hairline);
+    transition: all .25s var(--4dp-ease);
+  }
+  .drill-level.active { border-color: color-mix(in srgb, var(--dim) 50%, transparent); background: rgba(52,211,153,.08); }
+  .drill-level .pip {
+    width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+    display: grid; place-items: center;
+    font-family: var(--4dp-font-data); font-weight: 900; font-size: 11px;
+    background: rgba(245,243,238,.1); color: var(--4dp-text-dim);
+  }
+  .drill-level.active .pip { background: var(--dim); color: var(--4dp-ink); box-shadow: 0 0 12px var(--dim); }
+  .drill-level .text { flex: 1; }
+  .drill-level .name { font-size: 14px; font-weight: 700; color: var(--4dp-text); letter-spacing: -0.1px; }
+  .drill-level .desc { font-size: 12px; color: var(--4dp-text-mute); margin-top: 1px; }
+  .drill-level.done .pip { background: rgba(52,211,153,.4); color: var(--4dp-ink); }
+
+  .drill-controls { display: flex; gap: 10px; }
+  .drill-controls button {
+    flex: 1; padding: 12px 16px; border-radius: 10px;
+    background: var(--dim); color: var(--4dp-ink);
+    font-weight: 800; font-size: 12px; letter-spacing: 1.6px; text-transform: uppercase;
+    transition: all .2s var(--4dp-ease);
+  }
+  .drill-controls button.secondary {
+    background: transparent; color: var(--4dp-text); border: 1px solid var(--4dp-hairline);
+  }
+  .drill-controls button:hover { transform: translateY(-1px); }
+  .drill-controls button:active { transform: translateY(0); }
+
+  @media (max-width: 800px) {
+    .drill-stage { grid-template-columns: 1fr; }
+  }
+
+  /* Screen 9 — Up Next */
+  .up-next-card {
+    width: 100%; max-width: 760px;
+    padding: clamp(28px, 4vw, 44px);
+    background: linear-gradient(135deg, rgba(43,139,252,.08), rgba(52,211,153,.04));
+    border: 1px solid color-mix(in srgb, var(--4dp-dink) 35%, transparent);
+    border-radius: var(--4dp-r-lg);
+    text-align: center;
+    box-shadow: 0 30px 80px rgba(43,139,252,.18);
+  }
+  .up-next-card .label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 800; letter-spacing: 2.4px; text-transform: uppercase;
+    color: var(--4dp-dink); margin-bottom: 14px;
+  }
+  .up-next-card .label .arr { font-size: 12px; }
+  .up-next-card h3 {
+    font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+    font-size: clamp(28px, 4vw, 42px); line-height: 1.1; letter-spacing: -0.8px;
+    color: var(--4dp-text); margin-bottom: 12px;
+  }
+  .up-next-card .em { color: var(--4dp-dink); }
+  .up-next-card p { font-size: 16px; color: var(--4dp-text-dim); max-width: 480px; margin: 0 auto 26px; }
+  .up-next-card .cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 30px; border-radius: 999px;
+    background: var(--4dp-dink); color: var(--4dp-ink);
+    font-weight: 800; font-size: 13px; letter-spacing: 1.6px; text-transform: uppercase;
+    box-shadow: 0 12px 36px rgba(43,139,252,.36);
+    transition: transform .2s var(--4dp-ease), box-shadow .3s var(--4dp-ease);
+  }
+  .up-next-card .cta:hover { transform: translateY(-2px); box-shadow: 0 20px 60px rgba(43,139,252,.44); }
+  .up-next-card .replay {
+    display: block; margin-top: 14px;
+    font-size: 11px; color: var(--4dp-text-mute); letter-spacing: 1.4px; text-transform: uppercase; font-weight: 700;
+  }
+  .up-next-card .replay span { color: var(--dim); cursor: pointer; }
+  .up-next-card .replay span:hover { text-decoration: underline; }
+
+  /* Earned banner — appears once when drill hits 100 */
+  .earned {
+    position: fixed; top: 84px; left: 50%; transform: translate(-50%, -10px);
+    z-index: 250;
+    padding: 12px 22px; border-radius: 999px;
+    background: var(--gnr-gold-soft); color: var(--gnr-gold);
+    border: 1px solid color-mix(in srgb, var(--gnr-gold) 50%, transparent);
+    font-weight: 800; font-size: 12px; letter-spacing: 1.6px; text-transform: uppercase;
+    box-shadow: var(--4dp-glow-gold);
+    opacity: 0; pointer-events: none;
+    transition: opacity .4s ease, transform .4s ease;
+  }
+  .earned.show { opacity: 1; transform: translate(-50%, 0); }
+  .earned .ico { display: inline-block; margin-right: 6px; }
+
+  /* Bottom nav (in module) */
+  .mod-nav {
+    flex-shrink: 0;
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px clamp(16px, 3vw, 28px);
+    background: rgba(10,18,37,.86);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--4dp-hairline);
+  }
+  .nav-arrow {
+    width: 44px; height: 44px; border-radius: 12px;
+    border: 1px solid var(--4dp-hairline);
+    color: var(--4dp-text-dim);
+    display: grid; place-items: center;
+    transition: all .2s var(--4dp-ease);
+    flex-shrink: 0;
+  }
+  .nav-arrow:hover { color: var(--4dp-text); border-color: var(--4dp-hairline-s); background: rgba(255,255,255,.04); }
+  .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+  .nav-dots { flex: 1; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .nav-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--4dp-hairline);
+    transition: all .25s var(--4dp-ease);
+    cursor: pointer;
+  }
+  .nav-dot.active { background: var(--dim); transform: scale(1.4); box-shadow: 0 0 10px var(--dim); }
+  .nav-dot.visited { background: var(--4dp-text-faint); }
+  .nav-dot:hover:not(.active) { background: var(--4dp-text-mute); }
+
+  .nav-next {
+    padding: 12px 22px; border-radius: 999px;
+    background: var(--dim); color: var(--4dp-ink);
+    font-weight: 800; font-size: 12px; letter-spacing: 1.6px; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: transform .2s var(--4dp-ease), box-shadow .3s var(--4dp-ease);
+    flex-shrink: 0;
+  }
+  .nav-next:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(52,211,153,.36); }
+  .nav-next .arr {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(14,31,56,.25); color: var(--4dp-ink);
+    display: grid; place-items: center; font-size: 10px;
+  }
+  .nav-next.dink { background: var(--4dp-dink); }
+  .nav-next.dink:hover { box-shadow: 0 8px 24px rgba(43,139,252,.36); }
+
+  @media (max-width: 620px) {
+    .mod-nav { padding: 12px 14px; gap: 8px; }
+    .nav-arrow { width: 40px; height: 40px; }
+    .nav-next { padding: 10px 16px; font-size: 11px; }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .mod-rail { transition: none !important; }
+    *, *::before, *::after { animation-duration: 0.001s !important; transition-duration: 0.05s !important; }
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes overlayFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes drawLine { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes pulseGlow {
+    0%, 100% { opacity: .55; }
+    50% { opacity: 1; }
+  }
+
+  /* Footer */
+  footer {
+    padding: 60px clamp(20px, 3vw, 40px) 40px;
+    text-align: center;
+    border-top: 1px solid var(--4dp-hairline);
+    margin-top: 40px;
+  }
+  footer .lockup {
+    display: inline-flex; align-items: center; gap: 14px;
+    color: var(--4dp-text-dim); font-size: 13px;
+  }
+  footer .lockup .parent {
+    color: var(--gnr-gold); font-family: var(--4dp-font-display); font-style: italic;
+    font-weight: 400; font-size: 18px; letter-spacing: -0.3px;
+  }
+  footer .links { margin-top: 16px; display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; }
+  footer .links a { font-size: 12px; color: var(--4dp-text-mute); letter-spacing: 1.4px; text-transform: uppercase; font-weight: 700; }
+  footer .links a:hover { color: var(--dim); }
+
+  /* Hide module overlay scrollbar artifacts — keep canvas clean */
+  .screen::-webkit-scrollbar { width: 6px; }
+  .screen::-webkit-scrollbar-track { background: transparent; }
+  .screen::-webkit-scrollbar-thumb { background: var(--4dp-hairline); border-radius: 3px; }
+  .screen::-webkit-scrollbar-thumb:hover { background: var(--4dp-hairline-s); }
+
+  /* Body scroll lock when module open */
+  body.mod-open { overflow: hidden; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="brand" href="/">
+    <span class="brand-mark">4D</span>
+    <span class="brand-text">4D Pickleball<small>Drive · Defend · Drop · Dink</small></span>
+  </a>
+  <span class="nav-pill"><span class="dot"></span>3D · Drop · Under the Ball</span>
+  <span class="spacer"></span>
+  <a class="nav-back" href="/">← Home</a>
+</nav>
+
+<main>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SECTION 1 · TRAILER — the landing
+       ═══════════════════════════════════════════════════════════ -->
+  <section class="trailer">
+    <span class="trailer-eyebrow">
+      <span class="num">3D</span>
+      Under the ball · Coach Dave's masterclass
+    </span>
+
+    <h1>The shot that buys you<br>the <span class="accent">kitchen line</span>.</h1>
+
+    <p class="subhead">A soft arc that lands in the kitchen. Neutralizes the banger. Forces them to hit up. The third dimension &mdash; the one that transforms every rally you play.</p>
+
+    <div class="trailer-stage" aria-label="Drop shot loop animation">
+      <svg id="trailerSvg" viewBox="0 0 880 360" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img">
+        <defs>
+          <linearGradient id="tCourt" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#2D5FA8"/>
+            <stop offset="1" stop-color="#1B3E72"/>
+          </linearGradient>
+          <linearGradient id="tDeck" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#5E6878"/>
+            <stop offset="1" stop-color="#4A5462"/>
+          </linearGradient>
+          <linearGradient id="tKitchen" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#6B0F1A"/>
+            <stop offset="1" stop-color="#52090F"/>
+          </linearGradient>
+          <radialGradient id="tGold" cx="50%" cy="50%" r="50%">
+            <stop offset="0" stop-color="#34D399" stop-opacity="0.6"/>
+            <stop offset="0.7" stop-color="#34D399" stop-opacity="0.2"/>
+            <stop offset="1" stop-color="#34D399" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="tGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- Deck -->
+        <rect x="0" y="280" width="880" height="80" fill="url(#tDeck)"/>
+        <!-- Court surface (side view; baseline left, opponent baseline right) -->
+        <rect x="40" y="240" width="800" height="40" fill="url(#tCourt)"/>
+        <!-- Kitchen on opponent side -->
+        <rect x="540" y="240" width="160" height="40" fill="url(#tKitchen)"/>
+        <!-- Player baseline at left, 60% court is opponent side from net -->
+        <line x1="40"  y1="240" x2="40"  y2="280" class="court-line"/>
+        <line x1="840" y1="240" x2="840" y2="280" class="court-line"/>
+        <line x1="180" y1="240" x2="180" y2="280" class="court-line"/>
+        <line x1="540" y1="240" x2="540" y2="280" class="court-line"/>
+        <line x1="700" y1="240" x2="700" y2="280" class="court-line"/>
+
+        <!-- Net (around x=440) -->
+        <rect x="438" y="170" width="4" height="70" fill="rgba(255,255,255,.85)"/>
+        <line x1="438" y1="170" x2="442" y2="170" class="net-tape"/>
+        <line x1="425" y1="180" x2="455" y2="180" stroke="rgba(255,255,255,.55)" stroke-width="1"/>
+        <line x1="425" y1="195" x2="455" y2="195" stroke="rgba(255,255,255,.55)" stroke-width="1"/>
+        <line x1="425" y1="210" x2="455" y2="210" stroke="rgba(255,255,255,.55)" stroke-width="1"/>
+        <line x1="425" y1="225" x2="455" y2="225" stroke="rgba(255,255,255,.55)" stroke-width="1"/>
+
+        <!-- Goldilocks zone glow -->
+        <ellipse id="tGoldEllipse" cx="600" cy="265" rx="55" ry="14" fill="url(#tGold)">
+          <animate attributeName="opacity" values="0.4;0.9;0.4" dur="2.8s" repeatCount="indefinite"/>
+        </ellipse>
+
+        <!-- Player silhouette at baseline (left) -->
+        <g id="tPlayer" transform="translate(75 178)">
+          <rect x="-3" y="22" width="6" height="42" fill="#234E8C" rx="2"/>
+          <circle cx="0" cy="14" r="9" fill="#F5F3EE"/>
+          <ellipse cx="0" cy="35" rx="11" ry="14" fill="#234E8C"/>
+          <rect x="-2.5" y="55" width="2" height="14" fill="#1B3E72"/>
+          <rect x="0.5" y="55" width="2" height="14" fill="#1B3E72"/>
+          <ellipse cx="-3" cy="71" rx="4" ry="2" fill="#F5F3EE"/>
+          <ellipse cx="3" cy="71" rx="4" ry="2" fill="#F5F3EE"/>
+          <!-- arm + paddle -->
+          <line x1="6" y1="34" x2="22" y2="50" stroke="#F5F3EE" stroke-width="2.5" stroke-linecap="round"/>
+          <ellipse cx="26" cy="52" rx="6" ry="9" fill="#34D399" stroke="#0E1F38" stroke-width="0.8"/>
+          <circle cx="26" cy="52" r="1.4" fill="#F5F3EE"/>
+        </g>
+
+        <!-- Opponent silhouette at far kitchen line (around x=540) -->
+        <g id="tOpp" transform="translate(545 178) scale(-1,1)">
+          <rect x="-3" y="22" width="6" height="42" fill="#1B3E72" rx="2"/>
+          <circle cx="0" cy="14" r="9" fill="#F5F3EE"/>
+          <ellipse cx="0" cy="35" rx="11" ry="14" fill="#1B3E72"/>
+          <rect x="-2.5" y="55" width="2" height="14" fill="#234E8C"/>
+          <rect x="0.5" y="55" width="2" height="14" fill="#234E8C"/>
+          <ellipse cx="-3" cy="71" rx="4" ry="2" fill="#F5F3EE"/>
+          <ellipse cx="3" cy="71" rx="4" ry="2" fill="#F5F3EE"/>
+          <line x1="6" y1="34" x2="20" y2="42" stroke="#F5F3EE" stroke-width="2.5" stroke-linecap="round"/>
+          <ellipse cx="24" cy="44" rx="6" ry="9" fill="#F472B6" stroke="#0E1F38" stroke-width="0.8"/>
+        </g>
+
+        <!-- Animated trail -->
+        <path id="tTrail" class="trail trail-good" stroke-width="2.5" stroke-dasharray="4 4" stroke-opacity="0.7"/>
+        <!-- Animated ball -->
+        <ellipse id="tBallShadow" class="ball-shadow" cx="100" cy="276" rx="4" ry="1.2" opacity="0"/>
+        <circle id="tBall" class="ball" cx="100" cy="220" r="5" filter="url(#tGlow)"/>
+      </svg>
+    </div>
+
+    <div class="start-row">
+      <button class="start-btn" id="startBtn" type="button">
+        <span>Start the masterclass</span>
+        <span class="arrow">▶</span>
+      </button>
+      <span class="start-meta">9 screens<span class="pip"></span>~6 minutes<span class="pip"></span>by Coach Dave</span>
+    </div>
+
+    <div class="trailer-cards">
+      <div class="trailer-card">
+        <span class="num">01</span>
+        <h4>The Goldilocks zone</h4>
+        <p>One foot past their kitchen line. Center court. Force them to hit up.</p>
+      </div>
+      <div class="trailer-card">
+        <span class="num">02</span>
+        <h4>Three keys</h4>
+        <p>Soft hands. Under the ball. Let it come. Own all three.</p>
+      </div>
+      <div class="trailer-card">
+        <span class="num">03</span>
+        <h4>Drop or drive?</h4>
+        <p>One simple rule decides every third shot you'll ever play.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="lockup">
+      <span>The Drop · 3D · 4D Pickleball</span>
+      <span style="color:var(--4dp-text-faint)">·</span>
+      <span class="parent">Give 'n Receive</span>
+    </div>
+    <nav class="links">
+      <a href="/">Home</a>
+      <a href="/scoring/">Scoring</a>
+      <a href="/outballs/">Out Balls</a>
+      <a href="/pressure-dinking/">Pressure Dinking</a>
+    </nav>
+  </footer>
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODULE OVERLAY — the click-through
+     ═══════════════════════════════════════════════════════════ -->
+<div class="module-overlay" id="modOverlay" role="dialog" aria-label="The Drop masterclass" aria-modal="true">
+
+  <header class="mod-top">
+    <span class="pill"><span class="d"></span>The Drop · Masterclass</span>
+    <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+    <span class="step-label"><span id="stepNum">1</span><span class="total">/9</span></span>
+    <button class="close-btn" id="closeBtn" aria-label="Close masterclass">✕</button>
+  </header>
+
+  <div class="mod-viewport">
+    <div class="mod-rail" id="modRail">
+
+      <!-- ────────────────────────────────────────────────
+           SCREEN 1 · The question (the hook)
+           ──────────────────────────────────────────────── -->
+      <section class="screen" id="s1" data-screen="1">
+        <div class="screen-inner">
+          <span class="screen-eyebrow"><span class="num">01</span>The setup</span>
+          <h2>The banger is at the kitchen.<br>You're at the <span class="em">baseline</span>.</h2>
+          <p class="lede">Their next ball is going to be hit at a hundred miles an hour. Aimed at your feet. Or your shoulder. Or the gap between you and your partner. <strong>What do you do?</strong></p>
+
+          <div class="stage" id="stage-s1">
+            <svg viewBox="0 0 980 540" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="s1Court" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0" stop-color="#2D5FA8"/><stop offset="1" stop-color="#1B3E72"/>
+                </linearGradient>
+                <linearGradient id="s1Deck" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0" stop-color="#5E6878"/><stop offset="1" stop-color="#3F4854"/>
+                </linearGradient>
+                <linearGradient id="s1Kitchen" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0" stop-color="#6B0F1A"/><stop offset="1" stop-color="#52090F"/>
+                </linearGradient>
+                <filter id="s1Glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.4"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                <filter id="s1RedGlow"><feGaussianBlur stdDeviation="3"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+
+              <!-- Deck + court + kitchen -->
+              <rect x="0" y="380" width="980" height="160" fill="url(#s1Deck)"/>
+              <rect x="40" y="320" width="900" height="60" fill="url(#s1Court)"/>
+              <rect x="600" y="320" width="180" height="60" fill="url(#s1Kitchen)"/>
+
+              <!-- Court lines -->
+              <line x1="40"  y1="320" x2="40"  y2="380" class="court-line"/>
+              <line x1="940" y1="320" x2="940" y2="380" class="court-line"/>
+              <line x1="200" y1="320" x2="200" y2="380" class="court-line"/>
+              <line x1="600" y1="320" x2="600" y2="380" class="court-line"/>
+              <line x1="780" y1="320" x2="780" y2="380" class="court-line"/>
+
+              <!-- Net at center -->
+              <rect x="488" y="220" width="4" height="100" fill="rgba(255,255,255,.85)"/>
+              <line x1="488" y1="220" x2="492" y2="220" class="net-tape"/>
+              <g stroke="rgba(255,255,255,.5)" stroke-width="1">
+                <line x1="475" y1="232" x2="505" y2="232"/>
+                <line x1="475" y1="248" x2="505" y2="248"/>
+                <line x1="475" y1="264" x2="505" y2="264"/>
+                <line x1="475" y1="280" x2="505" y2="280"/>
+                <line x1="475" y1="296" x2="505" y2="296"/>
+              </g>
+
+              <!-- Player at baseline left -->
+              <g transform="translate(95 232)">
+                <rect x="-4" y="30" width="8" height="56" fill="#234E8C" rx="2"/>
+                <circle cx="0" cy="18" r="12" fill="#F5F3EE"/>
+                <ellipse cx="0" cy="46" rx="14" ry="18" fill="#234E8C"/>
+                <rect x="-3.5" y="74" width="3" height="18" fill="#1B3E72"/>
+                <rect x="0.5" y="74" width="3" height="18" fill="#1B3E72"/>
+                <ellipse cx="-4" cy="94" rx="5" ry="2.5" fill="#F5F3EE"/>
+                <ellipse cx="4" cy="94" rx="5" ry="2.5" fill="#F5F3EE"/>
+                <line x1="8" y1="44" x2="28" y2="64" stroke="#F5F3EE" stroke-width="3" stroke-linecap="round"/>
+                <ellipse cx="34" cy="68" rx="8" ry="12" fill="#34D399" stroke="#0E1F38" stroke-width="1"/>
+                <circle cx="34" cy="68" r="2" fill="#F5F3EE"/>
+              </g>
+
+              <!-- Banger at opponent kitchen line -->
+              <g transform="translate(605 232) scale(-1,1)">
+                <rect x="-4" y="30" width="8" height="56" fill="#1B3E72" rx="2"/>
+                <circle cx="0" cy="18" r="12" fill="#F5F3EE"/>
+                <ellipse cx="0" cy="46" rx="14" ry="18" fill="#1B3E72"/>
+                <rect x="-3.5" y="74" width="3" height="18" fill="#234E8C"/>
+                <rect x="0.5" y="74" width="3" height="18" fill="#234E8C"/>
+                <ellipse cx="-4" cy="94" rx="5" ry="2.5" fill="#F5F3EE"/>
+                <ellipse cx="4" cy="94" rx="5" ry="2.5" fill="#F5F3EE"/>
+                <line x1="8" y1="42" x2="26" y2="38" stroke="#F5F3EE" stroke-width="3" stroke-linecap="round"/>
+                <ellipse cx="32" cy="36" rx="8" ry="12" fill="#F472B6" stroke="#0E1F38" stroke-width="1"/>
+                <text x="0" y="-12" fill="#F472B6" font-family="DM Sans" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="2">BANGER</text>
+              </g>
+
+              <!-- Drive arrow -->
+              <path id="s1Drive" d="M 580 270 Q 360 250 130 290" fill="none" stroke="#F87171" stroke-width="3" stroke-linecap="round" stroke-dasharray="0 0" filter="url(#s1RedGlow)" opacity="0">
+                <animate attributeName="opacity" values="0;1" dur="0.5s" begin="1.0s" fill="freeze"/>
+              </path>
+              <polygon id="s1DriveArrow" points="130,290 142,283 142,297" fill="#F87171" opacity="0">
+                <animate attributeName="opacity" values="0;1" dur="0.5s" begin="1.5s" fill="freeze"/>
+              </polygon>
+              <text x="350" y="240" fill="#F87171" font-family="DM Sans" font-size="14" font-weight="800" letter-spacing="1.5" text-anchor="middle" opacity="0">
+                100 MPH AT YOUR FEET
+                <animate attributeName="opacity" values="0;1" dur="0.6s" begin="2.0s" fill="freeze"/>
+              </text>
+
+              <!-- Question mark over player -->
+              <g transform="translate(95 165)">
+                <text font-family="Instrument Serif" font-style="italic" font-size="58" fill="#F5F3EE" text-anchor="middle" opacity="0">
+                  ?
+                  <animate attributeName="opacity" values="0;1;0.6;1" dur="2s" begin="2.6s" repeatCount="indefinite"/>
+                </text>
+              </g>
+
+              <!-- Caption under court -->
+              <text x="490" y="510" fill="rgba(245,243,238,.6)" font-family="DM Sans" font-size="13" font-weight="700" letter-spacing="2" text-anchor="middle">
+                THE PROBLEM EVERY 3.5 PLAYER HAS
+              </text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ────────────────────────────────────────────────
+           SCREEN 2 · The answer
+           ──────────────────────────────────────────────── -->
+      <section class="screen" id="s2" data-screen="2">
+        <div class="screen-inner">
+          <span class="screen-eyebrow"><span class="num">02</span>The answer</span>
+          <h2>The drop. <span class="em">Soft arc</span>. Lands in their kitchen.</h2>
+          <p class="lede">Don't trade pace. <strong>Take it away</strong>. The drop is a soft arcing shot from the baseline that lands one to two feet past your opponent's kitchen line. They have to hit up. The rally resets. You walk to the line.</p>
+
+          <div class="screen-row">
+            <div class="stage" id="stage-s2" style="aspect-ratio: 16/10;">
+              <svg viewBox="0 0 980 600" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="s2Court" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0" stop-color="#2D5FA8"/><stop offset="1" stop-color="#1B3E72"/>
+                  </linearGradient>
+                  <linearGradient id="s2Deck" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0" stop-color="#5E6878"/><stop offset="1" stop-color="#3F4854"/>
+                  </linearGradient>
+                  <linearGradient id="s2Kitchen" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0" stop-color="#6B0F1A"/><stop offset="1" stop-color="#52090F"/>
+                  </linearGradient>
+                  <radialGradient id="s2Gold" cx="50%" cy="50%" r="50%">
+                    <stop offset="0" stop-color="#34D399" stop-opacity="0.7"/>
+                    <stop offset="0.6" stop-color="#34D399" stop-opacity="0.25"/>
+                    <stop offset="1" stop-color="#34D399" stop-opacity="0"/>
+                  </radialGradient>
+                  <filter id="s2Glow"><feGaussianBlur stdDeviation="2.6"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                </defs>
+                <rect x="0" y="440" width="980" height="160" fill="url(#s2Deck)"/>
+                <rect x="40" y="380" width="900" height="60" fill="url(#s2Court)"/>
+                <rect x="600" y="380" width="180" height="60" fill="url(#s2Kitchen)"/>
+
+                <line x1="40"  y1="380" x2="40"  y2="440" class="court-line"/>
+                <line x1="940" y1="380" x2="940" y2="440" class="court-line"/>
+                <line x1="200" y1="380" x2="200" y2="440" class="court-line"/>
+                <line x1="600" y1="380" x2="600" y2="440" class="court-line"/>
+                <line x1="780" y1="380" x2="780" y2="440" class="court-line"/>
+
+                <!-- Net -->
+                <rect x="488" y="240" width="4" height="140" fill="rgba(255,255,255,.85)"/>
+                <line x1="488" y1="240" x2="492" y2="240" class="net-tape"/>
+                <g stroke="rgba(255,255,255,.5)" stroke-width="1">
+                  <line x1="475" y1="252" x2="505" y2="252"/>
+                  <line x1="475" y1="268" x2="505" y2="268"/>
+                  <line x1="475" y1="284" x2="505" y2="284"/>
+                  <line x1="475" y1="300" x2="505" y2="300"/>
+                  <line x1="475" y1="316" x2="505" y2="316"/>
+                  <line x1="475" y1="332" x2="505" y2="332"/>
+                  <line x1="475" y1="348" x2="505" y2="348"/>
+                  <line x1="475" y1="364" x2="505" y2="364"/>
+                </g>
+
+                <!-- Goldilocks pulsing zone -->
+                <ellipse cx="690" cy="408" rx="60" ry="14" fill="url(#s2Gold)">
+                  <animate attributeName="opacity" values="0.5;1;0.5" dur="2.6s" repeatCount="indefinite"/>
+                </ellipse>
+
+                <!-- Trail (animated drop arc) -->
+                <path id="s2Trail" d="" class="trail trail-good" stroke-width="3" stroke-dasharray="6 4" opacity="0.6"/>
+
+                <!-- Player baseline -->
+                <g transform="translate(95 292)">
+                  <rect x="-4" y="30" width="8" height="56" fill="#234E8C" rx="2"/>
+                  <circle cx="0" cy="18" r="12" fill="#F5F3EE"/>
+                  <ellipse cx="0" cy="46" rx="14" ry="18" fill="#234E8C"/>
+                  <rect x="-3.5" y="74" width="3" height="18" fill="#1B3E72"/>
+                  <rect x="0.5" y="74" width="3" height="18" fill="#1B3E72"/>
+                  <ellipse cx="-4" cy="94" rx="5" ry="2.5" fill="#F5F3EE"/>
+                  <ellipse cx="4" cy="94" rx="5" ry="2.5" fill="#F5F3EE"/>
+                  <line x1="8" y1="44" x2="32" y2="58" stroke="#F5F3EE" stroke-width="3" stroke-linecap="round"/>
+                  <ellipse cx="38" cy="62" rx="8" ry="12" fill="#34D399" stroke="#0E1F38" stroke-width="1" transform="rotate(-22 38 62)"/>
+                  <circle cx="38" cy="62" r="2" fill="#F5F3EE"/>
+                </g>
+
+                <!-- Opponent at far kitchen -->
+                <g transform="translate(605 292) scale(-1,1)">
+                  <rect x="-4" y="30" width="8" height="56" fill="#1B3E72" rx="2"/>
+                  <circle cx="0" cy="18" r="12" fill="#F5F3EE"/>
+                  <ellipse cx="0" cy="46" rx="14" ry="18" fill="#1B3E72"/>
+                  <rect x="-3.5" y="74" width="3" height="18" fill="#234E8C"/>
+                  <rect x="0.5" y="74" width="3" height="18" fill="#234E8C"/>
+                  <ellipse cx="-4" cy="94" rx="5" ry="2.5" fill="#F5F3EE"/>
+                  <ellipse cx="4" cy="94" rx="5" ry="2.5" fill="#F5F3EE"/>
+                  <line x1="8" y1="42" x2="22" y2="48" stroke="#F5F3EE" stroke-width="3" stroke-linecap="round"/>
+                  <ellipse cx="28" cy="48" rx="8" ry="12" fill="#F472B6" stroke="#0E1F38" stroke-width="1"/>
+                </g>
+
+                <!-- Ball -->
+                <ellipse id="s2BallShadow" class="ball-shadow" cx="135" cy="438" rx="5" ry="1.5" opacity="0"/>
+                <circle id="s2Ball" class="ball" cx="135" cy="320" r="6" filter="url(#s2Glow)"/>
+
+                <!-- Annotation: peak -->
+                <text id="s2Peak" x="500" y="220" fill="#34D399" font-family="DM Sans" font-size="12" font-weight="800" letter-spacing="1.6" text-anchor="middle" opacity="0">
+                  PEAK BEFORE THE NET
+                </text>
+                <!-- Annotation: landing -->
+                <text id="s2Land" x="690" y="430" fill="#34D399" font-family="DM Sans" font-size="12" font-weight="800" letter-spacing="1.6" text-anchor="middle" opacity="0">
+                  GOLDILOCKS
+                </text>
+              </svg>
+            </div>
+
+            <div class="copy">
+              <p class="pull">Don't trade pace. <span class="em">Take it away.</span></p>
+              <p>A soft arc. Peaks <strong>before</strong> the net. Drops down into the kitchen at the lowest possible angle. There is no good answer for an opponent &mdash; the ball is below the net when they meet it. They have to hit <em>up</em>. And up-balls you can attack.</p>
+              <div class="key-stat">
+                <div class="item">
+                  <div class="v">~6 ft</div>
+                  <div class="l">Peak height</div>
+                </div>
+                <div class="item">
+                  <div class="v">1&ndash;2 ft</div>
+                  <div class="l">Past kitchen line</div>
+                </div>
+                <div class="item">
+                  <div class="v">15 mph</div>
+                  <div class="l">Contact speed</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ────────────────────────────────────────────────
+           SCREEN 3 · Goldilocks zone (top-down)
+           ──────────────────────────────────────────────── -->
+      <section class="screen" id="s3" data-screen="3">
+        <div class="screen-inner">
+          <span class="screen-eyebrow"><span class="num">03</span>The target</span>
+          <h2>Land it <span class="em">here</span>.<br>Nowhere else.</h2>
+          <p class="lede">There's a one-foot wide stripe of court that's <strong>perfect</strong>. It's just past their kitchen line, in the middle. Land your drop there and the rally is yours.</p>
+
+          <div class="zone-grid">
+            <div class="stage" id="stage-s3" style="aspect-ratio: 9/12;">
+              <svg viewBox="0 0 480 640" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <radialGradient id="s3CourtR" cx="50%" cy="50%" r="60%">
+                    <stop offset="0" stop-color="#2D5FA8"/>
+                    <stop offset="0.7" stop-color="#234E8C"/>
+                    <stop offset="1" stop-color="#1B3E72"/>
+                  </radialGradient>
+                  <linearGradient id="s3Deck" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0" stop-color="#3F4854"/><stop offset="0.5" stop-color="#5E6878"/><stop offset="1" stop-color="#3F4854"/>
+                  </linearGradient>
+                  <linearGradient id="s3Kitchen" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0" stop-color="#6B0F1A"/><stop offset="1" stop-color="#52090F"/>
+                  </linearGradient>
+                  <radialGradient id="s3SafeGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0" stop-color="#34D399" stop-opacity="0.6"/>
+                    <stop offset="0.5" stop-color="#34D399" stop-opacity="0.25"/>
+                    <stop offset="1" stop-color="#34D399" stop-opacity="0"/>
+                  </radialGradient>
+                  <pattern id="s3Hash" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+                    <line x1="0" y1="0" x2="0" y2="6" stroke="#F87171" stroke-width="1.5" opacity="0.4"/>
+                  </pattern>
+                </defs>
+
+                <!-- Surround deck -->
+                <rect width="480" height="640" fill="url(#s3Deck)"/>
+
+                <!-- Court -->
+                <rect x="60" y="40" width="360" height="560" fill="url(#s3CourtR)"/>
+
+                <!-- Kitchen (opponent side, top) -->
+                <rect x="60" y="180" width="360" height="120" fill="url(#s3Kitchen)" opacity="0.95"/>
+                <!-- Net at center (480 vertical court, midline = 320) -->
+                <rect x="60" y="318" width="360" height="4" fill="rgba(255,255,255,.92)"/>
+
+                <!-- Court lines -->
+                <rect x="60" y="40" width="360" height="560" stroke="rgba(255,255,255,.85)" stroke-width="2" fill="none"/>
+                <line x1="60" y1="180" x2="420" y2="180" stroke="rgba(255,255,255,.92)" stroke-width="2"/>
+                <line x1="60" y1="460" x2="420" y2="460" stroke="rgba(255,255,255,.92)" stroke-width="2"/>
+                <line x1="240" y1="40" x2="240" y2="180" stroke="rgba(255,255,255,.85)" stroke-width="1.5"/>
+                <line x1="240" y1="460" x2="240" y2="600" stroke="rgba(255,255,255,.85)" stroke-width="1.5"/>
+
+                <!-- "Too short" zone — in their kitchen -->
+                <rect x="100" y="200" width="280" height="60" fill="url(#s3Hash)"/>
+                <text x="240" y="235" fill="#F87171" font-family="DM Sans" font-size="12" font-weight="800" letter-spacing="1.4" text-anchor="middle">TOO SHORT &mdash; SITS UP</text>
+
+                <!-- Safe zone — 1-2 ft past kitchen line, center -->
+                <ellipse cx="240" cy="160" rx="120" ry="22" fill="url(#s3SafeGlow)">
+                  <animate attributeName="opacity" values="0.6;1;0.6" dur="2.4s" repeatCount="indefinite"/>
+                </ellipse>
+                <ellipse cx="240" cy="160" rx="120" ry="22" fill="none" stroke="#34D399" stroke-width="2" stroke-dasharray="6 4" opacity="0.85"/>
+                <text x="240" y="138" fill="#34D399" font-family="DM Sans" font-size="13" font-weight="900" letter-spacing="2.4" text-anchor="middle">GOLDILOCKS &mdash; LAND HERE</text>
+                <text x="240" y="167" fill="#34D399" font-family="DM Sans" font-size="11" font-weight="700" letter-spacing="1.2" text-anchor="middle">1&ndash;2 ft past their kitchen line</text>
+
+                <!-- "Too deep" — in opponent service zone -->
+                <rect x="100" y="60" width="280" height="60" fill="url(#s3Hash)"/>
+                <text x="240" y="95" fill="#F87171" font-family="DM Sans" font-size="12" font-weight="800" letter-spacing="1.4" text-anchor="middle">TOO DEEP &mdash; ANOTHER DRIVE</text>
+
+                <!-- Player at our baseline -->
+                <g transform="translate(220 568)">
+                  <circle cx="0" cy="0" r="8" fill="#34D399" stroke="#0E1F38" stroke-width="1.5"/>
+                  <text x="0" y="3" fill="#0E1F38" font-family="DM Sans" font-size="9" font-weight="900" text-anchor="middle">YOU</text>
+                </g>
+
+                <!-- Opponents at their kitchen -->
+                <g transform="translate(160 200)">
+                  <circle cx="0" cy="0" r="8" fill="#F472B6" stroke="#0E1F38" stroke-width="1.5"/>
+                </g>
+                <g transform="translate(320 200)">
+                  <circle cx="0" cy="0" r="8" fill="#F472B6" stroke="#0E1F38" stroke-width="1.5"/>
+                </g>
+
+                <!-- Drop arc (top-down trail from player to safe zone) -->
+                <path d="M 240 568 Q 240 360 240 160" fill="none" stroke="#34D399" stroke-width="2" stroke-dasharray="4 5" opacity="0.5"/>
+                <circle cx="240" cy="160" r="4" fill="#34D399"/>
+                <circle cx="240" cy="160" r="9" fill="none" stroke="#34D399" stroke-width="1.5" opacity="0.6">
+                  <animate attributeName="r" values="9;18;9" dur="1.8s" repeatCount="indefinite"/>
+                  <animate attributeName="opacity" values="0.6;0;0.6" dur="1.8s" repeatCount="indefinite"/>
+                </circle>
+
+                <!-- Compass: Net label -->
+                <text x="35" y="324" fill="rgba(245,243,238,.5)" font-family="DM Sans" font-size="9" font-weight="700" letter-spacing="1" text-anchor="middle" transform="rotate(-90 35 324)">— NET —</text>
+              </svg>
+            </div>
+
+            <div class="legend">
+              <div class="legend-item good">
+                <div class="swatch"></div>
+                <div>
+                  <h5>The Goldilocks zone</h5>
+                  <p>One to two feet past their kitchen line, center court. Forces a low contact &mdash; they have to hit up.</p>
+                </div>
+              </div>
+              <div class="legend-item bad">
+                <div class="swatch"></div>
+                <div>
+                  <h5>Too short &mdash; in the kitchen</h5>
+                  <p>The ball sits up. They reach in and put it away. <strong>The worst possible drop.</strong></p>
+                </div>
+              </div>
+              <div class="legend-item bad">
+                <div class="swatch"></div>
+                <div>
+                  <h5>Too deep &mdash; past the kitchen</h5>
+                  <p>You gave them another drive. They're at the line. You're still at the baseline. Disaster.</p>
+                </div>
+              </div>
+              <div class="legend-item warn">
+                <div class="swatch"></div>
+                <div>
+                  <h5>Too high &mdash; the pop-up</h5>
+                  <p>Even if it lands in the right spot, a high-bouncing ball gets attacked. Apex must peak <em>before</em> the net.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ────────────────────────────────────────────────
+           SCREEN 4 · The three keys
+           ──────────────────────────────────────────────── -->
+      <section class="screen" id="s4" data-screen="4">
+        <div class="screen-inner">
+          <span class="screen-eyebrow"><span class="num">04</span>The mechanics</span>
+          <h2>Three keys.<br>Get all <span class="em">three</span>.</h2>
+          <p class="lede">Soft hands. Under the ball. Let it come. Miss any one of them and the drop pops up. Get all three and the ball lands in the green every single time.</p>
+
+          <div class="keys-tabs" role="tablist" aria-label="Three keys to the drop">
+            <button class="keys-tab active" role="tab" data-key="0"><span class="num">1</span>Soft hands</button>
+            <button class="keys-tab" role="tab" data-key="1"><span class="num">2</span>Under the ball</button>
+            <button class="keys-tab" role="tab" data-key="2"><span class="num">3</span>Let it come</button>
+          </div>
+
+          <!-- KEY 1 · Soft hands — interactive grip pressure -->
+          <div class="keys-pane active" data-key="0">
+            <div class="keys-row">
+              <div class="grip-pressure">
+                <div style="font-size:12px; color:var(--4dp-text-mute); letter-spacing:1.6px; text-transform:uppercase; font-weight:800; margin-bottom:14px;">Grip pressure</div>
+
+                <div class="pressure-meter">
+                  <div class="pressure-fill" id="pressureFill"></div>
+                </div>
+                <div class="scale">
+                  <span>RELAXED · 1</span>
+                  <span>3 · TARGET</span>
+                  <span>WHITE-KNUCKLE · 10</span>
+                </div>
+
+                <div class="control">
+                  <input type="range" id="pressureSlider" min="1" max="10" value="3" step="1">
+                  <div class="read" id="pressureRead">3</div>
+                </div>
+
+                <div class="verdict" id="pressureVerdict">
+                  Your fingers are barely wrapped. The paddle absorbs the ball instead of pushing it. <strong>Soft.</strong>
+                </div>
+              </div>
+
+              <div class="copy">
+                <h3>Hold the paddle <span class="em">like a baby bird</span>.</h3>
+                <p>The single biggest pop-up cause: a death grip. Tight hands transfer energy <em>back</em> to the ball. Soft hands absorb it, and the ball drops dead. Sarah Ansboury says <strong>3 out of 10</strong>. Tyler Loong says: if your knuckles are white, your drop is dead.</p>
+                <div class="cue">If you can feel the ball compress on the paddle face, you've got it right.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- KEY 2 · Under the ball — paddle face slider -->
+          <div class="keys-pane" data-key="1">
+            <div class="keys-row">
+              <div class="paddle-angle-stage">
+                <div class="stage" style="border-radius: 0; border-bottom: 0; aspect-ratio: 16/10;">
+                  <svg id="paddleSvg" viewBox="0 0 600 380" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <linearGradient id="paddleCourt" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0" stop-color="#2D5FA8"/><stop offset="1" stop-color="#1B3E72"/>
+                      </linearGradient>
+                      <linearGradient id="paddleDeck" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0" stop-color="#5E6878"/><stop offset="1" stop-color="#3F4854"/>
+                      </linearGradient>
+                      <linearGradient id="paddleKitchen" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0" stop-color="#6B0F1A"/><stop offset="1" stop-color="#52090F"/>
+                      </linearGradient>
+                      <radialGradient id="paddleSafe" cx="50%" cy="50%" r="50%">
+                        <stop offset="0" stop-color="#34D399" stop-opacity="0.5"/>
+                        <stop offset="1" stop-color="#34D399" stop-opacity="0"/>
+                      </radialGradient>
+                      <filter id="paddleGlow"><feGaussianBlur stdDeviation="2.4"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                    </defs>
+                    <rect x="0" y="280" width="600" height="100" fill="url(#paddleDeck)"/>
+                    <rect x="20" y="240" width="560" height="40" fill="url(#paddleCourt)"/>
+                    <rect x="380" y="240" width="120" height="40" fill="url(#paddleKitchen)"/>
+
+                    <line x1="20"  y1="240" x2="20"  y2="280" class="court-line"/>
+                    <line x1="580" y1="240" x2="580" y2="280" class="court-line"/>
+                    <line x1="380" y1="240" x2="380" y2="280" class="court-line"/>
+                    <line x1="500" y1="240" x2="500" y2="280" class="court-line"/>
+
+                    <!-- Net -->
+                    <rect x="296" y="170" width="4" height="70" fill="rgba(255,255,255,.85)"/>
+                    <line x1="296" y1="170" x2="300" y2="170" class="net-tape"/>
+
+                    <!-- Goldilocks ellipse target -->
+                    <ellipse cx="430" cy="265" rx="42" ry="9" fill="url(#paddleSafe)">
+                      <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2s" repeatCount="indefinite"/>
+                    </ellipse>
+
+                    <!-- Player at left baseline (close-up paddle) -->
+                    <g id="paddlePlayer" transform="translate(60 178)">
+                      <rect x="-3" y="22" width="6" height="42" fill="#234E8C" rx="2"/>
+                      <circle cx="0" cy="14" r="9" fill="#F5F3EE"/>
+                      <ellipse cx="0" cy="35" rx="11" ry="14" fill="#234E8C"/>
+                      <rect x="-2.5" y="55" width="2" height="14" fill="#1B3E72"/>
+                      <rect x="0.5" y="55" width="2" height="14" fill="#1B3E72"/>
+                      <ellipse cx="-3" cy="71" rx="4" ry="2" fill="#F5F3EE"/>
+                      <ellipse cx="3" cy="71" rx="4" ry="2" fill="#F5F3EE"/>
+                      <line x1="6" y1="34" x2="22" y2="50" stroke="#F5F3EE" stroke-width="2.5" stroke-linecap="round"/>
+                      <!-- The paddle (rotates with slider) -->
+                      <g id="paddleFace" transform="rotate(-22 26 52)">
+                        <ellipse cx="26" cy="52" rx="6" ry="9" fill="#34D399" stroke="#0E1F38" stroke-width="0.8"/>
+                        <circle cx="26" cy="52" r="1.4" fill="#F5F3EE"/>
+                      </g>
+                    </g>
+
+                    <!-- Trajectory path -->
+                    <path id="paddleTraj" d="" fill="none" stroke="#34D399" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 4" opacity="0.85" filter="url(#paddleGlow)"/>
+                    <circle id="paddleBall" cx="86" cy="220" r="5" fill="#F5F3EE" filter="url(#paddleGlow)"/>
+
+                    <!-- Annotation -->
+                    <text id="paddleAnno" x="300" y="40" fill="#34D399" font-family="DM Sans" font-size="13" font-weight="900" letter-spacing="2" text-anchor="middle">PADDLE FACE: 22°</text>
+                  </svg>
+                </div>
+
+                <div class="controls">
+                  <div class="row">
+                    <span class="lbl">Paddle face</span>
+                    <input type="range" id="paddleAngle" min="0" max="50" value="22" step="1">
+                    <span class="val" id="paddleVal">22°</span>
+                  </div>
+                  <div class="verdict-row">
+                    <span class="v-pill good" id="paddleVerdictPill">DROPPED</span>
+                    <span class="v-text" id="paddleVerdictText">Open paddle face. Soft arc. Lands one foot past their kitchen line. Goldilocks.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="copy">
+                <h3>Tip the paddle face <span class="em">up</span>.</h3>
+                <p>A closed face <em>drives</em>. An open face <em>drops</em>. The contact is below the ball, paddle scoops up underneath, and the ball arcs over the net. <strong>Drag the slider</strong> &mdash; you can see the arc change in real time.</p>
+                <div class="cue">Closed face for power. Open face to lift. Drop = open. Always.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- KEY 3 · Let it come -->
+          <div class="keys-pane" data-key="2">
+            <div class="keys-row">
+              <div class="stage" style="aspect-ratio: 16/10;">
+                <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="letCourt" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0" stop-color="#2D5FA8"/><stop offset="1" stop-color="#1B3E72"/>
+                    </linearGradient>
+                    <linearGradient id="letDeck" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0" stop-color="#5E6878"/><stop offset="1" stop-color="#3F4854"/>
+                    </linearGradient>
+                    <filter id="letGlow"><feGaussianBlur stdDeviation="2"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                  </defs>
+                  <rect x="0" y="320" width="600" height="80" fill="url(#letDeck)"/>
+                  <rect x="20" y="280" width="560" height="40" fill="url(#letCourt)"/>
+
+                  <!-- Strike zone band — mid-thigh to waist -->
+                  <rect x="180" y="200" width="60" height="34" fill="rgba(52,211,153,.18)" stroke="#34D399" stroke-width="1.5" stroke-dasharray="3 3"/>
+                  <text x="210" y="195" fill="#34D399" font-family="DM Sans" font-size="11" font-weight="800" letter-spacing="1.4" text-anchor="middle">STRIKE ZONE</text>
+                  <text x="210" y="248" fill="#34D399" font-family="DM Sans" font-size="9" font-weight="700" letter-spacing="1" text-anchor="middle">mid-thigh</text>
+
+                  <!-- Player who LETS IT COME (left, balanced) -->
+                  <g transform="translate(150 180)">
+                    <rect x="-4" y="30" width="8" height="56" fill="#234E8C" rx="2"/>
+                    <circle cx="0" cy="18" r="12" fill="#F5F3EE"/>
+                    <ellipse cx="0" cy="46" rx="14" ry="18" fill="#234E8C"/>
+                    <rect x="-3.5" y="74" width="3" height="18" fill="#1B3E72"/>
+                    <rect x="0.5" y="74" width="3" height="18" fill="#1B3E72"/>
+                    <ellipse cx="-4" cy="94" rx="5" ry="2.5" fill="#F5F3EE"/>
+                    <ellipse cx="4" cy="94" rx="5" ry="2.5" fill="#F5F3EE"/>
+                    <line x1="6" y1="44" x2="22" y2="60" stroke="#F5F3EE" stroke-width="3" stroke-linecap="round"/>
+                    <ellipse cx="28" cy="62" rx="7" ry="10" fill="#34D399" stroke="#0E1F38" stroke-width="0.8" transform="rotate(-22 28 62)"/>
+                    <text x="0" y="-12" fill="#34D399" font-family="DM Sans" font-size="11" font-weight="900" text-anchor="middle" letter-spacing="2">PATIENT</text>
+                  </g>
+
+                  <!-- Animated dropping ball (good) -->
+                  <circle id="letBallGood" cx="210" cy="120" r="5" fill="#F5F3EE" filter="url(#letGlow)"/>
+                  <path id="letPathGood" d="M 90 60 Q 200 100 210 217" fill="none" stroke="#34D399" stroke-width="2" stroke-dasharray="5 4" opacity="0.6"/>
+
+                  <!-- Player who LUNGES (right, off-balance, popping up) -->
+                  <g transform="translate(420 174)">
+                    <rect x="-4" y="30" width="8" height="56" fill="#234E8C" opacity="0.6" rx="2" transform="rotate(8 0 60)"/>
+                    <circle cx="-2" cy="18" r="12" fill="#F5F3EE" opacity="0.7"/>
+                    <ellipse cx="-2" cy="46" rx="14" ry="18" fill="#234E8C" opacity="0.7" transform="rotate(8 0 46)"/>
+                    <rect x="-3.5" y="74" width="3" height="18" fill="#1B3E72" opacity="0.6" transform="rotate(15 -2 84)"/>
+                    <rect x="0.5" y="74" width="3" height="18" fill="#1B3E72" opacity="0.6" transform="rotate(-5 2 84)"/>
+                    <ellipse cx="-7" cy="94" rx="5" ry="2.5" fill="#F5F3EE" opacity="0.6"/>
+                    <ellipse cx="6" cy="94" rx="5" ry="2.5" fill="#F5F3EE" opacity="0.6"/>
+                    <line x1="0" y1="42" x2="-22" y2="22" stroke="#F5F3EE" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+                    <ellipse cx="-30" cy="16" rx="7" ry="10" fill="#F87171" stroke="#0E1F38" stroke-width="0.8" opacity="0.7" transform="rotate(60 -30 16)"/>
+                    <text x="0" y="-12" fill="#F87171" font-family="DM Sans" font-size="11" font-weight="900" text-anchor="middle" letter-spacing="2">REACHING</text>
+                  </g>
+
+                  <!-- Pop-up trajectory (red, sad) -->
+                  <path d="M 386 158 Q 450 100 510 60" fill="none" stroke="#F87171" stroke-width="2.5" stroke-dasharray="5 4" opacity="0.55"/>
+                  <circle cx="510" cy="60" r="4" fill="#F87171" opacity="0.85"/>
+                  <text x="510" y="50" fill="#F87171" font-family="DM Sans" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="1.2">POP-UP</text>
+
+                  <!-- Caption -->
+                  <text x="300" y="378" fill="rgba(245,243,238,.55)" font-family="DM Sans" font-size="11" font-weight="700" letter-spacing="1.6" text-anchor="middle">IF YOU REACH, YOU RAISE</text>
+                </svg>
+              </div>
+
+              <div class="copy">
+                <h3>Wait for the ball. <span class="em">Don't chase it</span>.</h3>
+                <p>Coach Dave's mantra: <em>let it come</em>. Most pop-ups happen because players reach forward and meet the ball above their waist. The drop wants contact at <strong>mid-thigh</strong>, paddle in front, body still. If you have to lunge, you've already lost the shot.</p>
+                <div class="cue">Take it after the bounce. Let it drop into the strike zone. Hit it from underneath.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ────────────────────────────────────────────────
+           SCREEN 5 · Drop or drive
+           ──────────────────────────────────────────────── -->
+      <section class="screen" id="s5" data-screen="5">
+        <div class="screen-inner">
+          <span class="screen-eyebrow"><span class="num">05</span>The decision</span>
+          <h2>Drop <em>or</em> drive?<br><span class="em">Two questions</span> decide.</h2>
+          <p class="lede">Every third shot you ever play is one of these two answers. The decision is mechanical. <strong>Where did the ball land</strong>, and <strong>how high is it when you take it</strong>. That's it.</p>
+
+          <div class="decision-question">
+            <small>Question 1</small>
+            <div class="q">Where did their return land?</div>
+          </div>
+
+          <div class="decision-stage">
+            <div class="branch drop">
+              <span class="label">▼ DROP</span>
+              <h4>Deep return.<br>Past the service line.</h4>
+              <div class="conditions">
+                <div class="cond"><span class="check">✓</span><span>You're behind the baseline. You're not advancing in time.</span></div>
+                <div class="cond"><span class="check">✓</span><span>The ball is below your waist when you reach it.</span></div>
+                <div class="cond"><span class="check">✓</span><span>Their team is already locked at the kitchen.</span></div>
+              </div>
+              <div class="mini-stage">
+                <svg viewBox="0 0 360 180" preserveAspectRatio="xMidYMid meet">
+                  <defs>
+                    <linearGradient id="m1Court" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#2D5FA8"/><stop offset="1" stop-color="#1B3E72"/></linearGradient>
+                    <linearGradient id="m1Kitchen" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#6B0F1A"/><stop offset="1" stop-color="#52090F"/></linearGradient>
+                  </defs>
+                  <rect x="0" y="120" width="360" height="60" fill="#3F4854"/>
+                  <rect x="20" y="100" width="320" height="20" fill="url(#m1Court)"/>
+                  <rect x="220" y="100" width="60" height="20" fill="url(#m1Kitchen)"/>
+                  <rect x="178" y="60" width="2" height="40" fill="rgba(255,255,255,.85)"/>
+                  <line x1="220" y1="100" x2="220" y2="120" stroke="rgba(255,255,255,.7)" stroke-width="1"/>
+                  <!-- Drop arc -->
+                  <path d="M 50 110 Q 175 30 250 110" fill="none" stroke="#34D399" stroke-width="2.4" stroke-dasharray="4 3"/>
+                  <circle cx="50" cy="110" r="3" fill="#34D399"/>
+                  <circle cx="250" cy="110" r="3" fill="#34D399"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="branch drive">
+              <span class="label">▶ DRIVE</span>
+              <h4>Short return.<br>Inside the transition zone.</h4>
+              <div class="conditions">
+                <div class="cond"><span class="check">✓</span><span>The ball is high. You're taking it above your waist.</span></div>
+                <div class="cond"><span class="check">✓</span><span>You're already moving forward. Pace adds threat.</span></div>
+                <div class="cond"><span class="check">✓</span><span>Their team is still getting to the kitchen.</span></div>
+              </div>
+              <div class="mini-stage">
+                <svg viewBox="0 0 360 180" preserveAspectRatio="xMidYMid meet">
+                  <defs>
+                    <linearGradient id="m2Court" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#2D5FA8"/><stop offset="1" stop-color="#1B3E72"/></linearGradient>
+                    <linearGradient id="m2Kitchen" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#6B0F1A"/><stop offset="1" stop-color="#52090F"/></linearGradient>
+                  </defs>
+                  <rect x="0" y="120" width="360" height="60" fill="#3F4854"/>
+                  <rect x="20" y="100" width="320" height="20" fill="url(#m2Court)"/>
+                  <rect x="220" y="100" width="60" height="20" fill="url(#m2Kitchen)"/>
+                  <rect x="178" y="60" width="2" height="40" fill="rgba(255,255,255,.85)"/>
+                  <line x1="220" y1="100" x2="220" y2="120" stroke="rgba(255,255,255,.7)" stroke-width="1"/>
+                  <!-- Drive arrow (flat, fast) -->
+                  <path d="M 80 95 L 280 90" fill="none" stroke="#F472B6" stroke-width="2.6"/>
+                  <polygon points="280,90 274,86 274,94" fill="#F472B6"/>
+                  <circle cx="80" cy="95" r="3" fill="#F472B6"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="decision-question" style="margin-top: 18px; max-width: 600px;">
+            <small>Question 2 &nbsp;·&nbsp; the override</small>
+            <div class="q"><span style="color:var(--dim)">Below your waist?</span> &nbsp;<span style="color:rgba(245,243,238,.4)">→</span>&nbsp; <strong style="color:var(--dim)">Drop.</strong> Always. Even if it's short.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ────────────────────────────────────────────────
+           SCREEN 6 · The reset (no man's land)
+           ──────────────────────────────────────────────── -->
+      <section class="screen" id="s6" data-screen="6">
+        <div class="screen-inner">
+          <span class="screen-eyebrow"><span class="num">06</span>The reset</span>
+          <h2>Caught in the middle?<br><span class="em">Reset</span>.</h2>
+          <p class="reset-pull">The drop's twin. Same physics, played from no-man's land. Compact paddle, square face, soft hands. The ball comes at you fast. You barely move. <span class="em">It dies in their kitchen.</span></p>
+
+          <div class="stage" id="stage-s6" style="aspect-ratio: 16/8;">
+            <svg viewBox="0 0 980 480" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="s6Court" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0" stop-color="#2D5FA8"/><stop offset="1" stop-color="#1B3E72"/>
+                </linearGradient>
+                <linearGradient id="s6Deck" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0" stop-color="#5E6878"/><stop offset="1" stop-color="#3F4854"/>
+                </linearGradient>
+                <linearGradient id="s6Kitchen" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0" stop-color="#6B0F1A"/><stop offset="1" stop-color="#52090F"/>
+                </linearGradient>
+                <radialGradient id="s6Gold" cx="50%" cy="50%" r="50%">
+                  <stop offset="0" stop-color="#34D399" stop-opacity="0.6"/>
+                  <stop offset="1" stop-color="#34D399" stop-opacity="0"/>
+                </radialGradient>
+                <filter id="s6Glow"><feGaussianBlur stdDeviation="2.4"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <rect x="0" y="380" width="980" height="100" fill="url(#s6Deck)"/>
+              <rect x="40" y="320" width="900" height="60" fill="url(#s6Court)"/>
+              <rect x="600" y="320" width="180" height="60" fill="url(#s6Kitchen)"/>
+
+              <line x1="40"  y1="320" x2="40"  y2="380" class="court-line"/>
+              <line x1="940" y1="320" x2="940" y2="380" class="court-line"/>
+              <line x1="200" y1="320" x2="200" y2="380" class="court-line"/>
+              <line x1="600" y1="320" x2="600" y2="380" class="court-line"/>
+              <line x1="780" y1="320" x2="780" y2="380" class="court-line"/>
+
+              <!-- Net -->
+              <rect x="488" y="220" width="4" height="100" fill="rgba(255,255,255,.85)"/>
+              <line x1="488" y1="220" x2="492" y2="220" class="net-tape"/>
+
+              <!-- Goldilocks safe zone in their kitchen -->
+              <ellipse cx="690" cy="350" rx="62" ry="11" fill="url(#s6Gold)">
+                <animate attributeName="opacity" values="0.4;0.9;0.4" dur="2.6s" repeatCount="indefinite"/>
+              </ellipse>
+
+              <!-- Player IN no-man's land (mid-court) -->
+              <g transform="translate(310 232)">
+                <rect x="-4" y="30" width="8" height="56" fill="#234E8C" rx="2"/>
+                <circle cx="0" cy="18" r="12" fill="#F5F3EE"/>
+                <ellipse cx="0" cy="46" rx="14" ry="18" fill="#234E8C"/>
+                <rect x="-3.5" y="74" width="3" height="18" fill="#1B3E72"/>
+                <rect x="0.5" y="74" width="3" height="18" fill="#1B3E72"/>
+                <ellipse cx="-4" cy="94" rx="5" ry="2.5" fill="#F5F3EE"/>
+                <ellipse cx="4" cy="94" rx="5" ry="2.5" fill="#F5F3EE"/>
+                <!-- Compact paddle in front -->
+                <line x1="6" y1="38" x2="20" y2="42" stroke="#F5F3EE" stroke-width="3" stroke-linecap="round"/>
+                <ellipse cx="26" cy="44" rx="7" ry="10" fill="#34D399" stroke="#0E1F38" stroke-width="1" transform="rotate(-15 26 44)"/>
+                <text x="0" y="-12" fill="#34D399" font-family="DM Sans" font-size="11" font-weight="900" text-anchor="middle" letter-spacing="2">SPLIT-STEP</text>
+              </g>
+
+              <!-- Banger at far kitchen -->
+              <g transform="translate(605 232) scale(-1,1)">
+                <rect x="-4" y="30" width="8" height="56" fill="#1B3E72" rx="2"/>
+                <circle cx="0" cy="18" r="12" fill="#F5F3EE"/>
+                <ellipse cx="0" cy="46" rx="14" ry="18" fill="#1B3E72"/>
+                <rect x="-3.5" y="74" width="3" height="18" fill="#234E8C"/>
+                <rect x="0.5" y="74" width="3" height="18" fill="#234E8C"/>
+                <ellipse cx="-4" cy="94" rx="5" ry="2.5" fill="#F5F3EE"/>
+                <ellipse cx="4" cy="94" rx="5" ry="2.5" fill="#F5F3EE"/>
+                <line x1="8" y1="42" x2="22" y2="48" stroke="#F5F3EE" stroke-width="3" stroke-linecap="round"/>
+                <ellipse cx="28" cy="48" rx="8" ry="12" fill="#F472B6" stroke="#0E1F38" stroke-width="1"/>
+              </g>
+
+              <!-- Incoming drive (banger to player, red, fast) -->
+              <path id="s6Incoming" d="M 580 270 Q 450 285 350 295" fill="none" stroke="#F87171" stroke-width="2.6" stroke-dasharray="5 4" opacity="0.7"/>
+              <text x="470" y="265" fill="#F87171" font-family="DM Sans" font-size="11" font-weight="800" letter-spacing="1.4" text-anchor="middle">90+ MPH</text>
+
+              <!-- Reset return (player back to kitchen, soft arc) -->
+              <path id="s6Reset" d="M 350 290 Q 470 230 690 350" fill="none" stroke="#34D399" stroke-width="3" stroke-dasharray="6 4"/>
+              <text x="540" y="220" fill="#34D399" font-family="DM Sans" font-size="12" font-weight="900" letter-spacing="1.6" text-anchor="middle">SOFT · ABSORB · RETURN</text>
+
+              <!-- Ball position at reset apex -->
+              <circle cx="540" cy="220" r="6" fill="#F5F3EE" filter="url(#s6Glow)">
+                <animate attributeName="cx" values="350;470;540;620;690" dur="2.4s" repeatCount="indefinite"/>
+                <animate attributeName="cy" values="290;240;220;260;350" dur="2.4s" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+          </div>
+
+          <div class="reset-cues">
+            <div class="reset-cue">
+              <div class="num">01</div>
+              <h5>Compact</h5>
+              <p>Paddle barely moves. Six inches max. No backswing.</p>
+            </div>
+            <div class="reset-cue">
+              <div class="num">02</div>
+              <h5>Square face</h5>
+              <p>Paddle face flat. Slight upward tilt. Acts like a wall.</p>
+            </div>
+            <div class="reset-cue">
+              <div class="num">03</div>
+              <h5>Absorb</h5>
+              <p>Soft hands kill the pace. The ball drops dead off your face.</p>
+            </div>
+            <div class="reset-cue">
+              <div class="num">04</div>
+              <h5>Then walk</h5>
+              <p>After the reset, take two steps forward. The kitchen is your reward.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ────────────────────────────────────────────────
+           SCREEN 7 · The big mistakes
+           ──────────────────────────────────────────────── -->
+      <section class="screen" id="s7" data-screen="7">
+        <div class="screen-inner">
+          <span class="screen-eyebrow"><span class="num">07</span>The traps</span>
+          <h2>The three mistakes<br>that <span class="em">kill</span> every drop.</h2>
+          <p class="lede">When your drop misses, it misses one of three ways. Diagnose which one. The fix is always the opposite of the mistake.</p>
+
+          <div class="mistake-grid">
+            <!-- Mistake 1: Pop-up -->
+            <div class="mistake-card">
+              <div class="stage">
+                <svg viewBox="0 0 360 200" preserveAspectRatio="xMidYMid meet" style="height:100%;width:100%">
+                  <defs>
+                    <linearGradient id="mc1Court" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#2D5FA8"/><stop offset="1" stop-color="#1B3E72"/></linearGradient>
+                    <linearGradient id="mc1K" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#6B0F1A"/><stop offset="1" stop-color="#52090F"/></linearGradient>
+                  </defs>
+                  <rect x="0" y="160" width="360" height="40" fill="#3F4854"/>
+                  <rect x="20" y="140" width="320" height="20" fill="url(#mc1Court)"/>
+                  <rect x="220" y="140" width="60" height="20" fill="url(#mc1K)"/>
+                  <rect x="178" y="60" width="2" height="80" fill="rgba(255,255,255,.85)"/>
+                  <!-- Pop-up arc — too high -->
+                  <path d="M 60 145 Q 180 -20 240 100" fill="none" stroke="#FBBF24" stroke-width="2.6" stroke-dasharray="5 4"/>
+                  <!-- Banger reaches up and crushes it -->
+                  <circle cx="240" cy="100" r="4" fill="#FBBF24"/>
+                  <text x="240" y="92" fill="#F87171" font-family="DM Sans" font-size="10" font-weight="800" text-anchor="middle">CRUSHED ↓</text>
+                  <!-- Player -->
+                  <circle cx="60" cy="148" r="4" fill="#34D399"/>
+                </svg>
+              </div>
+              <span class="tag">⚠ MISTAKE 01</span>
+              <h5>The pop-up</h5>
+              <p>Your drop arcs too high. Apex is over the net or past it. Bouncing high in the kitchen, opponent steps in and crushes it.</p>
+              <div class="fix">
+                <span class="lbl">Fix</span>
+                Soften the grip. Quiet the wrist. Let the shoulder do the work. Apex must peak <strong>before</strong> the net.
+              </div>
+            </div>
+
+            <!-- Mistake 2: Sailing long -->
+            <div class="mistake-card">
+              <div class="stage">
+                <svg viewBox="0 0 360 200" preserveAspectRatio="xMidYMid meet" style="height:100%;width:100%">
+                  <defs>
+                    <linearGradient id="mc2Court" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#2D5FA8"/><stop offset="1" stop-color="#1B3E72"/></linearGradient>
+                    <linearGradient id="mc2K" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#6B0F1A"/><stop offset="1" stop-color="#52090F"/></linearGradient>
+                  </defs>
+                  <rect x="0" y="160" width="360" height="40" fill="#3F4854"/>
+                  <rect x="20" y="140" width="320" height="20" fill="url(#mc2Court)"/>
+                  <rect x="220" y="140" width="60" height="20" fill="url(#mc2K)"/>
+                  <rect x="178" y="60" width="2" height="80" fill="rgba(255,255,255,.85)"/>
+                  <!-- Sailing arc — too flat, too long -->
+                  <path d="M 60 145 Q 200 80 320 142" fill="none" stroke="#F87171" stroke-width="2.6" stroke-dasharray="5 4"/>
+                  <circle cx="320" cy="142" r="4" fill="#F87171"/>
+                  <text x="320" y="135" fill="#F87171" font-family="DM Sans" font-size="10" font-weight="800" text-anchor="middle">DEEP</text>
+                  <circle cx="60" cy="148" r="4" fill="#34D399"/>
+                </svg>
+              </div>
+              <span class="tag">⚠ MISTAKE 02</span>
+              <h5>Sailing long</h5>
+              <p>Closed paddle face. Too much pace. The ball flies past their kitchen line and lands deep. They drive it back at you.</p>
+              <div class="fix">
+                <span class="lbl">Fix</span>
+                Open the paddle face. Take 30% off the swing. Aim for the kitchen line, not the baseline.
+              </div>
+            </div>
+
+            <!-- Mistake 3: Net dive -->
+            <div class="mistake-card">
+              <div class="stage">
+                <svg viewBox="0 0 360 200" preserveAspectRatio="xMidYMid meet" style="height:100%;width:100%">
+                  <defs>
+                    <linearGradient id="mc3Court" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#2D5FA8"/><stop offset="1" stop-color="#1B3E72"/></linearGradient>
+                    <linearGradient id="mc3K" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#6B0F1A"/><stop offset="1" stop-color="#52090F"/></linearGradient>
+                  </defs>
+                  <rect x="0" y="160" width="360" height="40" fill="#3F4854"/>
+                  <rect x="20" y="140" width="320" height="20" fill="url(#mc3Court)"/>
+                  <rect x="220" y="140" width="60" height="20" fill="url(#mc3K)"/>
+                  <rect x="178" y="60" width="2" height="80" fill="rgba(255,255,255,.85)"/>
+                  <!-- Net dive — into the net -->
+                  <path d="M 60 145 Q 130 100 178 130" fill="none" stroke="#F87171" stroke-width="2.6" stroke-dasharray="5 4"/>
+                  <circle cx="178" cy="130" r="4" fill="#F87171"/>
+                  <text x="160" y="124" fill="#F87171" font-family="DM Sans" font-size="10" font-weight="800" text-anchor="middle">NET</text>
+                  <circle cx="60" cy="148" r="4" fill="#34D399"/>
+                </svg>
+              </div>
+              <span class="tag">⚠ MISTAKE 03</span>
+              <h5>The net dive</h5>
+              <p>You decelerated. The paddle stopped moving at contact. The arc had no energy &mdash; it nosedives into the net.</p>
+              <div class="fix">
+                <span class="lbl">Fix</span>
+                Smooth low-to-high <em>follow-through</em>. Brush up through the ball. Finish with the paddle pointing at your target.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ────────────────────────────────────────────────
+           SCREEN 8 · Coach Dave's drill
+           ──────────────────────────────────────────────── -->
+      <section class="screen" id="s8" data-screen="8">
+        <div class="screen-inner">
+          <span class="screen-eyebrow"><span class="num">08</span>Coach Dave's drill</span>
+          <h2>One hundred drops.<br>Then <span class="em">one hundred more</span>.</h2>
+          <p class="lede">Touch is built by volume, not by reading. This is the drill. Three levels. Tap <strong>Hit drop</strong> &mdash; or just press <strong>Space</strong> &mdash; to log every rep.</p>
+
+          <div class="drill-stage">
+            <div class="drill-court">
+              <svg id="drillSvg" viewBox="0 0 600 380" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="drillCourt" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0" stop-color="#2D5FA8"/><stop offset="1" stop-color="#1B3E72"/>
+                  </linearGradient>
+                  <linearGradient id="drillDeck" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0" stop-color="#5E6878"/><stop offset="1" stop-color="#3F4854"/>
+                  </linearGradient>
+                  <linearGradient id="drillKitchen" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0" stop-color="#6B0F1A"/><stop offset="1" stop-color="#52090F"/>
+                  </linearGradient>
+                  <radialGradient id="drillSafe" cx="50%" cy="50%" r="50%">
+                    <stop offset="0" stop-color="#34D399" stop-opacity="0.55"/>
+                    <stop offset="1" stop-color="#34D399" stop-opacity="0"/>
+                  </radialGradient>
+                  <filter id="drillGlow"><feGaussianBlur stdDeviation="2"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                </defs>
+                <rect x="0" y="280" width="600" height="100" fill="url(#drillDeck)"/>
+                <rect x="20" y="240" width="560" height="40" fill="url(#drillCourt)"/>
+                <rect x="380" y="240" width="120" height="40" fill="url(#drillKitchen)"/>
+
+                <line x1="20"  y1="240" x2="20"  y2="280" class="court-line"/>
+                <line x1="580" y1="240" x2="580" y2="280" class="court-line"/>
+                <line x1="380" y1="240" x2="380" y2="280" class="court-line"/>
+                <line x1="500" y1="240" x2="500" y2="280" class="court-line"/>
+
+                <!-- Net -->
+                <rect x="296" y="170" width="4" height="70" fill="rgba(255,255,255,.85)"/>
+                <line x1="296" y1="170" x2="300" y2="170" class="net-tape"/>
+
+                <!-- Goldilocks safe zone -->
+                <ellipse cx="430" cy="265" rx="42" ry="9" fill="url(#drillSafe)">
+                  <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2s" repeatCount="indefinite"/>
+                </ellipse>
+
+                <!-- Player (level 1: kitchen, level 2: transition, level 3: baseline) -->
+                <g id="drillPlayer" transform="translate(60 178)">
+                  <rect x="-3" y="22" width="6" height="42" fill="#234E8C" rx="2"/>
+                  <circle cx="0" cy="14" r="9" fill="#F5F3EE"/>
+                  <ellipse cx="0" cy="35" rx="11" ry="14" fill="#234E8C"/>
+                  <rect x="-2.5" y="55" width="2" height="14" fill="#1B3E72"/>
+                  <rect x="0.5" y="55" width="2" height="14" fill="#1B3E72"/>
+                  <ellipse cx="-3" cy="71" rx="4" ry="2" fill="#F5F3EE"/>
+                  <ellipse cx="3" cy="71" rx="4" ry="2" fill="#F5F3EE"/>
+                  <line x1="6" y1="34" x2="22" y2="50" stroke="#F5F3EE" stroke-width="2.5" stroke-linecap="round"/>
+                  <ellipse cx="26" cy="52" rx="6" ry="9" fill="#34D399" stroke="#0E1F38" stroke-width="0.8" transform="rotate(-22 26 52)"/>
+                </g>
+
+                <!-- Coach feeder (always at far kitchen) -->
+                <g transform="translate(450 178) scale(-1,1)">
+                  <rect x="-3" y="22" width="6" height="42" fill="#1B3E72" rx="2"/>
+                  <circle cx="0" cy="14" r="9" fill="#F5F3EE"/>
+                  <ellipse cx="0" cy="35" rx="11" ry="14" fill="#1B3E72"/>
+                  <rect x="-2.5" y="55" width="2" height="14" fill="#234E8C"/>
+                  <rect x="0.5" y="55" width="2" height="14" fill="#234E8C"/>
+                  <ellipse cx="-3" cy="71" rx="4" ry="2" fill="#F5F3EE"/>
+                  <ellipse cx="3" cy="71" rx="4" ry="2" fill="#F5F3EE"/>
+                  <line x1="6" y1="34" x2="20" y2="38" stroke="#F5F3EE" stroke-width="2.5" stroke-linecap="round"/>
+                  <ellipse cx="26" cy="38" rx="6" ry="9" fill="#FBBF24" stroke="#0E1F38" stroke-width="0.8"/>
+                  <text x="0" y="-12" fill="#FBBF24" font-family="DM Sans" font-size="10" font-weight="800" text-anchor="middle" letter-spacing="1.4">COACH</text>
+                </g>
+
+                <!-- Trail (animated per shot) -->
+                <path id="drillTrail" d="" fill="none" stroke="#34D399" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0" opacity="0"/>
+                <!-- Ball -->
+                <circle id="drillBall" cx="86" cy="220" r="5" fill="#F5F3EE" filter="url(#drillGlow)"/>
+
+                <!-- Counter overlay -->
+                <text id="drillFloater" x="430" y="200" fill="#34D399" font-family="Instrument Serif" font-style="italic" font-size="22" text-anchor="middle" opacity="0">+1</text>
+              </svg>
+            </div>
+
+            <div class="drill-panel">
+              <div class="drill-counter">
+                <div class="big" id="drillCount">0</div>
+                <div class="of">/ 100 reps · current level</div>
+                <div class="label" id="drillLabel">LEVEL 1 · FROM THE KITCHEN</div>
+              </div>
+
+              <div class="drill-levels" id="drillLevels">
+                <div class="drill-level active" data-level="0">
+                  <div class="pip">1</div>
+                  <div class="text">
+                    <div class="name">From the kitchen</div>
+                    <div class="desc">Drop into your own kitchen line. Touch builder.</div>
+                  </div>
+                </div>
+                <div class="drill-level" data-level="1">
+                  <div class="pip">2</div>
+                  <div class="text">
+                    <div class="name">From no-man's land</div>
+                    <div class="desc">Reset shot. Soft block from the transition zone.</div>
+                  </div>
+                </div>
+                <div class="drill-level" data-level="2">
+                  <div class="pip">3</div>
+                  <div class="text">
+                    <div class="name">From the baseline</div>
+                    <div class="desc">The third shot. The real test.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="drill-controls">
+                <button id="drillHit" type="button">Hit drop · <span style="opacity:.7">SPACE</span></button>
+                <button class="secondary" id="drillReset" type="button">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ────────────────────────────────────────────────
+           SCREEN 9 · Up Next
+           ──────────────────────────────────────────────── -->
+      <section class="screen" id="s9" data-screen="9">
+        <div class="screen-inner">
+          <span class="screen-eyebrow" style="color:var(--4dp-dink)"><span class="num" style="background:rgba(43,139,252,.2);color:var(--4dp-dink)">09</span>Up next · 4D · Dink</span>
+          <h2>Now you've earned the <span style="color:var(--4dp-dink)">kitchen line</span>.</h2>
+          <p class="lede">The drop neutralizes. Resets the rally. Buys you the line. <strong>What do you do once you're there?</strong> That's the fourth dimension. Pressure dinking. Generating offense from the kitchen. Coach Casey and the Herrick brothers teach this one.</p>
+
+          <div class="up-next-card">
+            <span class="label"><span class="arr">▶</span> 4D · DINK · GENERATING KITCHEN OFFENSE</span>
+            <h3>Pressure dinks. Speed-ups.<br><span class="em">Put-aways</span>.</h3>
+            <p>You've earned the line. Now learn to win at it. Four cinematic 3D rallies that teach depth, precision, deception, and volley dinking. By Coach Casey + the Herrick brothers.</p>
+            <a class="cta" href="/pressure-dinking/">
+              <span>Start Pressure Dinking</span>
+              <span style="background:rgba(14,31,56,.25);color:var(--4dp-ink);width:22px;height:22px;border-radius:50%;display:inline-grid;place-items:center;">→</span>
+            </a>
+            <span class="replay">Or <span id="replayLink">replay The Drop</span></span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Earned banner -->
+  <div class="earned" id="earnedBanner"><span class="ico">★</span>Master Drop unlocked</div>
+
+  <nav class="mod-nav">
+    <button class="nav-arrow" id="navPrev" aria-label="Previous screen">‹</button>
+    <div class="nav-dots" id="navDots"></div>
+    <button class="nav-next" id="navNext">
+      <span id="navNextLabel">Next</span>
+      <span class="arr">→</span>
+    </button>
+  </nav>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   /drop/  — JS controller
+   ═══════════════════════════════════════════════════════════ */
+(function(){
+  'use strict';
+
+  /* ───── Util ───── */
+  const $  = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+  const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+  const lerp  = (a, b, t)   => a + (b - a) * t;
+  const ease  = t => t < .5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2;
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ═════════════════════════════════════════════════════════
+     1. TRAILER LOOP — soft arc that drops into the kitchen.
+        SVG side-view. Loops every 3.6 seconds.
+     ═════════════════════════════════════════════════════════ */
+  (function trailerLoop(){
+    const ball = $('#tBall');
+    const shadow = $('#tBallShadow');
+    const trail = $('#tTrail');
+    if (!ball || !trail) return;
+
+    // Ball flight: from player paddle (x=100, y=220) to safe zone (x=600, y=265)
+    // Apex around x=400, y=140 (above the net at x=440)
+    const startX = 102, startY = 222;
+    const apexX  = 400, apexY  = 140;
+    const endX   = 600, endY   = 265;
+    let last = performance.now();
+    let elapsed = 0;
+    const period = 3600; // 3.6s loop
+
+    function quadAt(t){
+      // Quadratic bezier P0→P1→P2 with the apex as control
+      const x = (1-t)*(1-t)*startX + 2*(1-t)*t*apexX + t*t*endX;
+      const y = (1-t)*(1-t)*startY + 2*(1-t)*t*apexY + t*t*endY;
+      return [x, y];
+    }
+    function trailPath(p){
+      // Build a path from start to current t
+      const N = 30;
+      let d = '';
+      for (let i = 0; i <= N*p; i++){
+        const tt = i / N;
+        const [x, y] = quadAt(tt);
+        d += (i === 0 ? 'M ' : 'L ') + x.toFixed(1) + ' ' + y.toFixed(1) + ' ';
+      }
+      return d;
+    }
+
+    function tick(now){
+      const dt = now - last; last = now;
+      elapsed = (elapsed + dt) % period;
+      // Two phases: flight (0-2.4s), pause (2.4-3.6s)
+      if (elapsed < 2400){
+        const t = elapsed / 2400;
+        const et = ease(t);
+        const [x, y] = quadAt(et);
+        ball.setAttribute('cx', x);
+        ball.setAttribute('cy', y);
+        // Shadow tracks below
+        const groundY = lerp(276, 277, et);
+        const shadowAlpha = clamp(0.2 + (1 - Math.abs(y - groundY) / 140) * 0.6, 0.05, 0.7);
+        shadow.setAttribute('cx', x);
+        shadow.setAttribute('cy', groundY);
+        shadow.setAttribute('opacity', shadowAlpha);
+        const sw = lerp(3, 5, et);
+        shadow.setAttribute('rx', sw);
+        // Trail
+        trail.setAttribute('d', trailPath(et));
+      } else {
+        // Hold at landing for a moment
+        ball.setAttribute('cx', endX);
+        ball.setAttribute('cy', endY);
+        shadow.setAttribute('cx', endX);
+        shadow.setAttribute('cy', 276);
+        shadow.setAttribute('opacity', 0.65);
+        trail.setAttribute('d', trailPath(1));
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
+
+  /* ═════════════════════════════════════════════════════════
+     2. MODULE STATE
+     ═════════════════════════════════════════════════════════ */
+  const TOTAL = 9;
+  let current = 0; // 0..8
+
+  const overlay  = $('#modOverlay');
+  const rail     = $('#modRail');
+  const progFill = $('#progFill');
+  const stepNum  = $('#stepNum');
+  const dotsHost = $('#navDots');
+  const navPrev  = $('#navPrev');
+  const navNext  = $('#navNext');
+  const navNextLabel = $('#navNextLabel');
+
+  /* Build dots */
+  for (let i = 0; i < TOTAL; i++){
+    const d = document.createElement('button');
+    d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Go to screen ' + (i+1));
+    d.addEventListener('click', () => goTo(i));
+    dotsHost.appendChild(d);
+  }
+  const dots = $$('.nav-dot', dotsHost);
+
+  function update(){
+    rail.style.transform = `translateX(${-100 * current}%)`;
+    progFill.style.width = (((current + 1) / TOTAL) * 100) + '%';
+    stepNum.textContent = (current + 1);
+    dots.forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+      d.classList.toggle('visited', i < current);
+    });
+    navPrev.disabled = (current === 0);
+    if (current === TOTAL - 1){
+      navNextLabel.textContent = 'Done';
+      navNext.classList.add('dink');
+    } else if (current === TOTAL - 2){
+      navNextLabel.textContent = 'Up next';
+      navNext.classList.remove('dink');
+    } else {
+      navNextLabel.textContent = 'Next';
+      navNext.classList.remove('dink');
+    }
+
+    // Re-trigger any animations on the active screen
+    const screen = $$('.screen')[current];
+    if (screen) screen.scrollTop = 0;
+
+    // Per-screen activations
+    if (current === 1) playScreen2();
+  }
+
+  function next(){
+    if (current < TOTAL - 1){ current++; update(); }
+    else { closeModule(); }
+  }
+  function prev(){ if (current > 0){ current--; update(); } }
+  function goTo(i){ current = clamp(i, 0, TOTAL-1); update(); }
+
+  navNext.addEventListener('click', next);
+  navPrev.addEventListener('click', prev);
+
+  /* ───── Open / close ───── */
+  function openModule(){
+    overlay.classList.add('open');
+    document.body.classList.add('mod-open');
+    current = 0;
+    update();
+    setTimeout(playScreen2, 50); // pre-warm second-screen animation
+  }
+  function closeModule(){
+    overlay.classList.remove('open');
+    document.body.classList.remove('mod-open');
+  }
+  $('#startBtn').addEventListener('click', openModule);
+  $('#closeBtn').addEventListener('click', closeModule);
+
+  /* ───── Keyboard ───── */
+  document.addEventListener('keydown', (e) => {
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape') { closeModule(); }
+    else if (e.key === 'ArrowRight' || e.key === 'PageDown') { next(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft'  || e.key === 'PageUp')   { prev(); e.preventDefault(); }
+    else if (e.code === 'Space' && current === 7) { drillHit(); e.preventDefault(); }
+  });
+
+  /* Touch swipe (left/right) on the rail */
+  (function swipe(){
+    let x0 = null, y0 = null;
+    rail.addEventListener('touchstart', (e) => {
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY;
+    }, {passive: true});
+    rail.addEventListener('touchend', (e) => {
+      if (x0 === null) return;
+      const x1 = e.changedTouches[0].clientX, y1 = e.changedTouches[0].clientY;
+      const dx = x1 - x0, dy = y1 - y0;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.4){
+        if (dx < 0) next(); else prev();
+      }
+      x0 = null; y0 = null;
+    });
+  })();
+
+  /* ═════════════════════════════════════════════════════════
+     3. SCREEN 2 · drop arc animation
+     ═════════════════════════════════════════════════════════ */
+  let s2Anim = null;
+  function playScreen2(){
+    const ball = $('#s2Ball');
+    const shadow = $('#s2BallShadow');
+    const trail = $('#s2Trail');
+    const peak  = $('#s2Peak');
+    const land  = $('#s2Land');
+    if (!ball || !trail) return;
+    if (s2Anim) cancelAnimationFrame(s2Anim);
+
+    const startX = 138, startY = 320;
+    const apexX  = 480, apexY  = 200;
+    const endX   = 690, endY   = 408;
+    const groundY = 438;
+
+    function quadAt(t){
+      const x = (1-t)*(1-t)*startX + 2*(1-t)*t*apexX + t*t*endX;
+      const y = (1-t)*(1-t)*startY + 2*(1-t)*t*apexY + t*t*endY;
+      return [x, y];
+    }
+    function trailPath(p){
+      const N = 36; let d = '';
+      for (let i = 0; i <= N*p; i++){
+        const tt = i / N; const [x, y] = quadAt(tt);
+        d += (i === 0 ? 'M ' : 'L ') + x.toFixed(1) + ' ' + y.toFixed(1) + ' ';
+      }
+      return d;
+    }
+
+    let started = performance.now();
+    const period = 3800;
+    function tick(now){
+      const elapsed = (now - started) % period;
+      if (elapsed < 2400){
+        const t = elapsed / 2400;
+        const et = ease(t);
+        const [x, y] = quadAt(et);
+        ball.setAttribute('cx', x);
+        ball.setAttribute('cy', y);
+        shadow.setAttribute('cx', x);
+        shadow.setAttribute('cy', groundY);
+        shadow.setAttribute('opacity', clamp((1 - Math.abs(y - groundY) / 240) * 0.6 + 0.1, 0.08, 0.7));
+        shadow.setAttribute('rx', lerp(4, 6, et));
+        trail.setAttribute('d', trailPath(et));
+        peak.setAttribute('opacity', et > 0.45 ? '1' : '0');
+        land.setAttribute('opacity', et > 0.92 ? '1' : '0');
+      } else {
+        ball.setAttribute('cx', endX);
+        ball.setAttribute('cy', endY);
+        shadow.setAttribute('cx', endX);
+        shadow.setAttribute('cy', groundY);
+        shadow.setAttribute('opacity', 0.7);
+        trail.setAttribute('d', trailPath(1));
+      }
+      s2Anim = requestAnimationFrame(tick);
+    }
+    s2Anim = requestAnimationFrame(tick);
+  }
+
+  /* ═════════════════════════════════════════════════════════
+     4. KEY 1 · grip pressure slider
+     ═════════════════════════════════════════════════════════ */
+  (function gripPressure(){
+    const slider = $('#pressureSlider');
+    const fill   = $('#pressureFill');
+    const read   = $('#pressureRead');
+    const verdict= $('#pressureVerdict');
+    if (!slider) return;
+
+    function setFromValue(v){
+      const pct = (v - 1) / 9;
+      fill.style.width = (pct * 100) + '%';
+      const isBad = v >= 6;
+      const isWarn = v >= 4 && v < 6;
+      fill.classList.toggle('bad', isBad || isWarn);
+      read.textContent = v;
+      read.classList.toggle('bad', isBad);
+      verdict.classList.toggle('bad', isBad);
+      if (v <= 2)
+        verdict.innerHTML = "Almost too soft — but the ball will still drop. <strong>Light is right.</strong>";
+      else if (v === 3)
+        verdict.innerHTML = "Your fingers are barely wrapped. The paddle absorbs the ball instead of pushing it. <strong>Soft.</strong>";
+      else if (v <= 5)
+        verdict.innerHTML = "Borderline — the ball will still drop but there's tension creeping into your forearm. <em>Loosen the grip.</em>";
+      else if (v <= 7)
+        verdict.innerHTML = "Too tight. The ball is bouncing off the paddle face — the drop will <strong>pop up</strong>.";
+      else
+        verdict.innerHTML = "White-knuckle. The drop just rocketed past their kitchen line into the baseline. <strong>Disaster.</strong>";
+    }
+    slider.addEventListener('input', e => setFromValue(parseInt(e.target.value, 10)));
+    setFromValue(parseInt(slider.value, 10));
+  })();
+
+  /* ═════════════════════════════════════════════════════════
+     5. KEY 2 · paddle face slider with live trajectory physics
+     ═════════════════════════════════════════════════════════ */
+  (function paddleAngle(){
+    const slider = $('#paddleAngle');
+    const val    = $('#paddleVal');
+    const traj   = $('#paddleTraj');
+    const ball   = $('#paddleBall');
+    const face   = $('#paddleFace');
+    const pill   = $('#paddleVerdictPill');
+    const text   = $('#paddleVerdictText');
+    const anno   = $('#paddleAnno');
+    if (!slider) return;
+
+    // Court coordinates in SVG space:
+    // Player paddle contact: x=86, y=220 (waist level)
+    // Net at x=298, top y=170 (net-tape is at y=170, so the lip)
+    // Court level y=240 (court surface), kitchen 380-500 on x
+    // Goldilocks zone: x=410-450, y=265
+    const startX = 86, startY = 220;
+    const groundY = 265;
+
+    // Simple trajectory model:
+    //  - Initial speed v0 (mph -> px/s)
+    //  - Launch angle = paddle angle (deg)
+    //  - Gravity acts downward
+    //  - We solve for the ball's path until it hits y >= groundY
+    function buildTrajectory(angleDeg){
+      // px/s, calibrated so that ~22° lands in goldilocks zone
+      const v0 = 240; // px per second
+      const ang = angleDeg * Math.PI / 180;
+      const vx = v0 * Math.cos(ang);
+      const vy = -v0 * Math.sin(ang); // SVG y goes down
+      const g = 360; // px/s²
+
+      let pts = [];
+      const dt = 0.012;
+      let t = 0, x = startX, y = startY;
+      while (t < 4){
+        const x_ = startX + vx * t;
+        const y_ = startY + vy * t + 0.5 * g * t * t;
+        pts.push([x_, y_]);
+        if (y_ >= groundY && t > 0.1) break;
+        t += dt;
+      }
+      return pts;
+    }
+
+    function setAngle(deg){
+      val.textContent = deg + '°';
+      anno.textContent = 'PADDLE FACE: ' + deg + '°';
+      face.setAttribute('transform', 'rotate(' + (-deg) + ' 26 52)');
+
+      const pts = buildTrajectory(deg);
+      const last = pts[pts.length - 1];
+      // Build path
+      let d = '';
+      pts.forEach((p, i) => {
+        d += (i === 0 ? 'M ' : 'L ') + p[0].toFixed(1) + ' ' + p[1].toFixed(1) + ' ';
+      });
+      traj.setAttribute('d', d);
+      // Move the ball to the landing
+      ball.setAttribute('cx', last[0]);
+      ball.setAttribute('cy', last[1]);
+
+      // Verdict zones (x at landing):
+      // Net: x=298. Ball must clear it.
+      // Did the ball clear the net? Check if any point along the path with x<298 goes higher than y=170
+      let crossedNet = false, hitNet = false;
+      for (const p of pts){
+        if (p[0] >= 296 && p[0] <= 302){ if (p[1] > 170) hitNet = true; else crossedNet = true; }
+      }
+      const lx = last[0];
+      let kind, copy;
+      if (deg < 8){
+        kind = 'bad';
+        copy = "Closed face. Ball drives flat into the net. Driving, not dropping.";
+      } else if (hitNet && !crossedNet){
+        kind = 'bad'; copy = "Too closed. The arc never gets over the net.";
+      } else if (lx < 380){
+        kind = 'bad';
+        copy = "Falls short — sits up in their kitchen. They put it away.";
+      } else if (lx >= 410 && lx <= 450){
+        kind = 'good';
+        copy = "Open paddle face. Soft arc. Lands one foot past their kitchen line. <strong>Goldilocks.</strong>";
+      } else if (lx > 450 && lx < 500){
+        kind = 'warn';
+        copy = "Slightly deep. Still in the kitchen, but they can step in and reach it.";
+      } else if (lx >= 500){
+        kind = 'bad';
+        copy = "Sailing long. Past their kitchen. They drive it back at you.";
+      } else {
+        kind = 'warn'; copy = "Marginal — try a little more open.";
+      }
+
+      pill.classList.remove('good','warn','bad');
+      pill.classList.add(kind);
+      pill.textContent = (kind === 'good' ? 'DROPPED' : (kind === 'warn' ? 'CLOSE' : (deg < 8 ? 'DRIVEN' : 'POP-UP')));
+      text.innerHTML = copy;
+    }
+    slider.addEventListener('input', e => setAngle(parseInt(e.target.value, 10)));
+    setAngle(parseInt(slider.value, 10));
+  })();
+
+  /* ═════════════════════════════════════════════════════════
+     6. KEYS — sub-tab switcher
+     ═════════════════════════════════════════════════════════ */
+  $$('.keys-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const k = tab.dataset.key;
+      $$('.keys-tab').forEach(t => t.classList.toggle('active', t === tab));
+      $$('.keys-pane').forEach(p => p.classList.toggle('active', p.dataset.key === k));
+    });
+  });
+
+  /* ═════════════════════════════════════════════════════════
+     7. SCREEN 8 · Drill counter
+     ═════════════════════════════════════════════════════════ */
+  let drillState = {
+    level: 0,
+    count: 0,
+    perLevel: 100,
+    earnedShown: false,
+  };
+  const drillCount = $('#drillCount');
+  const drillLabel = $('#drillLabel');
+  const drillLevels = $$('.drill-level');
+  const drillPlayer = $('#drillPlayer');
+  const drillBall = $('#drillBall');
+  const drillTrail = $('#drillTrail');
+  const drillFloater = $('#drillFloater');
+  const earnedBanner = $('#earnedBanner');
+
+  const LEVEL_LABELS = [
+    'LEVEL 1 · FROM THE KITCHEN',
+    'LEVEL 2 · FROM NO-MAN\'S LAND',
+    'LEVEL 3 · FROM THE BASELINE',
+  ];
+  const LEVEL_DESCS = [
+    'Drop into your own kitchen line. Touch builder.',
+    'Reset shot. Soft block from the transition zone.',
+    'The third shot. The real test.',
+  ];
+  const LEVEL_PLAYER_X = [220, 140, 60]; // farther = harder
+
+  function drillHit(){
+    if (drillState.count >= drillState.perLevel * 3) return;
+    drillState.count++;
+    // Level transition
+    const newLevel = Math.min(2, Math.floor(drillState.count / drillState.perLevel));
+    if (newLevel !== drillState.level){
+      drillState.level = newLevel;
+      drillPlayer.setAttribute('transform', 'translate(' + LEVEL_PLAYER_X[newLevel] + ' 178)');
+      drillLevels.forEach((el, i) => {
+        el.classList.toggle('active', i === newLevel);
+        el.classList.toggle('done', i < newLevel);
+      });
+      drillLabel.textContent = LEVEL_LABELS[newLevel];
+    }
+    // Update count display
+    const inLevel = drillState.count - newLevel * drillState.perLevel;
+    drillCount.textContent = inLevel >= 100 ? '100' : inLevel;
+    drillCount.classList.add('bump'); setTimeout(() => drillCount.classList.remove('bump'), 140);
+
+    // Floater
+    drillFloater.setAttribute('opacity', '1');
+    drillFloater.setAttribute('y', '200');
+    drillFloater.style.transition = 'all .9s var(--4dp-ease)';
+    requestAnimationFrame(() => {
+      drillFloater.setAttribute('y', '170');
+      drillFloater.setAttribute('opacity', '0');
+    });
+
+    // Animate ball
+    animateDrillBall();
+
+    // 100/200/300 milestones
+    if (drillState.count === 100 || drillState.count === 200 || drillState.count === 300){
+      showEarned(drillState.count === 300 ? 'Master Drop unlocked' : (drillState.count === 200 ? '200 reps · Coach Dave\'s drill' : '100 reps · keep going'));
+    }
+  }
+  function showEarned(msg){
+    earnedBanner.querySelector('.ico').textContent = '★';
+    earnedBanner.lastChild.textContent = msg;
+    // Reset text content after icon
+    earnedBanner.innerHTML = '<span class="ico">★</span>' + msg;
+    earnedBanner.classList.add('show');
+    setTimeout(() => earnedBanner.classList.remove('show'), 2400);
+  }
+
+  function animateDrillBall(){
+    const lvl = drillState.level;
+    const startX = LEVEL_PLAYER_X[lvl] + 26, startY = 230;
+    const endX = 430, endY = 265;
+    const apexY = 130 + lvl * 12;
+    const apexX = (startX + endX) / 2;
+    drillBall.setAttribute('cx', startX);
+    drillBall.setAttribute('cy', startY);
+    drillTrail.setAttribute('opacity', '1');
+
+    let started = performance.now();
+    const dur = 480;
+    function quadAt(t){
+      const x = (1-t)*(1-t)*startX + 2*(1-t)*t*apexX + t*t*endX;
+      const y = (1-t)*(1-t)*startY + 2*(1-t)*t*apexY + t*t*endY;
+      return [x, y];
+    }
+    function step(now){
+      const t = clamp((now - started) / dur, 0, 1);
+      const et = ease(t);
+      const [x, y] = quadAt(et);
+      drillBall.setAttribute('cx', x);
+      drillBall.setAttribute('cy', y);
+      let d = '';
+      const N = 22;
+      for (let i = 0; i <= N*et; i++){
+        const tt = i / N; const [px, py] = quadAt(tt);
+        d += (i === 0 ? 'M ' : 'L ') + px.toFixed(1) + ' ' + py.toFixed(1) + ' ';
+      }
+      drillTrail.setAttribute('d', d);
+      if (t < 1) requestAnimationFrame(step);
+      else {
+        setTimeout(() => drillTrail.setAttribute('opacity', '0'), 200);
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  $('#drillHit').addEventListener('click', drillHit);
+  $('#drillReset').addEventListener('click', () => {
+    drillState = { level: 0, count: 0, perLevel: 100, earnedShown: false };
+    drillCount.textContent = '0';
+    drillLabel.textContent = LEVEL_LABELS[0];
+    drillPlayer.setAttribute('transform', 'translate(' + LEVEL_PLAYER_X[0] + ' 178)');
+    drillLevels.forEach((el, i) => {
+      el.classList.toggle('active', i === 0);
+      el.classList.remove('done');
+    });
+    drillBall.setAttribute('cx', LEVEL_PLAYER_X[0] + 26);
+    drillBall.setAttribute('cy', 220);
+    drillTrail.setAttribute('d', '');
+    drillTrail.setAttribute('opacity', '0');
+  });
+
+  /* ═════════════════════════════════════════════════════════
+     8. Replay link on screen 9
+     ═════════════════════════════════════════════════════════ */
+  $('#replayLink').addEventListener('click', () => { current = 0; update(); });
+
+  /* ═════════════════════════════════════════════════════════
+     9. Trailer-card click → open module on the right screen
+     ═════════════════════════════════════════════════════════ */
+  $$('.trailer-card').forEach((c, i) => {
+    c.addEventListener('click', () => {
+      openModule();
+      // Card 1 → Goldilocks zone (screen 3 / index 2)
+      // Card 2 → Three keys (screen 4 / index 3)
+      // Card 3 → Drop or drive (screen 5 / index 4)
+      goTo(2 + i);
+    });
+  });
+
+  /* ═════════════════════════════════════════════════════════
+     10. Initial paint of trajectories on load
+     ═════════════════════════════════════════════════════════ */
+  // Ensure SVG-only animations on screen 2 start when overlay opens.
+  // Already wired via update() / openModule()
+})();
+</script>
+</body>
+</html>
