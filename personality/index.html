@@ -10,7 +10,25 @@
 <meta property="og:description" content="DUPR rates how well you hit the ball. We rate who's worth playing with. Different quiz. Different game.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://4dpickleball.com/personality">
+<meta property="og:image" content="https://4dpickleball.com/personality/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://4dpickleball.com/personality/og-default.png">
+<link rel="canonical" href="https://4dpickleball.com/personality">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Quiz",
+  "name":"What kind of pickleball player are you?",
+  "about":{"@type":"Thing","name":"Pickleball doubles compatibility"},
+  "educationalLevel":"all",
+  "numberOfQuestions":13,
+  "timeRequired":"PT4M",
+  "publisher":{"@type":"Organization","name":"4D Pickleball","url":"https://4dpickleball.com"},
+  "isPartOf":{"@type":"WebSite","name":"4D Pickleball","url":"https://4dpickleball.com"}
+}
+</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232B8BFC'/%3E%3Ctext x='50' y='68' font-family='Inter,Arial,sans-serif' font-size='56' font-weight='900' fill='white' text-anchor='middle'%3E4D%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="/4dp/tokens.css">
 
@@ -147,8 +165,25 @@ button { -webkit-tap-highlight-color: transparent; }
 .btn-blue:hover { box-shadow: 0 0 80px rgba(43,139,252,.55); }
 .btn-sm { padding: 10px 20px; font-size: 12px; }
 
+.trust-strip {
+  display: inline-flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: center;
+  margin: 28px auto 0;
+  padding: 14px 24px; border-radius: var(--4dp-r-pill);
+  background: rgba(245,243,238,.04); border: 1px solid var(--4dp-hairline-s);
+  font-size: 13px; color: var(--4dp-text-mute);
+}
+.trust-strip > div { text-align: center; line-height: 1.2; }
+.trust-strip strong {
+  display: block;
+  color: var(--4dp-text);
+  font-family: var(--4dp-font-display); font-style: italic; font-weight: 400;
+  font-size: 22px; line-height: 1; margin-bottom: 2px;
+}
+.trust-strip span { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--4dp-text-faint); }
+.trust-strip .sep { opacity: .35; font-size: 18px; }
+
 .preamble {
-  margin-top: 48px; padding: 24px 28px;
+  margin-top: 32px; padding: 24px 28px;
   background: var(--4dp-surface); border: 1px solid var(--4dp-hairline);
   border-radius: var(--4dp-r-md); text-align: left;
 }
@@ -186,11 +221,16 @@ button { -webkit-tap-highlight-color: transparent; }
   padding: 16px 20px;
   background: var(--4dp-surface); border: 1px solid var(--4dp-hairline);
   border-radius: var(--4dp-r-md);
-  cursor: pointer; font-size: 16px; color: var(--4dp-text);
+  cursor: pointer; font-size: 17px; color: var(--4dp-text);
   transition: transform .12s var(--4dp-ease), border-color .2s, background .2s;
   text-align: left; line-height: 1.4;
   width: 100%; touch-action: manipulation;
 }
+/* Carol's a11y + readability bumps */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.preamble p { font-size: 16px; }
+.result-section .sub { font-size: 16px; }
+.event-row .ev-blurb { font-size: 13px; }
 .opt:hover { border-color: var(--4dp-dink); background: var(--4dp-surface-2); }
 .opt:active { transform: scale(.97); }
 .opt.selected { border-color: var(--gnr-gold); background: rgba(245,158,11,.10); box-shadow: 0 0 24px rgba(245,158,11,.18); }
@@ -238,13 +278,15 @@ button { -webkit-tap-highlight-color: transparent; }
   margin-bottom: 6px;
 }
 .ev-seg {
-  min-height: 48px;
+  min-height: 56px;
   background: transparent; border: none; border-radius: 8px;
   font-size: 22px; font-weight: 700; color: var(--4dp-text-dim);
   cursor: pointer; transition: all .18s ease;
   touch-action: manipulation;
-  display: flex; align-items: center; justify-content: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
 }
+.ev-seg .sym { font-size: 18px; line-height: 1; }
+.ev-seg .lbl { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; opacity: .85; font-weight: 700; }
 .ev-seg:active { transform: scale(.95); }
 .ev-seg.selected.love     { background: var(--gnr-gold); color: var(--4dp-ink); box-shadow: 0 0 16px rgba(245,158,11,.4); }
 .ev-seg.selected.like     { background: rgba(52,211,153,.85); color: var(--4dp-ink); }
@@ -434,6 +476,35 @@ button { -webkit-tap-highlight-color: transparent; }
 .narrative .em { color: var(--gnr-gold); }
 .narrative .roast { color: var(--4dp-text-dim); }
 
+/* Maya's expandable depth */
+.narrative-deep {
+  margin-top: 18px;
+  border-top: 1px dashed var(--4dp-hairline);
+  padding-top: 16px;
+}
+.narrative-deep summary {
+  font-family: var(--4dp-font-data); font-size: 12px;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gnr-gold); cursor: pointer;
+  padding: 4px 0; list-style: none;
+}
+.narrative-deep summary::-webkit-details-marker { display: none; }
+.narrative-deep summary::after { content: '+'; float: right; font-size: 18px; color: var(--4dp-text-mute); transition: transform .2s; }
+.narrative-deep[open] summary::after { content: '−'; }
+.narrative-deep .deep-body { padding-top: 14px; }
+.narrative-deep h4 {
+  font-family: var(--4dp-font-data); font-size: 11px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--4dp-text-mute);
+  margin: 18px 0 8px;
+}
+.narrative-deep h4:first-child { margin-top: 0; }
+.narrative-deep p {
+  font-family: var(--4dp-font-display); font-style: italic;
+  font-size: 18px; line-height: 1.5;
+  color: var(--4dp-text-dim);
+}
+
 .radar-wrap { display: flex; flex-direction: column; align-items: center; margin-top: 18px; }
 .radar-svg { width: 100%; max-width: 480px; height: auto; }
 .radar-label-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 18px; max-width: 480px; margin: 22px auto 0; width: 100%; }
@@ -529,6 +600,22 @@ button { -webkit-tap-highlight-color: transparent; }
 .skill-scale { display: flex; justify-content: space-between; font-size: 10px; color: var(--4dp-text-faint); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
 .capture-disclaimer { font-size: 11px; color: var(--4dp-text-faint); margin-top: 14px; line-height: 1.5; }
 
+.creator-block {
+  display: flex; gap: 14px; align-items: center;
+  padding: 18px;
+  background: var(--4dp-surface); border: 1px solid var(--4dp-hairline);
+  border-radius: var(--4dp-r-md);
+  margin-top: 18px;
+}
+.creator-block .creator-mark {
+  width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--4dp-dink), var(--gnr-gold));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; color: #fff; font-size: 18px;
+}
+.creator-block .creator-text { font-size: 13px; line-height: 1.5; color: var(--4dp-text-dim); }
+.creator-block .creator-text strong { color: var(--4dp-text); }
+
 .partner-banner {
   margin-top: 28px; padding: 22px 26px;
   background: linear-gradient(135deg, rgba(43,139,252,.16), rgba(245,158,11,.10));
@@ -567,28 +654,36 @@ button { -webkit-tap-highlight-color: transparent; }
   <a href="https://4dpickleball.com/" class="home-link">← Home</a>
 </nav>
 
-<div class="reveal-stage" id="revealStage">
+<div class="reveal-stage" id="revealStage" role="status" aria-live="polite" aria-atomic="true">
   <div class="reveal-text" id="revealText">Reading your court DNA...</div>
-  <div class="reveal-ball"></div>
-  <div class="reveal-ripple"></div>
-  <div class="reveal-flash"></div>
-  <div class="reveal-name" id="revealName"></div>
+  <div class="reveal-ball" aria-hidden="true"></div>
+  <div class="reveal-ripple" aria-hidden="true"></div>
+  <div class="reveal-flash" aria-hidden="true"></div>
+  <div class="reveal-name" id="revealName" aria-hidden="true"></div>
+  <span id="revealAnnounce" class="sr-only"></span>
 </div>
 
 <div class="app">
 
   <section class="page active" id="page-intro">
     <div class="hero">
-      <div class="eyebrow"><span class="dot"></span>From inside community pickleball at NEPC</div>
+      <div class="eyebrow"><span class="dot"></span>The 4D Pickleball thesis · From 450 members at NEPC</div>
       <h1>What does your <span class="accent">game</span> look like?</h1>
       <div class="ball-stage"><div class="ball-shadow"></div><div class="ball"></div></div>
       <div class="meta"><span>13 questions</span><span class="dot"></span><span>~4 minutes</span><span class="dot"></span><span>Honest answers only</span></div>
       <div><button class="btn" onclick="startQuiz()">Take the Quiz</button></div>
+      <div class="trust-strip">
+        <div><strong>450+</strong><span>real members</span></div>
+        <div class="sep">·</div>
+        <div><strong>2 clubs</strong><span>Rye + Middleton</span></div>
+        <div class="sep">·</div>
+        <div><strong>6 years</strong><span>coordinating play</span></div>
+      </div>
       <div class="preamble" id="introPreamble">
-        <div class="eyebrow-sm">Why we built this</div>
-        <p>DUPR rates how well you hit the ball. CourtReserve books the courts. Neither one knows whether you're someone people want to play with again.</p>
-        <p>That's the part nobody measures — and it's the part players actually care about. A 3.5 with great energy beats a 4.5 with dead energy every single time. The 4.5 might win the match. Nobody invites them back.</p>
-        <p>Thirteen behavior questions. No "right" answers. No skill rating in disguise. We use it to put you on courts with the people who lift you up.</p>
+        <div class="eyebrow-sm">The first quiz of its kind</div>
+        <p><strong>DUPR rates how well you hit the ball. CourtReserve books the courts. Nobody measures the third dimension — who's worth playing with again.</strong></p>
+        <p>That's "the invitation graph": the dimension that decides who gets called for the 7am fill, who quietly drops off the regular foursome, and who walks off feeling like the night was worth it.</p>
+        <p>Thirteen behavior questions, built from inside <strong>450 NEPC members</strong> at the country's only pickleball club running a community-fairness layer. We're the first to measure this. You're early.</p>
         <p class="tiny muted"><em>Give freely, get back naturally.</em></p>
       </div>
     </div>
@@ -645,6 +740,15 @@ button { -webkit-tap-highlight-color: transparent; }
           <div class="line roast" id="narrRoast"></div>
           <div class="line" id="narrHook"></div>
         </div>
+        <details class="narrative-deep">
+          <summary>Read more about <span id="deepArchName">your archetype</span> →</summary>
+          <div class="deep-body">
+            <h4>Where this comes from</h4>
+            <p id="deepOrigin"></p>
+            <h4>The trap to watch for</h4>
+            <p id="deepTrap"></p>
+          </div>
+        </details>
       </div>
 
       <div class="result-section">
@@ -859,14 +963,46 @@ const EVENT_TYPES = [
 ];
 
 const ARCHETYPES = [
-  { code: 'HCB', name: 'The Hype Cannon', short: 'HYPE', vibesRange: [+1.0, +2], modeRange: [-2, 0], courtZone: 'baseline-left', color: '#FBBF24', tintClass: 'tint-hype', icon: 'hype', tagline: "Loud, lethal, loving every minute.", rarity: 5, defaultTier: 'amplifier', wing: 'CBM', stress: 'HSP', compliment: "You bring electricity to a court most players couldn't generate in an hour.", roast: "But sometimes you're hitting harder when softer would win.", hook: "Pair you with a Craftsman and you become unstoppable. Two Hype Cannons in one foursome and the rally dies in three shots.", vibesWith: ['CBM', 'FBT', 'ABS'], clashWith: ['MQT', 'AQP'] },
-  { code: 'CBM', name: 'The Captain', short: 'CAPT', vibesRange: [+1.0, +2], modeRange: [-2, 0], courtZone: 'baseline-right', color: '#F472B6', tintClass: 'tint-captain', icon: 'captain', tagline: "Calls the plays. Keeps the team loose. Refuses to let anyone tilt.", rarity: 8, defaultTier: 'amplifier', wing: 'HCB', stress: 'ABS', compliment: "You make average partners look like contenders.", roast: "But sometimes the team needs a follower, and that's not you.", hook: "Pair with a Hype Cannon and you're a top-10% team. Two Captains and someone's ego loses.", vibesWith: ['HCB', 'ABS', 'HSP'], clashWith: ['AQP', 'MQT'] },
-  { code: 'HSP', name: 'The Hammer', short: 'HAMM', vibesRange: [-1.0, +1], modeRange: [-2, 0], courtZone: 'midcourt-left', color: '#F87171', tintClass: 'tint-hammer', icon: 'hammer', tagline: "Quiet executioner. Says 'good shot' once a game. Beats you twice.", rarity: 11, defaultTier: 'player', wing: 'AQP', stress: 'CST', compliment: "Your putaways have a reputation that travels club to club.", roast: "But your dink game is ten years younger than your drive.", hook: "Pair with a Captain and you're surgical. Pair with a Festival and you both wonder why you signed up.", vibesWith: ['CBM', 'AQP', 'CST'], clashWith: ['FBT'] },
-  { code: 'AQP', name: 'The Assassin', short: 'ASSN', vibesRange: [-2, 0], modeRange: [-2, 0], courtZone: 'midcourt-right', color: '#9B5DE5', tintClass: 'tint-assassin', icon: 'assassin', tagline: "Doesn't talk. Wins. You forget they're on the court — until you've lost.", rarity: 6, defaultTier: 'player', wing: 'HSP', stress: 'HCB', compliment: "Your composure under pressure is the rarest thing in pickleball.", roast: "But the silence costs you partners who needed feedback.", hook: "Pair with a Hammer and you're a wall. Pair with a Festival and the energy gap is brutal for both of you.", vibesWith: ['HSP', 'MQT', 'CST'], clashWith: ['HCB', 'FBT'] },
-  { code: 'FBT', name: 'The Festival', short: 'FEST', vibesRange: [+1.0, +2], modeRange: [+1, +2], courtZone: 'kitchen-left', color: '#34D399', tintClass: 'tint-festival', icon: 'festival', tagline: "Soft game. Bigger smile. The reason this group still plays together.", rarity: 12, defaultTier: 'energizer', wing: 'ABS', stress: 'CST', compliment: "Three of your foursome would have quit pickleball by now if you weren't in their group chat.", roast: "But you'd rather chat than close out a winnable game.", hook: "Pair with a Captain and you elevate everyone. Pair with a Hammer and the energy mismatch hurts both of you.", vibesWith: ['ABS', 'CBM', 'HCB'], clashWith: ['HSP', 'AQP'] },
-  { code: 'ABS', name: 'The Anchor', short: 'ANCH', vibesRange: [+1.0, +2], modeRange: [+1, +2], courtZone: 'kitchen-right', color: '#F59E0B', tintClass: 'tint-anchor', icon: 'anchor', tagline: "Steady warmth. Plays anyone, with anyone — and everyone leaves better off.", rarity: 9, defaultTier: 'energizer', wing: 'FBT', stress: 'CBM', compliment: "You play with everyone, and everyone leaves the court a little less self-conscious than they showed up.", roast: "But you'll absorb a worse partner's mistakes for so long it costs you the match.", hook: "Pair with anyone — you're the universal donor of doubles. Two Anchors is also magic.", vibesWith: ['FBT', 'CST', 'HCB'], clashWith: [] },
-  { code: 'CST', name: 'The Craftsman', short: 'CRFT', vibesRange: [-1.0, +1], modeRange: [+1, +2], courtZone: 'no-mans-left', color: '#2B8BFC', tintClass: 'tint-craftsman', icon: 'craftsman', tagline: "A 47-shot kitchen exchange is your love language.", rarity: 14, defaultTier: 'amplifier', wing: 'MQT', stress: 'HSP', compliment: "You see the shot two beats before anyone else does.", roast: "But you'll dink yourself into a 25-minute game when 12 minutes was on the table.", hook: "Pair with an Anchor and the kitchen becomes ours. Pair with a Hype Cannon and the energies fight each other.", vibesWith: ['MQT', 'ABS', 'HSP'], clashWith: ['HCB'] },
-  { code: 'MQT', name: 'The Monk', short: 'MONK', vibesRange: [-2, 0], modeRange: [+1, +2], courtZone: 'no-mans-right', color: '#67E8F9', tintClass: 'tint-monk', icon: 'monk', tagline: "Zen kitchen rallies. No drama. No ego. Just dinks. Forever.", rarity: 7, defaultTier: 'player', wing: 'CST', stress: 'AQP', compliment: "You play pickleball the way philosophers play chess — patient, precise, untroubled.", roast: "But you'd dink an opponent to death without raising your heart rate, even when the put-away was right there.", hook: "Pair with a Craftsman and the kitchen becomes art. Pair with a Hype Cannon and you both leave wondering what happened.", vibesWith: ['CST', 'AQP'], clashWith: ['HCB', 'FBT'] },
+  { code: 'HCB', name: 'The Hype Cannon', short: 'HYPE', vibesRange: [+1.0, +2], modeRange: [-2, 0], courtZone: 'baseline-left', color: '#FBBF24', tintClass: 'tint-hype', icon: 'hype', tagline: "Loud, lethal, loving every minute.", rarity: 5, defaultTier: 'amplifier', wing: 'CBM', stress: 'HSP', compliment: "You bring electricity to a court most players couldn't generate in an hour.", roast: "But sometimes you're hitting harder when softer would win.", hook: "Pair you with a Craftsman and you become unstoppable. Two Hype Cannons in one foursome and the rally dies in three shots.", vibesWith: ['CBM', 'FBT', 'ABS'], clashWith: ['MQT', 'AQP'],
+    deep: {
+      origin: "Hype Cannons usually came up loud — basketball, baseball, big-house games where energy was the team's currency. You hit pickleball ready to bring noise. The court loves it most of the time. Coordinators secretly draft you first when the night feels flat.",
+      trap: "The drive wins points but the dial gets stuck on 11. Build a 'second gear' you almost never use — one session a month with no celebrations, no in-game commentary. You'll find shots you didn't know you had, and partners who used to eye-roll start requesting you."
+    } },
+  { code: 'CBM', name: 'The Captain', short: 'CAPT', vibesRange: [+1.0, +2], modeRange: [-2, 0], courtZone: 'baseline-right', color: '#F472B6', tintClass: 'tint-captain', icon: 'captain', tagline: "Calls the plays. Keeps the team loose. Refuses to let anyone tilt.", rarity: 8, defaultTier: 'amplifier', wing: 'HCB', stress: 'ABS', compliment: "You make average partners look like contenders.", roast: "But sometimes the team needs a follower, and that's not you.", hook: "Pair with a Hype Cannon and you're a top-10% team. Two Captains and someone's ego loses.", vibesWith: ['HCB', 'ABS', 'HSP'], clashWith: ['AQP', 'MQT'],
+    deep: {
+      origin: "You learned somewhere that taking the lead made the group play better — coaching, sales, parenting, the military, captaining a team. Pickleball gave you a court to do it on. Your reads are real, your timing is mostly right, and your team feels braver around you.",
+      trap: "When the team needs a follower for a few rallies, you can't be one. The Captain who stays Captain through a slump becomes a manager. Practice silence at 7-9. Trust the team for one rally where you don't say the read out loud. The Captains who make 4.5+ teams learn this."
+    } },
+  { code: 'HSP', name: 'The Hammer', short: 'HAMM', vibesRange: [-1.0, +1], modeRange: [-2, 0], courtZone: 'midcourt-left', color: '#F87171', tintClass: 'tint-hammer', icon: 'hammer', tagline: "Quiet executioner. Says 'good shot' once a game. Beats you twice.", rarity: 11, defaultTier: 'player', wing: 'AQP', stress: 'CST', compliment: "Your putaways have a reputation that travels club to club.", roast: "But the kitchen is where Hammers either evolve or get figured out — and right now your drive is years ahead of your touch.", hook: "Pair with a Captain and you're surgical. Pair with a Festival and you both wonder why you signed up.", vibesWith: ['CBM', 'AQP', 'CST'], clashWith: ['FBT'],
+    deep: {
+      origin: "Hammers often come from another sport — tennis, baseball, hockey. You learned competence by hitting things hard, and you trust your hands more than your patience. That's not a flaw. That's how you got here. The kitchen feels foreign because nobody who taught you the game played it.",
+      trap: "The drive wins points but loses partners. Your strongest pairings (Captain, Craftsman) need you to call ONE rally per game where you choose the drop over the drive. Not five. One. The signal it's working: a partner who used to roll their eyes when you signed up starts requesting you."
+    } },
+  { code: 'AQP', name: 'The Assassin', short: 'ASSN', vibesRange: [-2, 0], modeRange: [-2, 0], courtZone: 'midcourt-right', color: '#9B5DE5', tintClass: 'tint-assassin', icon: 'assassin', tagline: "Doesn't talk. Wins. You forget they're on the court — until you've lost.", rarity: 6, defaultTier: 'player', wing: 'HSP', stress: 'HCB', compliment: "Your composure under pressure is the rarest thing in pickleball.", roast: "But the silence costs you partners who needed feedback.", hook: "Pair with a Hammer and you're a wall. Pair with a Festival and the energy gap is brutal for both of you.", vibesWith: ['HSP', 'MQT', 'CST'], clashWith: ['HCB', 'FBT'],
+    deep: {
+      origin: "You read the court before you ever picked up a paddle. Chess players, poker players, surgeons, programmers — Assassins come from anywhere stillness gets rewarded. You came to pickleball for the puzzle, not the noise. Your foursome figured out fast that you don't need feedback to perform.",
+      trap: "The silence costs partners who needed feedback. A great Assassin learns to say one sentence per game out loud — 'I've got the middle,' 'switch,' 'great hands.' That's it. One. The partners who play with you twice and then disappear didn't dislike you; they just couldn't tell whether you liked them."
+    } },
+  { code: 'FBT', name: 'The Festival', short: 'FEST', vibesRange: [+1.0, +2], modeRange: [+1, +2], courtZone: 'kitchen-left', color: '#34D399', tintClass: 'tint-festival', icon: 'festival', tagline: "Soft game. Bigger smile. The reason this group still plays together.", rarity: 12, defaultTier: 'energizer', wing: 'ABS', stress: 'CST', compliment: "Three of your foursome would have quit pickleball by now if you weren't in their group chat.", roast: "But you'll trade a winnable game for a great rally — and your partners notice both wins and what you traded.", hook: "Pair with a Captain and you elevate everyone. Pair with a Hammer and the energy mismatch hurts both of you.", vibesWith: ['ABS', 'CBM', 'HCB'], clashWith: ['HSP', 'AQP'],
+    deep: {
+      origin: "You came to pickleball for the people. The game was the excuse. Your group chat moves matter more to the club than three of your foursome's DUPRs. Coordinators know it. Festivals are how clubs survive seasons. The data calls this Energizer-tier — a 1-in-50 player who lifts every court they touch.",
+      trap: "The energy that holds the group together can also dodge the close-out moment. When you trade a winnable game for a great rally, your partners notice both. Play one game a month where you commit to closing — not winning, just deciding to end the rally with intent. Festivals win more than they think when they decide to."
+    } },
+  { code: 'ABS', name: 'The Anchor', short: 'ANCH', vibesRange: [+1.0, +2], modeRange: [+1, +2], courtZone: 'kitchen-right', color: '#F59E0B', tintClass: 'tint-anchor', icon: 'anchor', tagline: "Steady warmth. Plays anyone, with anyone — and everyone leaves better off.", rarity: 9, defaultTier: 'energizer', wing: 'FBT', stress: 'CBM', compliment: "You play with everyone, and everyone leaves the court a little less self-conscious than they showed up.", roast: "But you'll absorb a worse partner's mistakes for so long it costs you the match.", hook: "Pair with anyone — you're the universal donor of doubles. Two Anchors is also magic.", vibesWith: ['FBT', 'CST', 'HCB'], clashWith: [],
+    deep: {
+      origin: "Anchors usually came up steady. Maybe you played a team sport for decades, maybe you raised kids, maybe both. You learned that the load goes on whoever can carry it without complaining. Pickleball gave you a court to be the calm one again. Every group with an Anchor in it is quietly easier.",
+      trap: "Your generosity is a strength most of the time and a wall the rest. You'll absorb a worse partner's mistakes for so long it costs you the match. The best Anchors learn to surface one tactical adjustment per game without it sounding like criticism. 'Let's switch.' 'I've got the lob.' Two-word interventions."
+    } },
+  { code: 'CST', name: 'The Craftsman', short: 'CRFT', vibesRange: [-1.0, +1], modeRange: [+1, +2], courtZone: 'no-mans-left', color: '#2B8BFC', tintClass: 'tint-craftsman', icon: 'craftsman', tagline: "A 47-shot kitchen exchange is your love language.", rarity: 14, defaultTier: 'amplifier', wing: 'MQT', stress: 'HSP', compliment: "You see the shot two beats before anyone else does.", roast: "But you'll dink yourself into a 25-minute game when 12 minutes was on the table.", hook: "Pair with an Anchor and the kitchen becomes ours. Pair with a Hype Cannon and the energies fight each other.", vibesWith: ['MQT', 'ABS', 'HSP'], clashWith: ['HCB'],
+    deep: {
+      origin: "Craftsmen show up early to drill and stay late to dink. You read pickleball as a craft, not a game. The kitchen is your studio. Most Craftsmen quietly out-play their DUPR by half a point because the rally always favors the patient one. Your wins look slow on video and feel inevitable in person.",
+      trap: "You'll dink yourself into a 25-minute game when 12 minutes was on the table. There's a moment in the kitchen where the put-away is right there and a Craftsman second-guesses it for a third dink. Train yourself to take the shot the third time you see it open. Patience that becomes hesitation is a different problem."
+    } },
+  { code: 'MQT', name: 'The Monk', short: 'MONK', vibesRange: [-2, 0], modeRange: [+1, +2], courtZone: 'no-mans-right', color: '#67E8F9', tintClass: 'tint-monk', icon: 'monk', tagline: "Zen kitchen rallies. No drama. No ego. Just dinks. Forever.", rarity: 7, defaultTier: 'player', wing: 'CST', stress: 'AQP', compliment: "You play pickleball the way philosophers play chess — patient, precise, untroubled.", roast: "But you'd dink an opponent to death without raising your heart rate, even when the put-away was right there.", hook: "Pair with a Craftsman and the kitchen becomes art. Pair with a Hype Cannon and you both leave wondering what happened.", vibesWith: ['CST', 'AQP'], clashWith: ['HCB', 'FBT'],
+    deep: {
+      origin: "Monks tend to play like they meditate — patience earned somewhere else, ported to pickleball. Yoga, music, long-distance running, hospice work. You came to the kitchen and recognized it. The reset shot makes more sense to you than the put-away. Most opponents leave the court not realizing they got beat.",
+      trap: "The same stillness that makes you unbeatable in a long rally can disappear you in a partner's experience. Make one moment of visible joy per game — a smile, a paddle tap, an audible 'good shot.' That's it. The Monk who adds a single warm signal becomes the one everyone wants on their side."
+    } },
 ];
 const CODE_TO_ARCH = Object.fromEntries(ARCHETYPES.map(a => [a.code, a]));
 
@@ -901,7 +1037,7 @@ function archetypeIconSVG(kind, color) {
 
 const state = {
   qIdx: 0, answers: {}, events: {},
-  capture: { name: '', email: '', member: '', skill: 3.5, frequency: null, loved_partners: '', share_with_club: true },
+  capture: { name: '', email: '', member: '', skill: 3.5, frequency: null, loved_partners: '', share_with_club: true, retake_30d: true },
   scores: { vibes: 0, style: 0, mode: 0, warmth: 0, composure: 0, reliability: 0 },
   triggers: [], archetype: null, tier: null,
   manipulationFlagged: false, startedAt: null,
@@ -940,7 +1076,7 @@ function renderQuestion() {
   q.options.forEach((opt, i) => {
     const optId = isMulti ? opt.id : i;
     const isSelected = isMulti ? Array.isArray(selected) && selected.includes(optId) : selected === i;
-    html += `<button class="opt ${isSelected ? 'selected' : ''}" data-idx="${i}" data-id="${opt.id || ''}">
+    html += `<button type="button" class="opt ${isSelected ? 'selected' : ''}" data-idx="${i}" data-id="${opt.id || ''}" aria-pressed="${isSelected}">
       ${isMulti ? '<span class="check"></span>' : `<span class="emoji">${opt.emoji || ''}</span>`}
       ${!isMulti ? '' : `<span class="emoji">${opt.emoji || ''}</span>`}
       <span class="text">${opt.text}</span>
@@ -995,11 +1131,11 @@ function renderEvents() {
       <div class="ev-body">
         <div class="ev-name">${ev.name}</div>
         <div class="ev-blurb">${ev.blurb}</div>
-        <div class="ev-segmented">
-          <button type="button" class="ev-seg love    ${sel(2)}"  data-val="2"  aria-label="Love it">♥</button>
-          <button type="button" class="ev-seg like    ${sel(1)}"  data-val="1"  aria-label="Like it">+</button>
-          <button type="button" class="ev-seg meh     ${sel(0)}"  data-val="0"  aria-label="Meh">○</button>
-          <button type="button" class="ev-seg dislike ${sel(-1)}" data-val="-1" aria-label="Don't enjoy">−</button>
+        <div class="ev-segmented" role="radiogroup" aria-label="${ev.name} enjoyment">
+          <button type="button" class="ev-seg love    ${sel(2)}"  data-val="2"  role="radio" aria-checked="${v===2}"  aria-label="Love it"><span class="sym">♥</span><span class="lbl">Love</span></button>
+          <button type="button" class="ev-seg like    ${sel(1)}"  data-val="1"  role="radio" aria-checked="${v===1}"  aria-label="Like it"><span class="sym">+</span><span class="lbl">Like</span></button>
+          <button type="button" class="ev-seg meh     ${sel(0)}"  data-val="0"  role="radio" aria-checked="${v===0}"  aria-label="Meh"><span class="sym">○</span><span class="lbl">Meh</span></button>
+          <button type="button" class="ev-seg dislike ${sel(-1)}" data-val="-1" role="radio" aria-checked="${v===-1}" aria-label="Don't enjoy"><span class="sym">−</span><span class="lbl">Skip</span></button>
         </div>
         <button type="button" class="ev-never ${v === null ? 'selected' : ''}" data-val="null">Never tried this one</button>
       </div>
@@ -1092,13 +1228,21 @@ function finishToReveal() {
   stage.classList.remove('named');
   stage.classList.add('active');
   document.getElementById('revealText').textContent = 'Reading your court DNA...';
+  // Screen-reader announcement (separate from the visual cinematic)
+  document.getElementById('revealAnnounce').textContent =
+    `Result: you are ${state.archetype.name}. ${state.archetype.tagline}`;
   setTimeout(() => { document.getElementById('revealText').textContent = 'You play like...'; }, 1100);
-  // Name snap lands inside the dark stage — synced haptic + chime
   setTimeout(() => { stage.classList.add('named'); vibe([30, 60, 30]); chime(); }, 1900);
   setTimeout(() => {
     stage.classList.remove('active', 'named');
     renderResult();
     goPage('result');
+    // Focus the result heading for keyboard + screen-reader users
+    const archHeading = document.getElementById('archName');
+    if (archHeading) {
+      archHeading.setAttribute('tabindex', '-1');
+      archHeading.focus({ preventScroll: false });
+    }
   }, 4200);
 }
 
@@ -1122,6 +1266,12 @@ function renderResult() {
   document.getElementById('narrCompliment').innerHTML = `<span class="em">✓</span> ${a.compliment}`;
   document.getElementById('narrRoast').innerHTML = `… ${a.roast}`;
   document.getElementById('narrHook').textContent = a.hook;
+  // Maya's deep read
+  if (a.deep) {
+    document.getElementById('deepArchName').textContent = a.name;
+    document.getElementById('deepOrigin').textContent = a.deep.origin;
+    document.getElementById('deepTrap').textContent = a.deep.trap;
+  }
   drawRadar();
   renderCourtGrid();
   const triggerList = document.getElementById('triggersList');
@@ -1272,9 +1422,19 @@ function renderCaptureInline() {
         <input type="checkbox" id="capShareWithClub" checked style="margin-top:3px;flex-shrink:0;">
         <span>OK to share my archetype with my club's coordinator (uncheck to keep results private to you).</span>
       </label>
+      <label class="capture-disclaimer" style="display:flex;gap:8px;align-items:flex-start;cursor:pointer;padding:6px 0;">
+        <input type="checkbox" id="capRetake" checked style="margin-top:3px;flex-shrink:0;">
+        <span>Send me one email in 30 days to see if my archetype evolved. <em>(That's it. One email. Most players' archetype shifts by spring.)</em></span>
+      </label>
+      <div class="creator-block">
+        <div class="creator-mark">DK</div>
+        <div class="creator-text">
+          <strong>Built by Dave + Krista</strong> at NEPC. Krista has coordinated 6,000+ doubles matches by hand. This quiz encodes what she already knows.
+        </div>
+      </div>
       <div class="actions-row"><button class="btn" onclick="submitCapture()">Save my profile</button></div>
       <div class="capture-disclaimer">
-        <strong>Plain English:</strong> We store your answers, archetype, and email. If you tell us you're a member at one of our clubs and leave the box above checked, we may share your archetype with that club's coordinator to put you in better games — never with anyone else. We don't sell your data. Email <a href="mailto:privacy@4dpickleball.com" style="color:var(--gnr-gold)">privacy@4dpickleball.com</a> to delete everything we have on you.
+        <strong>Plain English:</strong> We store your answers, archetype, and email. If you tell us you're a member at one of our clubs and leave the share-with-club box checked, we may share your archetype with that club's coordinator to put you in better games — never with anyone else. We don't sell your data. Email <a href="mailto:privacy@4dpickleball.com" style="color:var(--gnr-gold)">privacy@4dpickleball.com</a> to delete everything we have on you.
       </div>
     </div>`;
   document.getElementById('memberToggles').addEventListener('click', (e) => {
@@ -1298,6 +1458,7 @@ function submitCapture() {
   state.capture.email = document.getElementById('capEmail').value.trim();
   state.capture.loved_partners = (document.getElementById('capPartners')?.value || '').trim();
   state.capture.share_with_club = document.getElementById('capShareWithClub')?.checked !== false;
+  state.capture.retake_30d = document.getElementById('capRetake')?.checked !== false;
   if (!state.capture.name) { alert('Please enter your name.'); return; }
   if (!isValidEmail(state.capture.email)) { alert('Please enter a valid email.'); return; }
   vibe([20, 40, 80]);
@@ -1416,6 +1577,7 @@ function buildSubmissionPayload() {
     play_frequency_per_week: state.capture.frequency,
     loved_partners_raw: state.capture.loved_partners,
     consent_share_with_club: state.capture.share_with_club ? 1 : 0,
+    consent_retake_email_30d: state.capture.retake_30d ? 1 : 0,
     consent_version: 'v3-2026-05',
     archetype_code: state.archetype.code, archetype_name: state.archetype.name, archetype_short: state.archetype.short,
     wing_code: state.archetype.wing, stress_code: state.archetype.stress, tier_internal: state.tier,
